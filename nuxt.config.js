@@ -9,12 +9,24 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
+  ssr: false,
+  target: 'server',
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ['~/assets/scss/app.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '~/plugins/simplebar.js',
+    '~/plugins/vue-click-outside.js',
+    '~/plugins/vue-apexcharts.js',
+    '~/plugins/vuelidate.js',
+    '~/plugins/vue-slidebar.js',
+    '~/plugins/vue-lightbox.js',
+    '~/plugins/vue-chartist.js',
+    '~/plugins/vue-mask.js',
+    '~/plugins/vue-googlemap.js',
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
