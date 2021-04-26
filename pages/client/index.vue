@@ -5,7 +5,8 @@
 <script>
 export default {
   layout: 'default',
+  head: {
+    title: 'Clients Page',
+  },
 }
 </script>
-
-<style></style>

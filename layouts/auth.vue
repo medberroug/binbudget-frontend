@@ -7,10 +7,10 @@
 <script>
 export default {
   head: {
-    titleTemplate: '%s | Binbudget',
+    titleTemplate: '%s | BinBudget',
   },
-  mount() {
-    document.body.classList.remove('authentication-bg')
+  mounted() {
+    document.body.classList.add('authentication-bg')
   },
 }
 </script>
