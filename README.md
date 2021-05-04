@@ -1,4 +1,4 @@
-# binbudget-frontend
+# minible
 
 ## Build Setup
 

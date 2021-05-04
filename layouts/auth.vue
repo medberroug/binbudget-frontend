@@ -1,16 +1,13 @@
-<template>
-  <div>
-    <Nuxt />
-  </div>
-</template>
-
 <script>
 export default {
-  head: {
-    titleTemplate: '%s | BinBudget',
-  },
-  mounted() {
-    document.body.classList.add('authentication-bg')
-  },
-}
+    mounted() {
+        document.body.classList.add("authentication-bg");
+    }
+};
 </script>
+
+<template>
+<div>
+    <Nuxt />
+</div>
+</template>
