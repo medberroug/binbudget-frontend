@@ -104,7 +104,7 @@ export default {
           <div class="col-lg-12">
             <div class="text-center">
               <nuxt-link to="/" class="mb-5 d-block auth-logo">
-                <img src="~/assets/images/logo-large.png" alt="" />
+                <img src="~/assets/images/logo-large.png" alt="logo" />
               </nuxt-link>
             </div>
           </div>
