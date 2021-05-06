@@ -8,7 +8,7 @@ export default {
   layout: "auth",
   head() {
     return {
-      title: `Login | Clients - Binbudget`,
+      title: `Login | Clients - Binbudget`
     };
   },
   data() {
@@ -18,17 +18,17 @@ export default {
       submitted: false,
       authError: null,
       tryingToLogIn: false,
-      isAuthError: false,
+      isAuthError: false
     };
   },
   validations: {
     email: {
       required,
-      email,
+      email
     },
     password: {
-      required,
-    },
+      required
+    }
   },
   computed: {
     notification() {
@@ -36,7 +36,7 @@ export default {
     },
     notificationAutoCloseDuration() {
       return this.$store && this.$store.state.notification ? 5 : 0;
-    },
+    }
   },
   methods: {
     // Try to log the user in with the username
@@ -57,20 +57,20 @@ export default {
             this.$store
               .dispatch("auth/logIn", {
                 email: this.email,
-                password: this.password,
+                password: this.password
               })
               // eslint-disable-next-line no-unused-vars
-              .then((token) => {
+              .then(token => {
                 this.tryingToLogIn = false;
                 this.isAuthError = false;
                 // Redirect to the originally requested page, or to the home page
                 this.$router.push(
                   this.$route.query.redirectFrom || {
-                    path: "/",
+                    path: "/"
                   }
                 );
               })
-              .catch((error) => {
+              .catch(error => {
                 this.tryingToLogIn = false;
                 this.authError = error ? error : "";
                 this.isAuthError = true;
@@ -81,13 +81,13 @@ export default {
           if (email && password) {
             this.$store.dispatch("authfack/login", {
               email,
-              password,
+              password
             });
           }
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -104,7 +104,7 @@ export default {
           <div class="col-lg-12">
             <div class="text-center">
               <nuxt-link to="/" class="mb-5 d-block auth-logo">
-                BINBUDGET
+                <img src="~/assets/images/logo-large.png" alt="" />
               </nuxt-link>
             </div>
           </div>
@@ -175,7 +175,7 @@ export default {
                         type="password"
                         placeholder="Enter password"
                         :class="{
-                          'is-invalid': submitted && $v.password.$error,
+                          'is-invalid': submitted && $v.password.$error
                         }"
                       ></b-form-input>
                       <div

@@ -8,7 +8,7 @@ export default {
   layout: "auth",
   head() {
     return {
-      title: `Register | Client - Binbudget`,
+      title: `Register | Client - Binbudget`
     };
   },
   data() {
@@ -16,27 +16,27 @@ export default {
       user: {
         username: "",
         email: "",
-        password: "",
+        password: ""
       },
       submitted: false,
       tryingToRegister: false,
       isRegisterError: false,
-      title: "Register",
+      title: "Register"
     };
   },
   validations: {
     user: {
       username: {
-        required,
+        required
       },
       email: {
         required,
-        email,
+        email
       },
       password: {
-        required,
-      },
-    },
+        required
+      }
+    }
   },
   computed: {
     notification() {
@@ -44,7 +44,7 @@ export default {
     },
     notificationAutoCloseDuration() {
       return this.$store && this.$store.state.notification ? 5 : 0;
-    },
+    }
   },
   methods: {
     // Try to register the user in with the email, username
@@ -65,22 +65,22 @@ export default {
             this.$store
               .dispatch("auth/register", {
                 email: this.user.email,
-                password: this.user.password,
+                password: this.user.password
               })
               // eslint-disable-next-line no-unused-vars
-              .then((token) => {
+              .then(token => {
                 this.tryingToRegister = false;
                 this.isRegisterError = false;
                 this.registerSuccess = true;
                 if (this.registerSuccess) {
                   this.$router.push(
                     this.$route.query.redirectFrom || {
-                      path: "/",
+                      path: "/"
                     }
                   );
                 }
               })
-              .catch((error) => {
+              .catch(error => {
                 this.tryingToRegister = false;
                 this.regError = error ? error : "";
                 this.isRegisterError = true;
@@ -93,8 +93,8 @@ export default {
           }
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -111,7 +111,7 @@ export default {
           <div class="col-lg-12">
             <div class="text-center">
               <nuxt-link to="/" class="mb-5 d-block auth-logo">
-                BINBUDGET
+                <img src="~/assets/images/logo-large.png" alt="logo" />
               </nuxt-link>
             </div>
           </div>
@@ -147,7 +147,7 @@ export default {
                         type="text"
                         placeholder="Enter username"
                         :class="{
-                          'is-invalid': submitted && $v.user.username.$error,
+                          'is-invalid': submitted && $v.user.username.$error
                         }"
                       ></b-form-input>
                       <div
@@ -170,7 +170,7 @@ export default {
                         type="email"
                         placeholder="Enter email"
                         :class="{
-                          'is-invalid': submitted && $v.user.email.$error,
+                          'is-invalid': submitted && $v.user.email.$error
                         }"
                       ></b-form-input>
                       <div
@@ -198,7 +198,7 @@ export default {
                         type="password"
                         placeholder="Enter password"
                         :class="{
-                          'is-invalid': submitted && $v.user.password.$error,
+                          'is-invalid': submitted && $v.user.password.$error
                         }"
                       ></b-form-input>
                       <div

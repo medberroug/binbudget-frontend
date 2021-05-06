@@ -24,7 +24,7 @@ export default {
         content: "Responsive Bootstrap 5 Admin Dashboard"
       }
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.png" }]
   },
   router: {
     // linkExactActiveClass: 'active'
@@ -38,9 +38,9 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
-    '~/plugins/fakeauth.js',
+    "~/plugins/fakeauth.js",
     "~/plugins/fireauth.js",
-    '~/plugins/i18n.js',
+    "~/plugins/i18n.js",
     "~/plugins/simplebar.js",
     "~/plugins/vue-click-outside.js",
     "~/plugins/vue-apexcharts.js",
@@ -88,6 +88,6 @@ export default {
     storgebucket: process.env.VUE_APP_STORAGEBUCKET,
     message: process.env.VUE_APP_MESSAGINGSENDERID,
     appid: process.env.VUE_APP_APPId,
-    measurement: process.env.VUE_APP_MEASUREMENTID,
+    measurement: process.env.VUE_APP_MEASUREMENTID
   }
 };
