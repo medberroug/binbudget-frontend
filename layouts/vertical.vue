@@ -35,12 +35,12 @@ export default {
         document.body.classList.remove("vertical-collpsed");
       }
       this.isMenuCondensed = !this.isMenuCondensed;
-    },
+    }
   },
   data() {
     return {};
   },
-  computed: mapState(["layout"]),
+  computed: mapState(["layout"])
 };
 </script>
 

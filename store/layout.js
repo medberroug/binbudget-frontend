@@ -1,7 +1,7 @@
 export const state = () => ({
   layoutType: "vertical",
   layoutWidth: "fluid",
-  leftSidebarType: "light",
+  leftSidebarType: "dark",
   topbar: "colored",
   loader: false
 });
