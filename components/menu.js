@@ -19,19 +19,19 @@ export const menuItems = [
     id: 4,
     label: "Restaurants",
     icon: "uil-calender",
-    link: "/"
+    link: "/clients/restaurants"
   },
   {
     id: 5,
     label: "Events",
     icon: "uil-comments-alt",
-    link: "/"
+    link: "/clients/events"
   },
   {
     id: 6,
     label: "Note De Frais",
     icon: "uil-store",
-    link: ""
+    link: "/clients/note-de-frais"
   },
   {
     id: 7,
@@ -42,7 +42,7 @@ export const menuItems = [
     id: 8,
     label: "My Orders",
     icon: "uil-calender",
-    link: "/"
+    link: "/clients/orders"
   },
   {
     id: 9,
@@ -53,12 +53,12 @@ export const menuItems = [
     id: 10,
     label: "My Invoices",
     icon: "uil-store",
-    link: "/"
+    link: "/clients/invoices"
   },
   {
     id: 11,
     label: "Settings",
     icon: "uil-store",
-    link: "/"
+    link: "/clients/settings"
   }
 ];
