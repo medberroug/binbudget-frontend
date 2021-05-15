@@ -17,20 +17,36 @@ export const menuItems = [
   },
   {
     id: 4,
-    label: "Restaurants",
-    icon: "uil-calender",
-    link: "/clients/restaurants"
+    label: "Restauration",
+    icon: "uil-restaurant",
+    subItems: [
+      {
+        id: 1,
+        label: "Sur Carte",
+        link: "/clients/restauration/sur-carte"
+      },
+      {
+        id: 2,
+        label: "Menu conventionne",
+        link: "/clients/restauration/menu-conventionne"
+      },
+      {
+        id: 3,
+        label: "Commandes",
+        link: "/clients/restauration/commandes"
+      }
+    ]
   },
   {
     id: 5,
     label: "Events",
-    icon: "uil-comments-alt",
+    icon: "uil-schedule",
     link: "/clients/events"
   },
   {
     id: 6,
     label: "Note De Frais",
-    icon: "uil-store",
+    icon: "uil-moneybag",
     link: "/clients/note-de-frais"
   },
   {
@@ -52,13 +68,13 @@ export const menuItems = [
   {
     id: 10,
     label: "My Invoices",
-    icon: "uil-store",
+    icon: "uil-invoice",
     link: "/clients/invoices"
   },
   {
     id: 11,
     label: "Settings",
-    icon: "uil-store",
+    icon: "uil-setting",
     link: "/clients/settings"
   }
 ];
