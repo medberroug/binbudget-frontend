@@ -9,7 +9,6 @@
     <item-card />
     <item-card />
     <item-card />
-    <item-card />
   </div>
 </template>
 
