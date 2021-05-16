@@ -34,6 +34,11 @@ export const menuItems = [
         id: 3,
         label: "Commandes",
         link: "/clients/restauration/commandes"
+      },
+      {
+        id: 4,
+        label: "Reservation de restaurant",
+        link: "/clients/restauration/reservation-de-restaurant"
       }
     ]
   },
