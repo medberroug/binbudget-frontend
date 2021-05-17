@@ -1,6 +1,7 @@
 <template>
   <div class="col-xl-4 col-sm-6">
     <div class="card">
+      <img :src="img" class="card-img-top" alt="restaurant" height="400rem" />
       <div class="card-body">
         <div class="media">
           <div class="avatar-sm me-4">
@@ -9,7 +10,7 @@
                 `avatar-title bg-soft-blue text-blue font-size-16 rounded-circle`
               "
             >
-              M
+              {{ name.charAt(0).toUpperCase() }}
             </span>
           </div>
           <div class="media-body align-self-center">
@@ -19,24 +20,30 @@
                   to="/clients/restauration/products"
                   class="text-dark"
                 >
-                  Dummy brand</nuxt-link
+                  {{ name }}</nuxt-link
                 >
               </h5>
               <p class="text-muted">
-                <i class="mdi mdi-account me-1"></i> Fast Food Service
+                <i class="mdi mdi-account me-1"></i> {{ service }}
               </p>
             </div>
             <div class="row">
-              <div class="col-6">
+              <div class="col-4">
                 <div class="mt-3">
                   <p class="text-muted mb-2">Rating</p>
                   <h5 class="font-size-16 mb-0">1.5</h5>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-4">
                 <div class="mt-3">
                   <p class="text-muted mb-2">Earned</p>
-                  <h5 class="font-size-16 mb-0">10K+</h5>
+                  <h5 class="font-size-16 mb-0">{{ earned }}</h5>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="mt-3">
+                  <p class="text-muted mb-2">City</p>
+                  <h5 class="font-size-16 mb-0">{{ city }}</h5>
                 </div>
               </div>
             </div>
@@ -46,3 +53,9 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  props: ["img", "name", "service", "rating", "earned", "city"]
+};
+</script>
