@@ -49,6 +49,11 @@
             </div>
           </div>
         </div>
+        <!-- card buttons -->
+        <div class="d-flex justify-content-between mt-3">
+          <button class="btn btn-outline-primary">Browse Profile</button>
+          <button class="btn btn-primary">Check Menu</button>
+        </div>
       </div>
     </div>
   </div>
