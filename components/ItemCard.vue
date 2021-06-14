@@ -1,7 +1,13 @@
 <template>
   <div class="col-xl-4 col-sm-6">
-    <div class="card">
-      <img :src="img" class="card-img-top" alt="restaurant" height="400rem" />
+    <div class="card h-100">
+      <img
+        :src="img"
+        class="card-img-top"
+        style="object-fit:cover"
+        height="250"
+        alt="restaurant"
+      />
       <div class="card-body">
         <div class="media">
           <div class="avatar-sm me-4">
@@ -24,7 +30,7 @@
                 >
               </h5>
               <p class="text-muted">
-                <i class="mdi mdi-account me-1"></i> {{ service }}
+                <i class="mdi mdi-map-marker me-1"></i> {{ service }}
               </p>
             </div>
             <div class="row">
