@@ -12,13 +12,13 @@ export default {
   data() {
     return {
       productData: productData,
-      title: "Products",
+      title: "Restaurants",
       items: [
         {
-          text: "Ecommerce"
+          text: "Restaurants"
         },
         {
-          text: "Products",
+          text: "Dishes",
           active: true
         }
       ],
@@ -61,34 +61,36 @@ export default {
                 <i
                   class="mdi mdi-chevron-up accor-down-icon text-primary mr-1"
                 ></i>
-                Footwear
+                Dishes
               </a>
               <b-collapse visible id="categories-collapse">
                 <div class="card p-2 border shadow-none">
                   <ul class="list-unstyled categories-list mb-0">
                     <li>
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Formal Shoes
+                        <i class="mdi mdi-circle-medium mr-1"></i> Pasta &#38;
+                        Rissoto
                       </a>
                     </li>
                     <li class="active">
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Sports Shoes
+                        <i class="mdi mdi-circle-medium mr-1"></i> Salad
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> casual Shoes
+                        <i class="mdi mdi-circle-medium mr-1"></i> Curry
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Sandals
+                        <i class="mdi mdi-circle-medium mr-1"></i> Soup
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Slippers
+                        <i class="mdi mdi-circle-medium mr-1"></i> Vegetable
+                        Sides
                       </a>
                     </li>
                   </ul>
@@ -119,7 +121,7 @@ export default {
                     data-toggle="collapse"
                     v-b-toggle.filtersizes-collapse
                   >
-                    Sizes
+                    Seatings
                     <i class="mdi mdi-chevron-up float-end accor-down-icon"></i>
                   </a>
                 </h5>
@@ -128,7 +130,7 @@ export default {
                   <div class="mt-4">
                     <div class="media align-items-center">
                       <div class="media-body">
-                        <h5 class="font-size-15 mb-0">Select Sizes</h5>
+                        <h5 class="font-size-15 mb-0">Select Table Sizes</h5>
                       </div>
                       <div class="w-xs">
                         <select class="custom-select">
@@ -157,13 +159,13 @@ export default {
                     data-toggle="collapse"
                     v-b-toggle.filterprodductcolor-collapse
                   >
-                    Colors
+                    Meals
                     <i class="mdi mdi-chevron-up float-end accor-down-icon"></i>
                   </a>
                 </h5>
 
                 <b-collapse visible id="filterprodductcolor-collapse">
-                  <div class="mt-4">
+                  <!-- <div class="mt-4">
                     <div class="custom-control custom-checkbox mt-2">
                       <input
                         type="checkbox"
@@ -275,6 +277,22 @@ export default {
                         <i class="mdi mdi-circle text-purple mx-1"></i>
                         Purple
                       </label>
+                    </div>
+                  </div> -->
+                  <div class="mt-4">
+                    <div class="media align-items-center">
+                      <div class="media-body">
+                        <h5 class="font-size-15 mb-0">Select Meal Type</h5>
+                      </div>
+                      <div class="w-xs">
+                        <select class="custom-select">
+                          <option value="1">Breakfast</option>
+                          <option value="2" selected>Lunch</option>
+                          <option value="3">Brunch</option>
+                          <option value="4">Dinner</option>
+                          <option value="5">Drinks</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </b-collapse>
@@ -471,12 +489,12 @@ export default {
               <div class="row">
                 <div class="col-md-6">
                   <div>
-                    <h5>Showing result for "Shoes"</h5>
+                    <h5>Showing result for "Dishes"</h5>
                     <ol class="breadcrumb p-0 bg-transparent mb-2">
                       <li class="breadcrumb-item">
-                        <a href="javascript: void(0);">Footwear</a>
+                        <a href="javascript: void(0);">Dishes</a>
                       </li>
-                      <li class="breadcrumb-item active">Shoes</li>
+                      <li class="breadcrumb-item active">Meals</li>
                     </ol>
                   </div>
                 </div>
@@ -527,7 +545,7 @@ export default {
                   :key="index"
                 >
                   <div class="product-box">
-                    <div class="product-img pt-4 px-4">
+                    <div class="product-img pt-4 px-4 pb-6">
                       <div class="product-ribbon badge badge-danger">
                         - {{ item.discount }} %
                       </div>
@@ -540,6 +558,9 @@ export default {
                         :src="item.image"
                         alt
                         class="img-fluid mx-auto d-block"
+                        style="object-fit:cover"
+                        height="200"
+                        width="200"
                       />
                     </div>
 
@@ -562,7 +583,7 @@ export default {
                         ${{ item.newprice }}
                       </h5>
 
-                      <ul class="list-inline mb-0 text-muted product-color">
+                      <!-- <ul class="list-inline mb-0 text-muted product-color">
                         <li class="list-inline-item">Colors :</li>
                         <li
                           class="list-inline-item"
@@ -571,7 +592,7 @@ export default {
                         >
                           <i :class="`mdi mdi-circle text-${item}`"></i>
                         </li>
-                      </ul>
+                      </ul> -->
                     </div>
                   </div>
                 </div>

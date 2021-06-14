@@ -1,6 +1,7 @@
 <template>
-  <div class="row">
+  <div class="row ">
     <item-card
+      class="mt-4"
       v-for="(item, index) in items"
       :key="index"
       :name="item.name"
@@ -22,11 +23,11 @@ export default {
   data: () => ({
     items: [
       {
-        name: "Product 1",
-        service: "New Product",
+        name: "Shiro Restaurant and Bar",
+        service: "Salad Experts",
         img:
           "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80",
-        rating: 2.5,
+        rating: 4.5,
         city: "Casablanca",
         earned: "+10K"
       },
@@ -53,6 +54,7 @@ export default {
         service: "New Product 4",
         img:
           "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Barbieri_-_ViaSophia25668.jpg/1200px-Barbieri_-_ViaSophia25668.jpg",
+
         rating: 4.5,
         city: "Casablanca",
         earned: "+26K"
