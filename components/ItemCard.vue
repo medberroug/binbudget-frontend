@@ -1,4 +1,5 @@
 <template>
+  <!-- card details -->
   <div class="col-xl-4 col-sm-6">
     <div class="card h-100">
       <img
@@ -55,6 +56,7 @@
             </div>
           </div>
         </div>
+
         <!-- card buttons -->
         <div class="d-flex justify-content-between mt-3">
           <button class="btn btn-outline-primary">Browse Profile</button>

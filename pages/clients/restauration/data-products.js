@@ -1,3 +1,7 @@
+/**
+ * Products Info
+ */
+
 const productData = [
   {
     id: 1,
