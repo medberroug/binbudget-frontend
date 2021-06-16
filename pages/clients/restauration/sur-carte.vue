@@ -20,6 +20,9 @@ export default {
   components: {
     ItemCard
   },
+  /**
+   * Sur Carte Details
+   */
   data: () => ({
     items: [
       {

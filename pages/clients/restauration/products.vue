@@ -9,6 +9,9 @@ export default {
       title: `${this.title} | Nuxtjs Responsive Bootstrap 5 Admin Dashboard`
     };
   },
+  /**
+   * Products information
+   */
   data() {
     return {
       productData: productData,
@@ -39,6 +42,7 @@ export default {
 
 <template>
   <div>
+    <!-- Page Header -->
     <PageHeader :title="title" :items="items" />
     <div class="row">
       <div class="col-xl-3 col-lg-4">
@@ -46,7 +50,7 @@ export default {
           <div class="card-header bg-transparent border-bottom">
             <h5 class="mb-0">Filters</h5>
           </div>
-
+          <!-- Page Categories -->
           <div class="p-4">
             <h5 class="font-size-14 mb-3">Categories</h5>
             <div class="custom-accordion">
@@ -98,7 +102,7 @@ export default {
               </b-collapse>
             </div>
           </div>
-
+          <!-- Menu Price -->
           <div class="p-4 border-top">
             <div>
               <h5 class="font-size-14 mb-4">Price</h5>
@@ -110,7 +114,7 @@ export default {
               />
             </div>
           </div>
-
+          <!-- Page Seatings -->
           <div class="custom-accordion">
             <div class="p-4 border-top">
               <div>
@@ -149,7 +153,7 @@ export default {
                 </b-collapse>
               </div>
             </div>
-
+            <!-- Page Meals -->
             <div class="p-4 border-top">
               <div>
                 <h5 class="font-size-14 mb-0">
@@ -298,7 +302,7 @@ export default {
                 </b-collapse>
               </div>
             </div>
-
+            <!-- Customer Ratings -->
             <div class="p-4 border-top">
               <div>
                 <h5 class="font-size-14 mb-0">
@@ -379,7 +383,7 @@ export default {
                 </b-collapse>
               </div>
             </div>
-
+            <!-- Discount -->
             <div class="p-4 border-top">
               <div>
                 <h5 class="font-size-14 mb-0">
