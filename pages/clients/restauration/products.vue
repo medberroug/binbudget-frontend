@@ -6,7 +6,7 @@ import { productData } from "./data-products";
 export default {
   head() {
     return {
-      title: `${this.title} | Nuxtjs Responsive Bootstrap 5 Admin Dashboard`
+      title: `${this.title} |  Admin Dashboard`
     };
   },
   /**
