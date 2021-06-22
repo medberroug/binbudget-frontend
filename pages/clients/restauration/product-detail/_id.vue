@@ -130,8 +130,8 @@ export default {
 
                   <h5 class="mb-4 pt-2">
                     <del class="text-muted me-2"
-                      >${{ productDetail.oldprice }}</del
-                    >${{ productDetail.newprice }}
+                      >{{ productDetail.oldprice }}dh</del
+                    >{{ productDetail.newprice }}dh
                     <span class="text-danger font-size-14 ml-2"
                       >- {{ productDetail.discount }} % Off</span
                     >
