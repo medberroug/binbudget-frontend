@@ -32,34 +32,41 @@
           </div>
         </div>
         <div class="media-body border-top align-self-center">
-          <div class="row">
-            <div class="col-4">
+          <div class="row ">
+            <div class="col-6 ">
               <div class="mt-3">
                 <p class="text-muted mb-2">Rating</p>
                 <span class="badge bg-success font-size-14 me-1"
                   ><i class="mdi mdi-star"></i> {{ rating }}</span
-                >
+                >{{ reviews }} <span>Reviews</span>
               </div>
             </div>
-            <div class="col-4">
+            <div class="col-6  ml-2">
               <div class="mt-3">
-                <p class="text-muted mb-2">Earned</p>
-                <h5 class="font-size-16 mb-0">{{ earned }}</h5>
+                <p class="text-muted mb-2">Speciality</p>
+                <div
+                  class="badge  font-size-14 me-1"
+                  :class="[bgColor, textColor]"
+                >
+                  {{ speciality }}
+                </div>
               </div>
             </div>
-            <div class="col-4">
+            <!-- <div class="col-4">
               <div class="mt-3">
                 <p class="text-muted mb-2">City</p>
                 <h5 class="font-size-16 mb-0">{{ city }}</h5>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
         <!-- card buttons -->
         <div class="d-flex justify-content-around mt-3">
           <button class="btn btn-browse">Browse Profile</button>
-          <button class="btn btn-primary">Check Menu</button>
+          <nuxt-link to="/clients/restauration/products" class="btn btn-primary"
+            >Check Menu</nuxt-link
+          >
         </div>
       </div>
     </div>
@@ -68,11 +75,49 @@
 
 <script>
 export default {
-  props: ["img", "name", "service", "rating", "earned", "city", "img_icon"]
+  props: [
+    "img",
+    "name",
+    "service",
+    "rating",
+    "earned",
+    "city",
+    "img_icon",
+    "reviews",
+    "speciality",
+    "bg-color",
+    "text-color"
+  ],
+  data() {
+    return {};
+  }
+  // created() {
+  //   this.findRandom();
+  // },
+  // methods: {
+  //   findRandom() {
+  //     return this.arrayOfColours[
+  //       Math.floor(Math.random() * this.numberOfIterations) %
+  //         this.arrayOfColours.length
+  //     ];
+  //   }
+  // }
 };
 </script>
 <style scoped>
 .btn-browse:hover {
   background: #ccc;
+}
+.red {
+  background-color: red;
+}
+.blue {
+  background-color: blue;
+}
+.orange {
+  background-color: orange;
+}
+.green {
+  background-color: green;
 }
 </style>

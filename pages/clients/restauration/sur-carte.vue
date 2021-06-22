@@ -9,11 +9,15 @@
         :key="index"
         :name="item.name"
         :service="item.service"
+        :reviews="item.reviews"
         :img="item.img"
         :img_icon="item.img_icon"
+        :bg-color="colours[index].bg"
+        :text-color="colours[index].text"
         :rating="item.rating"
         :city="item.city"
         :earned="item.earned"
+        :speciality="item.speciality"
       />
     </div>
   </div>
@@ -47,6 +51,14 @@ export default {
           active: true
         }
       ],
+      colours: [
+        { bg: "red", text: "text-white" },
+        { bg: "blue", text: "text-white" },
+        { bg: "orange", text: "text-white" },
+        { bg: "green", text: "text-white" },
+        { bg: "blue", text: "text-white" }
+      ],
+
       items: [
         {
           name: "Shiro Restaurant and Bar",
@@ -56,8 +68,10 @@ export default {
           img:
             "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80",
           rating: `4.5`,
+          reviews: "234",
           city: "Casablanca",
-          earned: "+10K"
+          earned: "+10K",
+          speciality: "Western Cusine"
         },
         {
           name: "Product 2",
@@ -67,8 +81,10 @@ export default {
           img:
             "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Barbieri_-_ViaSophia25668.jpg/1200px-Barbieri_-_ViaSophia25668.jpg",
           rating: 3.5,
+          reviews: "342",
           city: "Casablanca",
-          earned: "+40M"
+          earned: "+40M",
+          speciality: "French Cusine"
         },
         {
           name: "Product 3",
@@ -78,8 +94,10 @@ export default {
           img:
             "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80",
           rating: 1.5,
+          reviews: "126",
           city: "Casablanca",
-          earned: "+30K"
+          earned: "+30K",
+          speciality: "Italian Cusine"
         },
         {
           name: "Product 4",
@@ -90,8 +108,10 @@ export default {
             "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Barbieri_-_ViaSophia25668.jpg/1200px-Barbieri_-_ViaSophia25668.jpg",
 
           rating: 4.5,
+          reviews: "734",
           city: "Casablanca",
-          earned: "+26K"
+          earned: "+26K",
+          speciality: "Cuban Cusine"
         },
         {
           name: "Product 5",
@@ -101,11 +121,29 @@ export default {
           img:
             "https://images.unsplash.com/photo-1586999768265-24af89630739?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80",
           rating: 4.5,
+          reviews: "768",
           city: "Rabat Sale",
-          earned: "+100K"
+          earned: "+100K",
+          speciality: "African Cusine"
         }
       ]
     };
+  },
+  computed: {
+    shuffleArray(array) {
+      if (!array || array.length <= 1) return array;
+      array = array.slice();
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+      return array;
+    },
+    colours() {
+      this.shuffleArray(this.colours);
+    }
   }
 };
 </script>

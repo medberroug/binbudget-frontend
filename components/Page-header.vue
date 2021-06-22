@@ -34,7 +34,7 @@ export default {
               <li
                 class="breadcrumb-item"
                 v-for="detail in details"
-                :key="detail"
+                :key="detail.id"
                 active
               >
                 <a href="#">{{ detail.text }}</a>
