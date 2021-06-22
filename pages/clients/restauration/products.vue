@@ -9,11 +9,13 @@ export default {
       title: `${this.title} |  Admin Dashboard`
     };
   },
+
   /**
    * Products information
    */
   data() {
     return {
+      changed: true,
       productData: productData,
       title: "Restaurants",
       items: [
@@ -35,6 +37,9 @@ export default {
       this.productData = productData.filter(function(product) {
         return product.newprice <= value.currentValue;
       });
+    },
+    selected(show) {
+      this.changed = !this.changed;
     }
   }
 };
@@ -488,17 +493,39 @@ export default {
 
       <div class="col-xl-9 col-lg-8">
         <div class="card">
+          <div class="hero-image">
+            <div class="hero-text">
+              <div class="d-flex justify-content-start align-items-center m-2">
+                <div class="avatar-con">
+                  <img
+                    src="~/assets/images/product/shiro.png"
+                    class="avatar-img img-fluid"
+                    style="object-fit:cover"
+                    alt="restaurant-icon"
+                  />
+                </div>
+                <div class="margin">
+                  <div class="display-6">Shiro Restaurant and Bar</div>
+                  <p>
+                    Lorem ipsum dolor sit, amet consectetur...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="card-body">
             <div>
               <div class="row">
                 <div class="col-md-6">
                   <div>
-                    <h5>Showing result for "Dishes"</h5>
                     <ol class="breadcrumb p-0 bg-transparent mb-2">
                       <li class="breadcrumb-item">
-                        <a href="javascript: void(0);">Dishes</a>
+                        <a href="javascript: void(0);">Restauration</a>
                       </li>
-                      <li class="breadcrumb-item active">Meals</li>
+                      <li class="breadcrumb-item ">Sur Carte</li>
+                      <li class="breadcrumb-item active">
+                        Shiro Restaurant and Bar
+                      </li>
                     </ol>
                   </div>
                 </div>
@@ -548,23 +575,31 @@ export default {
                   v-for="(item, index) in productData"
                   :key="index"
                 >
-                  <div class="product-box">
-                    <div class="product-img pt-4 px-4 pb-6">
-                      <div class="product-ribbon badge badge-danger">
+                  <div class="product-box" @click="selected(show)">
+                    <div class="product-img  pb-6">
+                      <div
+                        class="product-ribbon badge badge-danger text-dark f-3"
+                      >
                         - {{ item.discount }} %
                       </div>
                       <div class="product-wishlist">
                         <a href="#">
-                          <i class="mdi mdi-heart-outline"></i>
+                          <i
+                            class="f-3 mdi mdi-heart  "
+                            :class="[
+                              changed
+                                ? 'mdi-heart mdi text-danger'
+                                : changed === true
+                            ]"
+                          ></i>
                         </a>
                       </div>
                       <img
                         :src="item.image"
                         alt
-                        class="img-fluid mx-auto d-block"
+                        class="img-fluid d-block w-100"
                         style="object-fit:cover"
                         height="200"
-                        width="200"
                       />
                     </div>
 
@@ -582,9 +617,9 @@ export default {
 
                       <h5 class="mt-3 mb-0">
                         <span class="text-muted mr-2">
-                          <del>${{ item.oldprice }}</del>
+                          <del>{{ item.oldprice }}dh</del>
                         </span>
-                        ${{ item.newprice }}
+                        {{ item.newprice }}dh
                       </h5>
 
                       <!-- <ul class="list-inline mb-0 text-muted product-color">
@@ -623,3 +658,12 @@ export default {
     <!-- end row -->
   </div>
 </template>
+
+<style scoped>
+.margin {
+  margin-left: 1.5rem;
+}
+.f-3 {
+  font-size: 15px;
+}
+</style>

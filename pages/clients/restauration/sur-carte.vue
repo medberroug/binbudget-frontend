@@ -53,8 +53,8 @@ export default {
       ],
       colours: [
         { bg: "red", text: "text-white" },
-        { bg: "blue", text: "text-white" },
         { bg: "orange", text: "text-white" },
+        { bg: "blue", text: "text-white" },
         { bg: "green", text: "text-white" },
         { bg: "blue", text: "text-white" }
       ],

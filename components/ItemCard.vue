@@ -109,7 +109,7 @@ export default {
   background: #ccc;
 }
 .red {
-  background-color: red;
+  background-color: #5b73e8;
 }
 .blue {
   background-color: blue;
