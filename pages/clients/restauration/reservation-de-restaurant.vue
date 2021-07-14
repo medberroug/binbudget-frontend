@@ -27,6 +27,7 @@ export default {
         img:
           "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80",
         rating: 2.5,
+        reviews: 234,
         city: "Casablanca",
         earned: "+10K"
       },
@@ -36,6 +37,7 @@ export default {
         img:
           "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Barbieri_-_ViaSophia25668.jpg/1200px-Barbieri_-_ViaSophia25668.jpg",
         rating: 3.5,
+        reviews: 356,
         city: "Casablanca",
         earned: "+40M"
       },
@@ -45,6 +47,7 @@ export default {
         img:
           "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80",
         rating: 1.5,
+        reviews: 444,
         city: "Casablanca",
         earned: "+30K"
       },
@@ -54,6 +57,7 @@ export default {
         img:
           "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Barbieri_-_ViaSophia25668.jpg/1200px-Barbieri_-_ViaSophia25668.jpg",
         rating: 4.5,
+        reviews: 678,
         city: "Casablanca",
         earned: "+26K"
       }

@@ -1,23 +1,100 @@
-// 
+//
 // _nav.scss
-// 
+//
 
-.nav-tabs,.nav-pills {
+.nav-tabs,
+.nav-pills {
   > li {
-      > a {
-          color: $gray-700;
-          font-weight: $font-weight-medium;
-      }
+    > a {
+      color: $gray-700;
+      font-weight: $font-weight-medium;
+    }
   }
 }
 
 .nav-pills {
   > a {
-      color: $gray-700;  
-      font-weight: $font-weight-medium;
+    color: $gray-700;
+    font-weight: $font-weight-medium;
   }
 }
+.hero-image {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("~assets/images/product/hero.jpg");
+  height: 30vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.card_img {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+.card_content {
+  // text-align: left;
+  position: absolute;
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+  // color: white;
+}
+.hero-text {
+  text-align: left;
+  position: absolute;
+  top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+  color: white;
+}
+.avatar-img {
+  width: 70px;
+  height: 70px;
+  display: block;
+  border-radius: 50%;
+}
+.avatar-con {
+  padding: 4px;
+  border-radius: 50%;
+  max-width: 250px;
+  border-radius: 50%;
+  background: linear-gradient(to right, #6a33cd, #fb86f1, #fbe5f1, #40d5d3);
+}
 
+//   transform: rotate(45deg);
+//   -ms-transform: rotate(45deg);
+//   -webkit-transform: rotate(45deg);
+// }
+// .avatar-con:before,
+// .avatar-con:after {
+//   content: "";
+//   position: absolute;
+//   background: #fff;
+//   z-index: -1;
+
+//   transform: rotate(-45deg);
+//   -ms-transform: rotate(-45deg);
+//   -webkit-transform: rotate(-45deg);
+// }
+// .avatar:before {
+//   height: 4px;
+//   top: 50%;
+//   left: 2px;
+//   right: -5px;
+//   margin-top: -2px;
+// }
+// .avatar:after {
+//   width: 4px;
+//   left: 50%;
+//   top: 2px;
+//   bottom: -5px;
+//   margin-left: -2px;
+// }
 
 .nav-tabs-custom {
   border-bottom: 2px solid $gray-300;
@@ -40,29 +117,27 @@
         transform: scale(0);
       }
 
-      &.active{
+      &.active {
         color: $primary;
-        &:after{
+        &:after {
           transform: scale(1);
         }
       }
-
     }
   }
 }
 
-
 // vertical nav
 
-.vertical-nav{
-  .nav{
-      .nav-link{
-          padding: 24px 16px;
-          text-align: center;
-          margin-bottom: 8px;
-          .nav-icon{
-              font-size: 24px;
-          }
+.vertical-nav {
+  .nav {
+    .nav-link {
+      padding: 24px 16px;
+      text-align: center;
+      margin-bottom: 8px;
+      .nav-icon {
+        font-size: 24px;
       }
+    }
   }
 }

@@ -8,7 +8,7 @@ export default {
   layout: "auth",
   head() {
     return {
-      title: `Forgot Password | Nuxtjs Responsive Bootstrap 5 Admin Dashboard`,
+      title: `Forgot Password | Admin Dashboard`
     };
   },
   data() {
@@ -16,14 +16,14 @@ export default {
       email: "",
       submitted: false,
       error: null,
-      title: "Recoverpwd",
+      title: "Recoverpwd"
     };
   },
   validations: {
     email: {
       required,
-      email,
-    },
+      email
+    }
   },
   methods: {
     // Try to register the user in with the email, fullname
@@ -43,14 +43,14 @@ export default {
           return (
             this.$store
               .dispatch("auth/resetPassword", {
-                email: this.email,
+                email: this.email
               })
               // eslint-disable-next-line no-unused-vars
-              .then((token) => {
+              .then(token => {
                 this.tryingToReset = false;
                 this.isResetError = false;
               })
-              .catch((error) => {
+              .catch(error => {
                 this.tryingToReset = false;
                 this.error = error ? error : "";
                 this.isResetError = true;
@@ -58,8 +58,8 @@ export default {
           );
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -112,7 +112,7 @@ export default {
                           id="useremail"
                           placeholder="Enter email"
                           :class="{
-                            'is-invalid': submitted && $v.email.$error,
+                            'is-invalid': submitted && $v.email.$error
                           }"
                         />
                         <div
