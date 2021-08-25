@@ -1,112 +1,3 @@
-<script>
-/**
- * Topbar component
- */
-export default {
-  data() {
-    return {
-      languages: [
-        {
-          flag: require("~/assets/images/flags/us.jpg"),
-          language: "en",
-          title: "English"
-        },
-        {
-          flag: require("~/assets/images/flags/french.jpg"),
-          language: "fr",
-          title: "French"
-        },
-        {
-          flag: require("~/assets/images/flags/spain.jpg"),
-          language: "es",
-          title: "spanish"
-        },
-        {
-          flag: require("~/assets/images/flags/china.png"),
-          language: "zh",
-          title: "Chinese"
-        },
-        {
-          flag: require("~/assets/images/flags/arabic.png"),
-          language: "ar",
-          title: "Arabic"
-        }
-      ],
-      current_language: this.$i18n.locale,
-      text: null,
-      flag: null,
-      value: null
-    };
-  },
-  mounted() {
-    this.value = this.languages.find(x => x.language === this.$i18n.locale);
-    this.text = this.value.title;
-    this.flag = this.value.flag;
-  },
-  methods: {
-    /**
-     * Toggle menu
-     */
-    toggleMenu() {
-      this.$parent.toggleMenu();
-    },
-    initFullScreen() {
-      document.body.classList.toggle("fullscreen-enable");
-      if (
-        !document.fullscreenElement &&
-        /* alternative standard method */
-        !document.mozFullScreenElement &&
-        !document.webkitFullscreenElement
-      ) {
-        // current working methods
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-          document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          document.documentElement.webkitRequestFullscreen(
-            Element.ALLOW_KEYBOARD_INPUT
-          );
-        }
-      } else {
-        if (document.cancelFullScreen) {
-          document.cancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        }
-      }
-    },
-    /**
-     * Toggle rightsidebar
-     */
-    toggleRightSidebar() {
-      this.$parent.toggleRightSidebar();
-    },
-    /**
-     * Set languages
-     */
-    setLanguage(locale, country, flag) {
-      this.$i18n.locale = locale;
-      this.current_language = locale;
-      this.text = country;
-      this.flag = flag;
-    },
-    logoutUser() {
-      if (process.env.auth === "firebase") {
-        this.$store.dispatch("auth/logOut");
-      } else if (process.env.auth === "fakebackend") {
-        this.$store.dispatch("authfack/logout");
-      }
-      this.$router.push({
-        path: "/account/login"
-      });
-    }
-  }
-};
-</script>
-
 <template>
   <header id="page-topbar">
     <div class="navbar-header">
@@ -271,7 +162,7 @@ export default {
           </div>
         </b-dropdown> -->
 
-        <div class="dropdown d-none d-lg-inline-block ms-1">
+        <!-- <div class="dropdown d-none d-lg-inline-block ms-1">
           <button
             type="button"
             class="btn header-item noti-icon waves-effect"
@@ -280,8 +171,12 @@ export default {
           >
             <i class="uil-minus-path"></i>
           </button>
-        </div>
+        </div> -->
 
+        <!-- cart -->
+        <shopping-cart />
+
+        <!-- notifications -->
         <b-dropdown
           variant="white"
           class="dropdown d-inline-block"
@@ -417,7 +312,7 @@ export default {
             </a>
           </div>
         </b-dropdown>
-
+        
         <b-dropdown
           class="d-inline-block"
           toggle-class="header-item"
@@ -489,3 +384,112 @@ export default {
     </div>
   </header>
 </template>
+
+<script>
+/**
+ * Topbar component
+ */
+export default {
+  data() {
+    return {
+      languages: [
+        {
+          flag: require("~/assets/images/flags/us.jpg"),
+          language: "en",
+          title: "English"
+        },
+        {
+          flag: require("~/assets/images/flags/french.jpg"),
+          language: "fr",
+          title: "French"
+        },
+        {
+          flag: require("~/assets/images/flags/spain.jpg"),
+          language: "es",
+          title: "spanish"
+        },
+        {
+          flag: require("~/assets/images/flags/china.png"),
+          language: "zh",
+          title: "Chinese"
+        },
+        {
+          flag: require("~/assets/images/flags/arabic.png"),
+          language: "ar",
+          title: "Arabic"
+        }
+      ],
+      current_language: this.$i18n.locale,
+      text: null,
+      flag: null,
+      value: null
+    };
+  },
+  mounted() {
+    this.value = this.languages.find(x => x.language === this.$i18n.locale);
+    this.text = this.value.title;
+    this.flag = this.value.flag;
+  },
+  methods: {
+    /**
+     * Toggle menu
+     */
+    toggleMenu() {
+      this.$parent.toggleMenu();
+    },
+    initFullScreen() {
+      document.body.classList.toggle("fullscreen-enable");
+      if (
+        !document.fullscreenElement &&
+        /* alternative standard method */
+        !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement
+      ) {
+        // current working methods
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+          document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen(
+            Element.ALLOW_KEYBOARD_INPUT
+          );
+        }
+      } else {
+        if (document.cancelFullScreen) {
+          document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        }
+      }
+    },
+    /**
+     * Toggle rightsidebar
+     */
+    toggleRightSidebar() {
+      this.$parent.toggleRightSidebar();
+    },
+    /**
+     * Set languages
+     */
+    setLanguage(locale, country, flag) {
+      this.$i18n.locale = locale;
+      this.current_language = locale;
+      this.text = country;
+      this.flag = flag;
+    },
+    logoutUser() {
+      if (process.env.auth === "firebase") {
+        this.$store.dispatch("auth/logOut");
+      } else if (process.env.auth === "fakebackend") {
+        this.$store.dispatch("authfack/logout");
+      }
+      this.$router.push({
+        path: "/account/login"
+      });
+    }
+  }
+};
+</script>
