@@ -1,5 +1,6 @@
 <script>
 import { productData } from "./data-products";
+import { mapActions } from 'vuex'
 /**
  * Products component
  */
@@ -15,7 +16,6 @@ export default {
    */
   data() {
     return {
-      changed: true,
       productData: productData,
       title: "Restaurants",
       items: [
@@ -33,6 +33,9 @@ export default {
   },
   middleware: "authentication",
   methods: {
+    ...mapActions({
+      likeProduct: 'products/likeProduct'
+    }),
     valuechange(value) {
       this.productData = productData.filter(function(product) {
         return product.newprice <= value.currentValue;
@@ -575,7 +578,7 @@ export default {
                   v-for="(item, index) in productData"
                   :key="index"
                 >
-                  <div class="product-box" @click="selected(show)">
+                  <div class="product-box">
                     <div class="product-img  pb-6">
                       <div
                         class="product-ribbon badge badge-danger text-dark f-3"
@@ -583,16 +586,9 @@ export default {
                         - {{ item.discount }} %
                       </div>
                       <div class="product-wishlist">
-                        <a href="#">
-                          <i
-                            class="f-3 mdi mdi-heart  "
-                            :class="[
-                              changed
-                                ? 'mdi-heart mdi text-danger'
-                                : changed === true
-                            ]"
+                          <i role="button" @click="likeProduct(item.id)"
+                            :class="[item.liked ? 'text-danger' : '', 'f-3', 'mdi', 'mdi-heart']"
                           ></i>
-                        </a>
                       </div>
                       <img
                         :src="item.image"
