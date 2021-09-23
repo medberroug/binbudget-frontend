@@ -5,6 +5,7 @@
 const productData = [
   {
     id: 1,
+    liked: false,
     image: require("~/assets/images/product/salad4.jpg"),
     discount: 20,
     brand: "Salad",
@@ -23,6 +24,7 @@ const productData = [
   },
   {
     id: 2,
+    liked: false,
     image: require("~/assets/images/product/salad5.jpg"),
     discount: 10,
     brand: "Salad",
@@ -41,6 +43,7 @@ const productData = [
   },
   {
     id: 3,
+    liked: false,
     image: require("~/assets/images/product/fruit.jpg"),
     discount: 10,
     brand: "Fruit",
@@ -59,6 +62,7 @@ const productData = [
   },
   {
     id: 4,
+    liked: false,
     image: require("~/assets/images/product/pasta2.jpg"),
     discount: 10,
     brand: "Salad",
@@ -77,6 +81,7 @@ const productData = [
   },
   {
     id: 5,
+    liked: false,
     image: require("~/assets/images/product/dinner.jpg"),
     discount: 10,
     brand: "Salad",
@@ -95,6 +100,7 @@ const productData = [
   },
   {
     id: 6,
+    liked: false,
     image: require("~/assets/images/product/avocado.jpg"),
     discount: 10,
     brand: "Salad",

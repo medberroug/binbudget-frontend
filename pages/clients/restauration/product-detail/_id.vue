@@ -1,41 +1,3 @@
-<script>
-import { productData } from "../data-products";
-
-/**
- * Product-detail component
- */
-export default {
-  head() {
-    return {
-      title: `${this.title} |  Admin Dashboard`
-    };
-  },
-  asyncData({ params }) {
-    const productDetail = productData.find(
-      user => String(user.id) === params.id
-    );
-    return {
-      productDetail
-    };
-  },
-  data() {
-    return {
-      title: "Dish-detail",
-      items: [
-        {
-          text: "Dishes"
-        },
-        {
-          text: "Dish-detail",
-          active: true
-        }
-      ]
-    };
-  },
-  middleware: "authentication"
-};
-</script>
-
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
@@ -201,6 +163,12 @@ export default {
                           </button>
                         </div>
                       </div>
+                    </div>
+                    <b-button v-if="!isItemInCart(productDetail.id)" @click.prevent="addToCart" variant="outline-primary">Add to cart</b-button>
+                    <div class="d-flex align-items-center" v-else>
+                      <b-button @click.prevent="updateQuantity('decrease')" variant="outline-primary">-</b-button>
+                      <span class="mx-2">Quantity: {{ getThisProductInCart(productDetail.id).quantity }}</span>
+                      <b-button @click.prevent="updateQuantity('increase')" variant="outline-primary">+</b-button>
                     </div>
                   </div>
 
@@ -512,3 +480,60 @@ export default {
     <!-- end row -->
   </div>
 </template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
+import { productData } from "../data-products";
+
+/**
+ * Product-detail component
+ */
+export default {
+  head() {
+    return {
+      title: `${this.title} |  Admin Dashboard`
+    };
+  },
+  asyncData({ params }) {
+    const productDetail = productData.find(
+      user => String(user.id) === params.id
+    );
+    return {
+      productDetail
+    };
+  },
+  data() {
+    return {
+      title: "Dish-detail",
+      items: [
+        {
+          text: "Dishes"
+        },
+        {
+          text: "Dish-detail",
+          active: true
+        }
+      ]
+    };
+  },
+  middleware: "authentication",
+  computed: {
+    ...mapGetters('products', {
+      isItemInCart: 'isProductInCart',
+      getThisProductInCart: 'fetchOneProduct'
+    })
+  },
+  methods: {
+    ...mapActions('products', {
+      addItemToCart: 'addToCart',
+      updateProductQuantity: 'updateCartQuantity'
+    }),
+    addToCart() {
+      this.addItemToCart({ product: this.productDetail, quantity: 1 })
+    },
+    updateQuantity(type) {
+      this.updateProductQuantity(type)
+    }
+  },
+};
+</script>
