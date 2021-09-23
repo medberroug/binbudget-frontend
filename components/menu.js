@@ -22,22 +22,17 @@ export const menuItems = [
     subItems: [
       {
         id: 1,
-        label: "Sur Carte",
+        label: "Sur carte",
         link: "/clients/restauration/sur-carte"
       },
       {
         id: 2,
-        label: "Menu conventionne",
+        label: "Menu conventionné",
         link: "/clients/restauration/menu-conventionne"
       },
       {
         id: 3,
-        label: "Commandes",
-        link: "/clients/restauration/commandes"
-      },
-      {
-        id: 4,
-        label: "Reservation de restaurant",
+        label: "Réservation",
         link: "/clients/restauration/reservation-de-restaurant"
       }
     ]
@@ -55,13 +50,19 @@ export const menuItems = [
     link: "/clients/note-de-frais"
   },
   {
+    id: 6,
+    label: "Market",
+    icon: "uil-store",
+    link: "/clients/note-de-frais"
+  },
+  {
     id: 7,
-    label: "My Accounts",
+    label: "My Account",
     isTitle: true
   },
   {
     id: 8,
-    label: "My Orders",
+    label: "Orders",
     icon: "uil-calender",
     link: "/clients/orders"
   },
@@ -72,7 +73,7 @@ export const menuItems = [
   },
   {
     id: 10,
-    label: "My Invoices",
+    label: "Invoices",
     icon: "uil-invoice",
     link: "/clients/invoices"
   },
