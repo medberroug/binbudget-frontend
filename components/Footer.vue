@@ -12,7 +12,7 @@ export default {};
         <div class="col-sm-6">{{ new Date().getFullYear() }} © BinBudget.</div>
         <div class="col-sm-6">
           <div class="text-sm-end d-none d-sm-block">
-            Powered by Pixlabe
+            Developed by <a href="https://www.pixlabe.com">Pixlabe ltd.</a>
           </div>
         </div>
       </div>

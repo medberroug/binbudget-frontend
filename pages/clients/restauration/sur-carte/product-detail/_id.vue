@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageHeader :title="title" :items="items" />
+    <PageHeader :title="title" :details="details" />
     <div class="row mt-3">
       <div class="col-lg-12">
         <div class="card">
@@ -116,7 +116,7 @@
                             <i
                               class="mdi mdi-circle-medium me-1 align-middle"
                             ></i>
-                            {{ item }}
+                            {{ item }} 
                           </li>
                         </ul>
                       </div>
@@ -133,7 +133,12 @@
                           </li> -->
                           <li>
                             <i
-                              class="uil uil-bill text-primary me-1 font-size-16"
+                              class="
+                                uil uil-bill
+                                text-primary
+                                me-1
+                                font-size-16
+                              "
                             ></i>
                             Cash on Delivery available
                           </li>
@@ -145,30 +150,67 @@
                   <div class="mt-3">
                     <h5 class="font-size-14 mb-3">
                       <i
-                        class="uil uil-location-pin-alt font-size-20 text-primary align-middle me-2"
+                        class="
+                          uil uil-shopping-basket
+                          font-size-20
+                          text-primary
+                          align-middle
+                          me-2
+                        "
                       ></i>
-                      Delivery location
+                      Order option
                     </h5>
 
-                    <div class="form-inline">
-                      <div class="input-group mb-3">
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Enter Delivery pincode "
-                        />
-                        <div class="input-group-append">
-                          <button class="btn btn-light" type="button">
-                            Check
-                          </button>
+                    <div class="row">
+                      <div
+                        class="
+                          d-flex
+                          justify-content-center
+                          align-items-start
+                          col-12 col-md-3
+                        "
+                      >
+                        <b-button
+                          v-if="!isItemInCart(productDetail.id)"
+                          @click.prevent="addToCart"
+                          variant="outline-primary"
+                          >Add to cart</b-button
+                        >
+                        <div class="d-flex align-items-center" v-else>
+                          <b-button
+                            @click.prevent="updateQuantity('decrease')"
+                            variant="outline-primary"
+                            >-</b-button
+                          >
+                          <span class="mx-2"
+                            >Quantity:
+                            {{
+                              getThisProductInCart(productDetail.id).quantity
+                            }}</span
+                          >
+                          <b-button
+                            @click.prevent="updateQuantity('increase')"
+                            variant="outline-primary"
+                            >+</b-button
+                          >
                         </div>
                       </div>
-                    </div>
-                    <b-button v-if="!isItemInCart(productDetail.id)" @click.prevent="addToCart" variant="outline-primary">Add to cart</b-button>
-                    <div class="d-flex align-items-center" v-else>
-                      <b-button @click.prevent="updateQuantity('decrease')" variant="outline-primary">-</b-button>
-                      <span class="mx-2">Quantity: {{ getThisProductInCart(productDetail.id).quantity }}</span>
-                      <b-button @click.prevent="updateQuantity('increase')" variant="outline-primary">+</b-button>
+                      <div class="col-12 col-md-9">
+                        <div class="form-inline">
+                          <div class="input-group mb-3">
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="If you have a special order , enter the details her..."
+                            />
+                            <div class="input-group-append">
+                              <button class="btn btn-light mx-2" type="button">
+                                Submit
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -296,19 +338,31 @@
                             >
                               <li>
                                 <i
-                                  class="mdi mdi-circle-medium me-1 align-middle"
+                                  class="
+                                    mdi mdi-circle-medium
+                                    me-1
+                                    align-middle
+                                  "
                                 ></i>
                                 Sed ut perspiciatis omnis iste
                               </li>
                               <li>
                                 <i
-                                  class="mdi mdi-circle-medium me-1 align-middle"
+                                  class="
+                                    mdi mdi-circle-medium
+                                    me-1
+                                    align-middle
+                                  "
                                 ></i>
                                 Neque porro quisquam est
                               </li>
                               <li>
                                 <i
-                                  class="mdi mdi-circle-medium me-1 align-middle"
+                                  class="
+                                    mdi mdi-circle-medium
+                                    me-1
+                                    align-middle
+                                  "
                                 ></i>
                                 Quis autem vel eum iure
                               </li>
@@ -323,7 +377,7 @@
                       <table class="table table-nowrap mb-0">
                         <tbody>
                           <tr>
-                            <th scope="row" style="width: 20%;">Category</th>
+                            <th scope="row" style="width: 20%">Category</th>
                             <td>Meals</td>
                           </tr>
                           <tr>
@@ -370,27 +424,6 @@
                     <div class="media-body">
                       <h5 class="font-size-15 mb-0">Samuel</h5>
                     </div>
-
-                    <ul class="list-inline product-review-link mb-0">
-                      <li
-                        class="list-inline-item"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Like"
-                      >
-                        <a href="#"><i class="uil uil-thumbs-up"></i></a>
-                      </li>
-                      <li
-                        class="list-inline-item"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Comment"
-                      >
-                        <a href="#"
-                          ><i class="uil uil-comment-alt-message"></i
-                        ></a>
-                      </li>
-                    </ul>
                   </div>
                 </div>
 
@@ -408,66 +441,6 @@
                     <div class="media-body">
                       <h5 class="font-size-15 mb-0">Joseph</h5>
                     </div>
-
-                    <ul class="list-inline product-review-link mb-0">
-                      <li
-                        class="list-inline-item"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Like"
-                      >
-                        <a href="#"><i class="uil uil-thumbs-up"></i></a>
-                      </li>
-                      <li
-                        class="list-inline-item"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Comment"
-                      >
-                        <a href="#"
-                          ><i class="uil uil-comment-alt-message"></i
-                        ></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div class="border-bottom py-3">
-                  <p class="float-sm-right text-muted font-size-13">
-                    26 June, 2020
-                  </p>
-                  <div class="badge bg-success mb-2">
-                    <i class="mdi mdi-star"></i> 4.2
-                  </div>
-                  <p class="text-muted mb-4">
-                    Neque porro quisquam est, qui dolorem ipsum quia dolor sit
-                    amet
-                  </p>
-                  <div class="media">
-                    <div class="media-body">
-                      <h5 class="font-size-15 mb-0">Paul</h5>
-                    </div>
-
-                    <ul class="list-inline product-review-link mb-0">
-                      <li
-                        class="list-inline-item"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Like"
-                      >
-                        <a href="#"><i class="uil uil-thumbs-up"></i></a>
-                      </li>
-                      <li
-                        class="list-inline-item"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Comment"
-                      >
-                        <a href="#"
-                          ><i class="uil uil-comment-alt-message"></i
-                        ></a>
-                      </li>
-                    </ul>
                   </div>
                 </div>
               </div>
@@ -482,7 +455,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 import { productData } from "../../data-products";
 
 /**
@@ -491,49 +464,49 @@ import { productData } from "../../data-products";
 export default {
   head() {
     return {
-      title: `${this.title} |  Admin Dashboard`
+      title: `${this.title} |  Admin Dashboard`,
     };
   },
   asyncData({ params }) {
     const productDetail = productData.find(
-      user => String(user.id) === params.id
+      (user) => String(user.id) === params.id
     );
     return {
-      productDetail
+      productDetail,
     };
   },
   data() {
     return {
-      title: "Dish-detail",
-      items: [
+      title: "Dish detail",
+      details: [
         {
-          text: "Dishes"
+          text: "Dishes",
         },
         {
           text: "Dish-detail",
-          active: true
-        }
-      ]
+          active: true,
+        },
+      ],
     };
   },
   middleware: "authentication",
   computed: {
-    ...mapGetters('products', {
-      isItemInCart: 'isProductInCart',
-      getThisProductInCart: 'fetchOneProduct'
-    })
+    ...mapGetters("products", {
+      isItemInCart: "isProductInCart",
+      getThisProductInCart: "fetchOneProduct",
+    }),
   },
   methods: {
-    ...mapActions('products', {
-      addItemToCart: 'addToCart',
-      updateProductQuantity: 'updateCartQuantity'
+    ...mapActions("products", {
+      addItemToCart: "addToCart",
+      updateProductQuantity: "updateCartQuantity",
     }),
     addToCart() {
-      this.addItemToCart({ product: this.productDetail, quantity: 1 })
+      this.addItemToCart({ product: this.productDetail, quantity: 1 });
     },
     updateQuantity(type) {
-      this.updateProductQuantity(type)
-    }
+      this.updateProductQuantity(type);
+    },
   },
 };
 </script>

@@ -8,7 +8,7 @@ export const menuItems = [
     id: 2,
     label: "Dashboard",
     icon: "uil-home-alt",
-    link: "/clients/dashboard"
+    link: "/clients"
   },
   {
     id: 3,

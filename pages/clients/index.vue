@@ -10,7 +10,7 @@ export default {
   },
   data() {
     return {
-      title: "Client's Dashboard",
+      title: "Dashboard",
       items: [
         {
           text: "Binbudget"

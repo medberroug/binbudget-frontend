@@ -17,10 +17,10 @@ export default {
   data() {
     return {
       productData: productData,
-      title: "Restaurants",
-      items: [
+      title: "Restaurant",
+      details: [
         {
-          text: "Restaurants"
+          text: "Restaurant"
         },
         {
           text: "Dishes",
@@ -51,7 +51,7 @@ export default {
 <template>
   <div>
     <!-- Page Header -->
-    <PageHeader :title="title" :items="items" />
+    <PageHeader :title="title" :details="details" />
     <div class="row mt-4">
       <div class="col-xl-3 col-lg-4">
         <div class="card">
@@ -532,6 +532,7 @@ export default {
                     </ol>
                   </div>
                 </div>
+   
 
                 <div class="col-md-6">
                   <div class="form-inline float-md-end">
@@ -562,7 +563,7 @@ export default {
                   >
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" href="#">Popularity</a>
+                  <a class="nav-link active" href="#" >Popularity</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">Newest</a>
@@ -580,11 +581,14 @@ export default {
                 >
                   <div class="product-box">
                     <div class="product-img  pb-6">
-                      <div
-                        class="product-ribbon badge badge-danger text-dark f-3"
+                      <span 
+                        class="product-ribbon badge badge-danger text-red f-3"
+                        
                       >
-                        - {{ item.discount }} %
-                      </div>
+                        <div id="discountbadgeColor">
+                          - {{ item.discount }} %
+                        </div>
+                      </span >
                       <div class="product-wishlist">
                           <i role="button" @click="likeProduct(item.id)"
                             :class="[item.liked ? 'text-danger' : '', 'f-3', 'mdi', 'mdi-heart']"
@@ -661,5 +665,14 @@ export default {
 }
 .f-3 {
   font-size: 15px;
+}
+#discountbadgeColor{
+  color: rgb(255, 255, 255);
+  font-size: 1rem;
+  font-weight: 900;
+  background-color: rgba(0, 0, 0, 0.404);
+  border-radius: 2rem;
+  padding: 0.5rem;
+
 }
 </style>

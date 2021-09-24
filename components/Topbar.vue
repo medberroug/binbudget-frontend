@@ -3,6 +3,7 @@
     <div class="navbar-header">
       <div class="d-flex">
         <!-- LOGO -->
+      
         <div class="navbar-brand-box">
           <nuxt-link to="/" class="logo logo-dark">
             <span class="logo-sm">
