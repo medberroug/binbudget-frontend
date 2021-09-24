@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import ItemCard from "../../../components/ItemCard";
-import PageHeader from "../../../components/Page-header";
+import ItemCard from "../../../../components/ItemCard";
+import PageHeader from "../../../../components/Page-header";
 export default {
   head() {
     return {

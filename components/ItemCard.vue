@@ -2,7 +2,7 @@
 <template>
   <!-- card details -->
   <div class="col-xl-4 col-sm-6">
-    <div class="card h-100">
+    <div class="card">
       <img
         :src="img"
         class="card-img-top"
@@ -12,8 +12,8 @@
       />
       <!-- TODO: Remake the shape it should be horizental and cleaner  -->
       <div class="card-body">
-        <div class="media">
-          <div class="avatar-sm me-4">
+        <div class="row">
+          <div class="avatar-sm me-4 d-flex align-self-top justify-content-end col-4 col-md-1">
             <img
               :src="img_icon"
               class="avatar avatar-32 img-circle img-fluid"
@@ -22,27 +22,31 @@
               height="50"
             />
           </div>
-          <div class="pb-1">
-            <h5 class="text-truncate font-size-16 mb-1">
-              <nuxt-link to="/clients/restauration/products" class="text-dark">
+          <div class="pb-1 col-8 col-md-6">
+            <div >
+              <h5 class="text-truncate font-size-16 mb-1">
+              <nuxt-link to="/clients/restauration/sur-carte/products" class="text-dark">
                 {{ name }}
               </nuxt-link>
             </h5>
             <p class="text-muted">
               <i class="mdi mdi-map-marker me-1"></i> {{ city }}
             </p>
+            </div>
           </div>
-          <div class="mr-auto">
+          <div
+            class="d-flex justify-content-center align-self-center col-12 col-md-4"
+          >
             <nuxt-link
-              to="/clients/restauration/products"
-              class="btn btn-primary"
-              >Check Menu</nuxt-link
-            >
+              to="/clients/restauration/sur-carte/products"
+              class="btn btn-primary my-2"
+              >Check Menu <i class="uil-arrow-right"></i
+            ></nuxt-link>
           </div>
         </div>
         <div class="media-body border-top align-self-center">
           <div class="row">
-            <div class="col-6 col-md-4">
+            <div class="col-4 col-md-2">
               <div class="mt-3">
                 <p class="text-muted mb-2">Rating</p>
                 <span class="badge bg-success font-size-14 me-1"
@@ -50,7 +54,7 @@
                 >
               </div>
             </div>
-            <div class="col-6 col-md-8">
+            <div class="col-8 col-md-10">
               <div class="mt-3">
                 <p class="text-muted mb-2">Speciality</p>
                 <div class="font-size-12 me-1">
@@ -98,6 +102,9 @@ export default {
 };
 </script>
 <style scoped>
+.checkMenuButton {
+  margin-left: auto;
+}
 .red {
   background-color: #5b73e8;
 }

@@ -1,7 +1,7 @@
-<template> </template>
+<template></template>
 
 <script>
 export default {
-  layout: "home"
+  layout: "home",
 };
 </script>
