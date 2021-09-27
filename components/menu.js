@@ -47,13 +47,26 @@ export const menuItems = [
     id: 6,
     label: "Note De Frais",
     icon: "uil-moneybag",
-    link: "/clients/note-de-frais"
+    link: "/clients/note-de-frais",
+
+    subItems: [
+      {
+        id: 1,
+        label: "Nouvelle déclaration",
+        link: "/clients/note-de-frais/declaration"
+      },
+      {
+        id: 2,
+        label: "Mes notes de frais",
+        link: "/clients/note-de-frais/mes-notes-de-frais",
+      }
+    ]
   },
   {
     id: 6,
     label: "Market",
     icon: "uil-store",
-    link: "/clients/note-de-frais"
+    link: "/clients/market"
   },
   {
     id: 7,

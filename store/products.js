@@ -22,7 +22,9 @@ export const mutations = {
   CLEAR_CART(state) {
     state.cartItems = new Map();
   },
-  INCREASE_QUANTITY(state) {},
+  INCREASE_QUANTITY(state) {
+    
+  },
   DECREASE_QUANTITY(state) {}
 };
 
