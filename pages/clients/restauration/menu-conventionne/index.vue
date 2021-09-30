@@ -18,7 +18,7 @@
         :city="item.city"
         :earned="item.earned"
         :speciality="item.speciality"
-        :parentlink="'sur-carte'"
+        :parentlink="'menu-conventionne'"
       />
     </div>
   </div>
@@ -42,13 +42,13 @@ export default {
    */
   data() {
     return {
-      title: "Sur Carte",
+      title: "Menu conventionné",
       details: [
         {
           text: "Restauration"
         },
         {
-          text: "Sur-Carte",
+          text: "Menu-conventionne",
           active: true
         }
       ],

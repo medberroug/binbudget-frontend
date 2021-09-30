@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import ItemCard from "../../../../components/ItemCard";
+import ItemCard from "../../../../components/ItemCardReservation";
 import PageHeader from "../../../../components/Page-header";
 export default {
   head() {
@@ -42,13 +42,13 @@ export default {
    */
   data() {
     return {
-      title: "Sur Carte",
+      title: "Réservation",
       details: [
         {
           text: "Restauration"
         },
         {
-          text: "Sur-Carte",
+          text: "Réservation",
           active: true
         }
       ],

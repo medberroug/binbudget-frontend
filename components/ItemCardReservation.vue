@@ -13,7 +13,16 @@
       <!-- TODO: Remake the shape it should be horizental and cleaner  -->
       <div class="card-body">
         <div class="row">
-          <div class="avatar-sm me-4 d-flex align-self-top justify-content-end col-4 col-md-1">
+          <div
+            class="
+              avatar-sm
+              me-4
+              d-flex
+              align-self-top
+              justify-content-end
+              col-4 col-md-1
+            "
+          >
             <img
               :src="img_icon"
               class="avatar avatar-32 img-circle img-fluid"
@@ -23,24 +32,32 @@
             />
           </div>
           <div class="pb-1 col-8 col-md-6">
-            <div >
+            <div>
               <h5 class="text-truncate font-size-16 mb-1">
-              <nuxt-link to="/clients/restauration/sur-carte/products" class="text-dark">
-                {{ name }}
-              </nuxt-link>
-            </h5>
-            <p class="text-muted">
-              <i class="mdi mdi-map-marker me-1"></i> {{ city }}
-            </p>
+                <nuxt-link
+                  to="/clients/restauration/sur-carte/products"
+                  class="text-dark"
+                >
+                  {{ name }}
+                </nuxt-link>
+              </h5>
+              <p class="text-muted">
+                <i class="mdi mdi-map-marker me-1"></i> {{ city }}
+              </p>
             </div>
           </div>
           <div
-            class="d-flex justify-content-center align-self-center col-12 col-md-4"
+            class="
+              d-flex
+              justify-content-center
+              align-self-center
+              col-12 col-md-4
+            "
           >
             <nuxt-link
-              :to="'/clients/restauration/'+parentlink+'/products'"
+              :to="'/clients/restauration/' + parentlink + '/products'"
               class="btn btn-primary my-2"
-              >Check Menu <i class="uil-arrow-right"></i
+              >Réserver  <i class="uil-arrow-right"></i
             ></nuxt-link>
           </div>
         </div>
@@ -54,12 +71,19 @@
                 >
               </div>
             </div>
-            <div class="col-8 col-md-10">
+            <div class="col-8 col-md-6">
               <div class="mt-3">
                 <p class="text-muted mb-2">Speciality</p>
                 <div class="font-size-12 me-1">
                   {{ speciality }}
                 </div>
+              </div>
+            </div>
+            <div class="col-8 col-md-4">
+              <div class="mt-3">
+                <button class="btn  btn-outline-primary my-2">
+                  Menu (PDF) <i class="uil-paperclip"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -84,7 +108,7 @@ export default {
     "speciality",
     "bg-color",
     "text-color",
-    "parentlink"
+    "parentlink",
   ],
   data() {
     return {};
