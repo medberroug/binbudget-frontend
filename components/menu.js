@@ -21,18 +21,28 @@ export const menuItems = [
     icon: "uil-restaurant",
     subItems: [
       {
-        id: 1,
-        label: "Sur carte",
-        link: "/clients/restauration/sur-carte"
+        id: 5,
+        label: "Livraison de repas",
+        link: "/clients/restauration/livraison-de-repas"
       },
       {
-        id: 2,
+        id: 6,
+        label: "Repas emporté",
+        link: "/clients/restauration/repas-emporte"
+      },
+      {
+        id: 7,
         label: "Menu conventionné",
         link: "/clients/restauration/menu-conventionne"
       },
       {
-        id: 3,
-        label: "Réservation",
+        id: 8,
+        label: "Restauration collectif",
+        link: "/clients/restauration/restauration-collectif"
+      },
+      {
+        id: 9,
+        label: "Réservation de restaurant",
         link: "/clients/restauration/reservation-de-restaurant"
       }
     ]

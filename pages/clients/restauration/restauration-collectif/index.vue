@@ -3,7 +3,7 @@
     <PageHeader :title="title" :details="details" />
 
     <div class="row ">
-      <item-card-reservation
+      <item-card
         class="mt-4"
         v-for="(item, index) in items"
         :key="index"
@@ -18,15 +18,14 @@
         :city="item.city"
         :earned="item.earned"
         :speciality="item.speciality"
-        :parentlink="'reservation-de-restaurant'"
+        :parentlink="'sur-carte'"
       />
     </div>
   </div>
 </template>
 
 <script>
-import ItemCardReservation from "../../../../components/ItemCardReservation";
-
+import ItemCard from "../../../../components/ItemCard";
 import PageHeader from "../../../../components/Page-header";
 export default {
   head() {
@@ -35,22 +34,21 @@ export default {
     };
   },
   components: {
-    ItemCardReservation,
+    ItemCard,
     PageHeader
-
   },
   /**
    * Sur Carte Details
    */
   data() {
     return {
-      title: "Réservation",
+      title: "Sur Carte",
       details: [
         {
           text: "Restauration"
         },
         {
-          text: "Réservation",
+          text: "Sur-Carte",
           active: true
         }
       ],

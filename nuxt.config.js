@@ -88,6 +88,7 @@ export default {
     storgebucket: process.env.VUE_APP_STORAGEBUCKET,
     message: process.env.VUE_APP_MESSAGINGSENDERID,
     appid: process.env.VUE_APP_APPId,
-    measurement: process.env.VUE_APP_MEASUREMENTID
+    measurement: process.env.VUE_APP_MEASUREMENTID,
+    baseUrl: process.env.VUE_APP_BASE_URL || 'http://localhost:1337'
   }
 };

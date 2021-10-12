@@ -10,7 +10,7 @@
         height="250"
         alt="restaurant"
       />
-      <!-- TODO: Remake the shape it should be horizental and cleaner  -->
+
       <div class="card-body">
         <div class="row">
           <div
@@ -55,9 +55,9 @@
             "
           >
             <nuxt-link
-              :to="'/clients/restauration/' + parentlink + '/products'"
+              :to="'/clients/restauration/' + parentlink + '/reservation'"
               class="btn btn-primary my-2"
-              >Réserver  <i class="uil-arrow-right"></i
+              >Réserver <i class="uil-arrow-right"></i
             ></nuxt-link>
           </div>
         </div>
@@ -81,7 +81,7 @@
             </div>
             <div class="col-8 col-md-4">
               <div class="mt-3">
-                <button class="btn  btn-outline-primary my-2">
+                <button class="btn btn-outline-primary my-2">
                   Menu (PDF) <i class="uil-paperclip"></i>
                 </button>
               </div>
