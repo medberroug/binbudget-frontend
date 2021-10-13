@@ -34,7 +34,7 @@
         </button>
 
         <!-- App Search-->
-        <p id="portalTitle">Portail Client</p>
+        
       </div>
 
       <div class="d-flex">
@@ -66,105 +66,6 @@
             </div>
           </form>
         </b-dropdown>
-
-        <!-- <b-dropdown variant="white" right toggle-class="header-item">
-          <template v-slot:button-content>
-            <img class :src="flag" alt="Header Language" height="16" />
-            {{ text }}
-          </template>
-          <b-dropdown-item
-            class="notify-item"
-            v-for="(entry, i) in languages"
-            :key="`Lang${i}`"
-            :value="entry"
-            @click="setLanguage(entry.language, entry.title, entry.flag)"
-            :link-class="{ active: entry.language === current_language }"
-          >
-            <img
-              :src="`${entry.flag}`"
-              alt="user-image"
-              class="me-1"
-              height="12"
-            />
-            <span class="align-middle">{{ entry.title }}</span>
-          </b-dropdown-item>
-        </b-dropdown> -->
-
-        <!-- <b-dropdown
-          variant="white"
-          class="d-none d-lg-inline-block ms-1"
-          toggle-class="header-item noti-icon"
-          right
-          menu-class="dropdown-menu-lg dropdown-menu-end"
-        >
-          <template v-slot:button-content>
-            <i class="uil-apps"></i>
-          </template>
-          <div class="px-lg-2">
-            <div class="row no-gutters">
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="~/assets/images/brands/github.png" alt="Github" />
-                  <span>{{ $t("navbar.dropdown.site.list.github") }}</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img
-                    src="~/assets/images/brands/bitbucket.png"
-                    alt="bitbucket"
-                  />
-                  <span>{{ $t("navbar.dropdown.site.list.bitbucket") }}</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img
-                    src="~/assets/images/brands/dribbble.png"
-                    alt="dribbble"
-                  />
-                  <span>{{ $t("navbar.dropdown.site.list.dribbble") }}</span>
-                </a>
-              </div>
-            </div>
-
-            <div class="row no-gutters">
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="~/assets/images/brands/dropbox.png" alt="dropbox" />
-                  <span>{{ $t("navbar.dropdown.site.list.dropbox") }}</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img
-                    src="~/assets/images/brands/mail_chimp.png"
-                    alt="mail_chimp"
-                  />
-                  <span>{{ $t("navbar.dropdown.site.list.mailchimp") }}</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="~/assets/images/brands/slack.png" alt="slack" />
-                  <span>{{ $t("navbar.dropdown.site.list.slack") }}</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </b-dropdown> -->
-
-        <!-- <div class="dropdown d-none d-lg-inline-block ms-1">
-          <button
-            type="button"
-            class="btn header-item noti-icon waves-effect"
-            data-toggle="fullscreen"
-            @click="initFullScreen"
-          >
-            <i class="uil-minus-path"></i>
-          </button>
-        </div> -->
-
         <!-- cart -->
         <shopping-cart />
 
@@ -499,11 +400,5 @@ export default {
 </script>
 
 <style >
-#portalTitle {
-  font-size: 1rem;
-  font-weight: 900;
-  color: rgb(54, 54, 54);
-  align-items: center;
-  margin: 1.32rem;
-}
+
 </style>

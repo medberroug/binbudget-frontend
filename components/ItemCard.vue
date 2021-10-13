@@ -1,7 +1,7 @@
 
 <template>
   <!-- card details -->
-  <div class="col-xl-4 col-sm-6">
+  <div class="col-xl-6 col-sm-6">
     <div class="card">
       <img
         :src="img"

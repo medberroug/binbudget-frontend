@@ -1,13 +1,13 @@
 <script>
 import { productData } from "../../data-products";
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
 /**
  * Products component
  */
 export default {
   head() {
     return {
-      title: `${this.title} |  Admin Dashboard`
+      title: `${this.title} |  Admin Dashboard`,
     };
   },
 
@@ -20,31 +20,31 @@ export default {
       title: "Restaurant",
       details: [
         {
-          text: "Restaurant"
+          text: "Restaurant",
         },
         {
           text: "Dishes",
-          active: true
-        }
+          active: true,
+        },
       ],
       sliderPrice: 800,
-      currentPage: 1
+      currentPage: 1,
     };
   },
   middleware: "authentication",
   methods: {
     ...mapActions({
-      likeProduct: 'products/likeProduct'
+      likeProduct: "products/likeProduct",
     }),
     valuechange(value) {
-      this.productData = productData.filter(function(product) {
+      this.productData = productData.filter(function (product) {
         return product.newprice <= value.currentValue;
       });
     },
     selected(show) {
       this.changed = !this.changed;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -177,120 +177,6 @@ export default {
                 </h5>
 
                 <b-collapse visible id="filterprodductcolor-collapse">
-                  <!-- <div class="mt-4">
-                    <div class="custom-control custom-checkbox mt-2">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="productcolorCheck1"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productcolorCheck1"
-                      >
-                        <i class="mdi mdi-circle text-dark mx-1"></i>
-                        Black
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox mt-2">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="productcolorCheck2"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productcolorCheck2"
-                      >
-                        <i class="mdi mdi-circle text-light mx-1"></i>
-                        White
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox mt-2">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="productcolorCheck3"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productcolorCheck3"
-                      >
-                        <i class="mdi mdi-circle text-secondary mx-1"></i>
-                        Gray
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox mt-2">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="productcolorCheck4"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productcolorCheck4"
-                      >
-                        <i class="mdi mdi-circle text-primary mx-1"></i>
-                        Blue
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox mt-2">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="productcolorCheck5"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productcolorCheck5"
-                      >
-                        <i class="mdi mdi-circle text-success mx-1"></i>
-                        green
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox mt-2">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="productcolorCheck6"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productcolorCheck6"
-                      >
-                        <i class="mdi mdi-circle text-danger mx-1"></i>
-                        Red
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox mt-2">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="productcolorCheck7"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productcolorCheck7"
-                      >
-                        <i class="mdi mdi-circle text-warning mx-1"></i>
-                        Yellow
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox mt-2">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="productcolorCheck8"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productcolorCheck8"
-                      >
-                        <i class="mdi mdi-circle text-purple mx-1"></i>
-                        Purple
-                      </label>
-                    </div>
-                  </div> -->
                   <div class="mt-4">
                     <div class="media align-items-center">
                       <div class="media-body">
@@ -496,22 +382,20 @@ export default {
 
       <div class="col-xl-9 col-lg-8">
         <div class="card">
-          <div class="hero-image ">
+          <div class="hero-image">
             <div class="hero-text">
               <div class="d-flex justify-content-start align-items-center m-4">
                 <div class="avatar-con">
                   <img
                     src="~/assets/images/product/shiro.png"
                     class="avatar-img img-fluid"
-                    style="object-fit:cover"
+                    style="object-fit: cover"
                     alt="restaurant-icon"
                   />
                 </div>
                 <div class="margin">
                   <div class="display-6">Shiro Restaurant and Bar</div>
-                  <p>
-                    Lorem ipsum dolor sit, amet consectetur...
-                  </p>
+                  <p>Lorem ipsum dolor sit, amet consectetur...</p>
                 </div>
               </div>
             </div>
@@ -525,14 +409,13 @@ export default {
                       <li class="breadcrumb-item">
                         <a href="javascript: void(0);">Restauration</a>
                       </li>
-                      <li class="breadcrumb-item ">Sur Carte</li>
+                      <li class="breadcrumb-item">Sur Carte</li>
                       <li class="breadcrumb-item active">
                         Shiro Restaurant and Bar
                       </li>
                     </ol>
                   </div>
                 </div>
-   
 
                 <div class="col-md-6">
                   <div class="form-inline float-md-end">
@@ -551,7 +434,12 @@ export default {
               </div>
 
               <ul
-                class="nav nav-tabs nav-tabs-custom mt-3 mb-2 ecommerce-sortby-list"
+                class="
+                  nav nav-tabs nav-tabs-custom
+                  mt-3
+                  mb-2
+                  ecommerce-sortby-list
+                "
               >
                 <li class="nav-item">
                   <a
@@ -563,7 +451,7 @@ export default {
                   >
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" href="#" >Popularity</a>
+                  <a class="nav-link active" href="#">Popularity</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">Newest</a>
@@ -580,25 +468,31 @@ export default {
                   :key="index"
                 >
                   <div class="product-box">
-                    <div class="product-img  pb-6">
-                      <span 
+                    <div class="product-img pb-6">
+                      <span
                         class="product-ribbon badge badge-danger text-red f-3"
-                        
                       >
                         <div id="discountbadgeColor">
                           - {{ item.discount }} %
                         </div>
-                      </span >
+                      </span>
                       <div class="product-wishlist">
-                          <i role="button" @click="likeProduct(item.id)"
-                            :class="[item.liked ? 'text-danger' : '', 'f-3', 'mdi', 'mdi-heart']"
-                          ></i>
+                        <i
+                          role="button"
+                          @click="likeProduct(item.id)"
+                          :class="[
+                            item.liked ? 'text-danger' : '',
+                            'f-3',
+                            'mdi',
+                            'mdi-heart',
+                          ]"
+                        ></i>
                       </div>
                       <img
                         :src="item.image"
                         alt
                         class="img-fluid d-block w-100"
-                        style="object-fit:cover"
+                        style="object-fit: cover"
                         height="200"
                       />
                     </div>
@@ -607,7 +501,8 @@ export default {
                       <h5 class="mb-1">
                         <nuxt-link
                           :to="
-                            '/clients/restauration/livraison-de-repas/product-detail/' + item.id
+                            '/clients/restauration/livraison-de-repas/product-detail/' +
+                            item.id
                           "
                           class="text-dark"
                           >{{ item.name }}</nuxt-link
@@ -666,13 +561,12 @@ export default {
 .f-3 {
   font-size: 15px;
 }
-#discountbadgeColor{
+#discountbadgeColor {
   color: rgb(255, 255, 255);
   font-size: 1rem;
   font-weight: 900;
   background-color: rgba(0, 0, 0, 0.404);
   border-radius: 2rem;
   padding: 0.5rem;
-
 }
 </style>
