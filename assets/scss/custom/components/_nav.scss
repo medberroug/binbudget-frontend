@@ -18,17 +18,7 @@
     font-weight: $font-weight-medium;
   }
 }
-.hero-image {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("~assets/images/product/hero.jpg");
-  height: 30vh;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
+
 .card_img {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
   background-position: center;

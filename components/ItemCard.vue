@@ -38,7 +38,7 @@
             class="d-flex justify-content-center align-self-center col-12 col-md-4"
           >
             <nuxt-link
-              :to="'/clients/restauration/'+parentlink+'/items/'+id"
+              :to="'/clients/restauration/'+parentlink+'/restaurants/'+id"
               class="btn btn-primary my-2"
               >Check Menu <i class="uil-arrow-right"></i
             ></nuxt-link>

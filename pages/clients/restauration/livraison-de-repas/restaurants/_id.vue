@@ -1,6 +1,8 @@
 <script>
 import { productData } from "../../data-products";
 import { mapActions } from "vuex";
+import axios from "axios";
+import moment from "moment";
 /**
  * Products component
  */
@@ -10,20 +12,96 @@ export default {
       title: `${this.title} |  Admin Dashboard`,
     };
   },
+  computed: {
+    cssVars() {
+      return {
+        "--bg-color": this.bgColor,
+        "--height": this.height + "px",
+      };
+    },
+  },
+  async mounted() {
+    console.log(this.$route.params.id);
+    try {
+      let result = await axios.get(
+        process.env.baseUrl + "/restaurations/" + this.$route.params.id
+      );
+      this.restaurantDetails = result.data;
+      this.restaurantItems;
+      for (let i = 0; i < this.restaurantDetails.items.length; i++) {
+        let showInJudger = true;
+        for (
+          let j = 0;
+          j < this.restaurantDetails.items[i].shownIn.length;
+          j++
+        ) {
+          if (
+            this.restaurantDetails.items[i].shownIn[j].serviceName ==
+            this.details[1].text
+          ) {
+            showInJudger = true;
+            break;
+          }
+        }
+        if (showInJudger) {
+          let myCategories = "";
+          for (
+            let k = 0;
+            k < this.restaurantDetails.items[i].categories.length;
+            k++
+          ) {
+            myCategories =
+              myCategories +
+              this.restaurantDetails.items[i].categories[k].name +
+              ", ";
+          }
+          let newPrice = null;
+          let myDiscount=null
+          if (this.restaurantDetails.items[i].disocunt!=null) {
+            myDiscount=this.restaurantDetails.items[i].disocunt.percentage
+            newPrice =
+              this.restaurantDetails.items[i].price *
+              (1 - this.restaurantDetails.items[i].disocunt.percentage / 100);
+            newPrice = parseFloat(newPrice.toFixed(2));
+          } else {
+            newPrice=this.restaurantDetails.items[i].price
+          }
+          let myNewItem = {
+            id: this.restaurantDetails.items[i].id,
+            name: this.restaurantDetails.items[i].name,
+            discount: myDiscount,
+            firstImage:
+              this.baseUrl + this.restaurantDetails.items[i].firstImage.url,
+            oldPrice: this.restaurantDetails.items[i].price,
+            newPrice: newPrice,
+            categories: myCategories,
+            liked: false,
+          };
+
+          this.restaurantItems.push(myNewItem);
+          console.log(this.restaurantItems);
+        }
+      }
+      // console.log(this.restaurantDetails);
+    } catch (error) {}
+  },
 
   /**
    * Products information
    */
   data() {
     return {
+      restaurantItems: [],
       productData: productData,
       title: "Restaurant",
+      baseUrl: process.env.baseUrl,
+      restaurantDetails: null,
       details: [
         {
           text: "Restaurant",
         },
         {
-          text: "Dishes",
+          text: "livraison-de-repas",
           active: true,
         },
       ],
@@ -380,59 +458,34 @@ export default {
         </div>
       </div>
 
-      <div class="col-xl-9 col-lg-8">
+      <div class="col-xl-9 col-lg-8" v-if="restaurantDetails">
         <div class="card">
           <div class="hero-image">
+            <img
+              :src="baseUrl + restaurantDetails.topImage.url"
+              :alt="restaurantDetails.knownName"
+              class="hero-image"
+              style="object-fit: cover"
+            />
             <div class="hero-text">
               <div class="d-flex justify-content-start align-items-center m-4">
                 <div class="avatar-con">
                   <img
-                    src="~/assets/images/product/shiro.png"
+                    :src="baseUrl + restaurantDetails.logo.url"
                     class="avatar-img img-fluid"
                     style="object-fit: cover"
                     alt="restaurant-icon"
                   />
                 </div>
                 <div class="margin">
-                  <div class="display-6">Shiro Restaurant and Bar</div>
-                  <p>Lorem ipsum dolor sit, amet consectetur...</p>
+                  <div class="display-6">{{ restaurantDetails.knownName }}</div>
+                  <p>{{ restaurantDetails.smallDescription }}</p>
                 </div>
               </div>
             </div>
           </div>
           <div class="card-body">
             <div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div>
-                    <ol class="breadcrumb p-0 bg-transparent mb-2">
-                      <li class="breadcrumb-item">
-                        <a href="javascript: void(0);">Restauration</a>
-                      </li>
-                      <li class="breadcrumb-item">Sur Carte</li>
-                      <li class="breadcrumb-item active">
-                        Shiro Restaurant and Bar
-                      </li>
-                    </ol>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-inline float-md-end">
-                    <div class="search-box ml-2">
-                      <div class="position-relative">
-                        <input
-                          type="text"
-                          class="form-control bg-light border-light rounded"
-                          placeholder="Search..."
-                        />
-                        <i class="mdi mdi-magnify search-icon"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <ul
                 class="
                   nav nav-tabs nav-tabs-custom
@@ -464,15 +517,15 @@ export default {
               <div class="row">
                 <div
                   class="col-xl-4 col-sm-6"
-                  v-for="(item, index) in productData"
+                  v-for="(item, index) in restaurantItems"
                   :key="index"
                 >
                   <div class="product-box">
                     <div class="product-img pb-6">
-                      <span
+                      <span 
                         class="product-ribbon badge badge-danger text-red f-3"
                       >
-                        <div id="discountbadgeColor">
+                        <div id="discountbadgeColor" v-if="item.oldPrice!=item.newPrice">
                           - {{ item.discount }} %
                         </div>
                       </span>
@@ -489,7 +542,7 @@ export default {
                         ></i>
                       </div>
                       <img
-                        :src="item.image"
+                        :src="item.firstImage"
                         alt
                         class="img-fluid d-block w-100"
                         style="object-fit: cover"
@@ -508,25 +561,20 @@ export default {
                           >{{ item.name }}</nuxt-link
                         >
                       </h5>
-                      <p class="text-muted font-size-13">{{ item.disc }}</p>
+                      <p class="text-muted font-size-13">
+                        {{ item.categories }}
+                      </p>
 
                       <h5 class="mt-3 mb-0">
-                        <span class="text-muted mr-2">
-                          <del>{{ item.oldprice }}dh</del>
-                        </span>
-                        {{ item.newprice }}dh
-                      </h5>
-
-                      <!-- <ul class="list-inline mb-0 text-muted product-color">
-                        <li class="list-inline-item">Colors :</li>
-                        <li
-                          class="list-inline-item"
-                          v-for="(item, index) in item.colors"
-                          :key="index"
+                        <span
+                          class="text-muted mr-2"
+                          v-if="item.oldPrice != item.newPrice"
                         >
-                          <i :class="`mdi mdi-circle text-${item}`"></i>
-                        </li>
-                      </ul> -->
+                          <del>{{ item.oldPrice }}dh</del>
+                        </span>
+                        <span v-if="item.oldPrice != item.newPrice">{{ item.newPrice }}dh</span>
+                        <span v-if="item.oldPrice == item.newPrice">{{ item.oldPrice }}dh</span>
+                      </h5>
                     </div>
                   </div>
                 </div>
@@ -535,11 +583,11 @@ export default {
               <div class="row mt-4">
                 <div class="col-lg-12">
                   <b-pagination
-                    v-if="productData.length > 0"
+                    v-if="restaurantItems.length > 0"
                     class="justify-content-end"
                     pills
                     v-model="currentPage"
-                    :total-rows="productData.length"
+                    :total-rows="restaurantItems.length"
                     :per-page="6"
                     aria-controls="my-table"
                   ></b-pagination>
@@ -555,6 +603,16 @@ export default {
 </template>
 
 <style scoped>
+.hero-image {
+  height: 30vh;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
 .margin {
   margin-left: 1.5rem;
 }
