@@ -554,8 +554,7 @@ export default {
                       <h5 class="mb-1">
                         <nuxt-link
                           :to="
-                            '/clients/restauration/livraison-de-repas/product-detail/' +
-                            item.id
+                            '/clients/restauration/livraison-de-repas/restaurants/product-detail' 
                           "
                           class="text-dark"
                           >{{ item.name }}</nuxt-link

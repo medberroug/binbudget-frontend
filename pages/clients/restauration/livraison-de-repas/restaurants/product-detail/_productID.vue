@@ -80,9 +80,9 @@
               <div class="col-xl-7">
                 <div class="mt-4 mt-xl-3 pl-xl-4">
                   <h5 class="font-size-14">
-                    <a href="#" class="text-muted">{{ productDetail.brand }}</a>
+                    <a href="#" class="text-muted">brand</a>
                   </h5>
-                  <h4 class="font-size-20 mb-3">{{ productDetail.name }}</h4>
+                  <h4 class="font-size-20 mb-3"> name</h4>
                   <div class="text-muted">
                     <span class="badge bg-success font-size-14 me-1"
                       ><i class="mdi mdi-star"></i> 4.2</span
@@ -92,10 +92,10 @@
 
                   <h5 class="mb-4 pt-2">
                     <del class="text-muted me-2"
-                      >{{ productDetail.oldprice }}dh</del
-                    >{{ productDetail.newprice }}dh
+                      >50 dh</del
+                    >45 dh
                     <span class="text-danger font-size-14 ml-2"
-                      >- {{ productDetail.discount }} % Off</span
+                      >- 10 % Off</span
                     >
                   </h5>
                   <p class="text-muted mb-4">
@@ -110,13 +110,12 @@
 
                         <ul class="list-unstyled product-desc-list text-muted">
                           <li
-                            v-for="(item, index) in productDetail.specification"
-                            :key="index"
+                           
                           >
                             <i
                               class="mdi mdi-circle-medium me-1 align-middle"
                             ></i>
-                            {{ item }} 
+                            item 
                           </li>
                         </ul>
                       </div>
@@ -171,12 +170,11 @@
                         "
                       >
                         <b-button
-                          v-if="!isItemInCart(productDetail.id)"
-                          @click.prevent="addToCart"
+                
                           variant="outline-primary"
                           >Add to cart</b-button
                         >
-                        <div class="d-flex align-items-center" v-else>
+                        <div class="d-flex align-items-center" >
                           <b-button
                             @click.prevent="updateQuantity('decrease')"
                             variant="outline-primary"
@@ -185,7 +183,7 @@
                           <span class="mx-2"
                             >Quantity:
                             {{
-                              getThisProductInCart(productDetail.id).quantity
+                              0
                             }}</span
                           >
                           <b-button
@@ -313,7 +311,7 @@
                       <div class="col-sm-3 col-md-2">
                         <div>
                           <img
-                            :src="productDetail.image"
+                            src="~/assets/images/product/salad4.jpg"
                             alt=""
                             class="img-fluid mx-auto d-block"
                           />
@@ -456,7 +454,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { productData } from "../../../data-products";
+
 
 /**
  * Product-detail component
@@ -467,16 +465,14 @@ export default {
       title: `${this.title} |  Admin Dashboard`,
     };
   },
+
+
   asyncData({ params }) {
-    const productDetail = productData.find(
-      (user) => String(user.id) === params.id
-    );
-    return {
-      productDetail,
-    };
+    
   },
   data() {
     return {
+
       title: "Dish detail",
       details: [
         {
