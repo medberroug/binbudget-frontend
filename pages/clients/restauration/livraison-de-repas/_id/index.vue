@@ -1,8 +1,7 @@
 <script>
-import { productData } from "../../data-products";
 import { mapActions } from "vuex";
 import axios from "axios";
-import moment from "moment";
+
 /**
  * Products component
  */
@@ -56,15 +55,15 @@ export default {
               ", ";
           }
           let newPrice = null;
-          let myDiscount=null
-          if (this.restaurantDetails.items[i].disocunt!=null) {
-            myDiscount=this.restaurantDetails.items[i].disocunt.percentage
+          let myDiscount = null;
+          if (this.restaurantDetails.items[i].disocunt != null) {
+            myDiscount = this.restaurantDetails.items[i].disocunt.percentage;
             newPrice =
               this.restaurantDetails.items[i].price *
               (1 - this.restaurantDetails.items[i].disocunt.percentage / 100);
             newPrice = parseFloat(newPrice.toFixed(2));
           } else {
-            newPrice=this.restaurantDetails.items[i].price
+            newPrice = this.restaurantDetails.items[i].price;
           }
           let myNewItem = {
             id: this.restaurantDetails.items[i].id,
@@ -92,8 +91,8 @@ export default {
   data() {
     return {
       restaurantItems: [],
-      productData: productData,
       title: "Restaurant",
+      restoId: this.$route.params.id,
       baseUrl: process.env.baseUrl,
       restaurantDetails: null,
       details: [
@@ -522,10 +521,13 @@ export default {
                 >
                   <div class="product-box">
                     <div class="product-img pb-6">
-                      <span 
+                      <span
                         class="product-ribbon badge badge-danger text-red f-3"
                       >
-                        <div id="discountbadgeColor" v-if="item.oldPrice!=item.newPrice">
+                        <div
+                          id="discountbadgeColor"
+                          v-if="item.oldPrice != item.newPrice"
+                        >
                           - {{ item.discount }} %
                         </div>
                       </span>
@@ -554,7 +556,10 @@ export default {
                       <h5 class="mb-1">
                         <nuxt-link
                           :to="
-                            '/clients/restauration/livraison-de-repas/restaurants/product-detail' 
+                            '/clients/restauration/livraison-de-repas/' +
+                            restoId +
+                            '/' +
+                            item.id
                           "
                           class="text-dark"
                           >{{ item.name }}</nuxt-link
@@ -564,16 +569,33 @@ export default {
                         {{ item.categories }}
                       </p>
 
-                      <h5 class="mt-3 mb-0">
-                        <span
-                          class="text-muted mr-2"
-                          v-if="item.oldPrice != item.newPrice"
-                        >
-                          <del>{{ item.oldPrice }}dh</del>
-                        </span>
-                        <span v-if="item.oldPrice != item.newPrice">{{ item.newPrice }}dh</span>
-                        <span v-if="item.oldPrice == item.newPrice">{{ item.oldPrice }}dh</span>
-                      </h5>
+                      <div v-if="item.oldPrice != item.newPrice">
+                        <h5 class="mt-3 mb-0">
+                          <span class="text-muted mr-2">
+                            <del>{{ item.oldPrice }}dh</del>
+                          </span>
+                          <span 
+                            >{{ item.newPrice }}dh</span
+                          >
+                         
+                        </h5>
+                      </div>
+                      <div v-if="(item.oldPrice == item.newPrice)&&(item.newPrice>0)">
+                        <h5 class="mt-3 mb-0">
+                          
+                          <span 
+                            >{{ item.newPrice }}dh</span
+                          >
+                         
+                        </h5>
+                      </div>
+                      <div v-if="(item.oldPrice == item.newPrice)&&(item.newPrice==0)">
+                        <h5 class="mt-3 mb-0">
+                          
+                          <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
+                         
+                        </h5>
+                      </div>
                     </div>
                   </div>
                 </div>

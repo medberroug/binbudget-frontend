@@ -2,72 +2,24 @@
   <div>
     <PageHeader :title="title" :details="details" />
     <div class="row mt-3">
-      <div class="col-lg-12">
+      <div class="col-lg-12" v-if="myItem">
         <div class="card">
           <div class="card-body">
             <div class="row">
               <div class="col-xl-5">
                 <div class="product-detail">
                   <b-tabs pills vertical nav-wrapper-class="col-3">
-                    <b-tab>
+                    <b-tab v-for="(pic, index) in myItem.images" :key="index">
                       <template v-slot:title>
                         <img
-                          src="~/assets/images/product/salad4.jpg"
+                          :src="baseUrl + pic.url"
                           alt
                           class="img-fluid mx-auto d-block tab-img rounded"
                         />
                       </template>
                       <div class="product-img">
                         <img
-                          src="~/assets/images/product/salad4.jpg"
-                          alt
-                          class="img-fluid mx-auto d-block"
-                        />
-                      </div>
-                    </b-tab>
-                    <b-tab>
-                      <template v-slot:title>
-                        <img
-                          src="~/assets/images/product/salad5.jpg"
-                          alt
-                          class="img-fluid mx-auto d-block tab-img rounded"
-                        />
-                      </template>
-                      <div class="product-img">
-                        <img
-                          src="~/assets/images/product/salad1.jpg"
-                          alt
-                          class="img-fluid mx-auto d-block"
-                        />
-                      </div>
-                    </b-tab>
-                    <b-tab>
-                      <template v-slot:title>
-                        <img
-                          src="~/assets/images/product/salad3.jpg"
-                          alt
-                          class="img-fluid mx-auto d-block tab-img rounded"
-                        />
-                      </template>
-                      <div class="product-img">
-                        <img
-                          src="~/assets/images/product/salad3.jpg"
-                          alt
-                          class="img-fluid mx-auto d-block"
-                        />
-                      </div>
-                    </b-tab>
-                    <b-tab>
-                      <template v-slot:title>
-                        <img
-                          src="~/assets/images/product/fruit.jpg"
-                          alt
-                          class="img-fluid mx-auto d-block tab-img rounded"
-                        />
-                      </template>
-                      <div class="product-img">
-                        <img
-                          src="~/assets/images/product/fruit.jpg"
+                          :src="baseUrl + pic.url"
                           alt
                           class="img-fluid mx-auto d-block"
                         />
@@ -80,28 +32,53 @@
               <div class="col-xl-7">
                 <div class="mt-4 mt-xl-3 pl-xl-4">
                   <h5 class="font-size-14">
-                    <a href="#" class="text-muted">brand</a>
+                    <a href="#" class="text-muted">{{
+                      restaurant.knownName
+                    }}</a>
                   </h5>
-                  <h4 class="font-size-20 mb-3"> name</h4>
-                  <div class="text-muted">
+                  <h4 class="font-size-20 mb-3">{{ myItem.name }}</h4>
+                  <!-- <div class="text-muted">
                     <span class="badge bg-success font-size-14 me-1"
                       ><i class="mdi mdi-star"></i> 4.2</span
                     >
                     234 Reviews
-                  </div>
+                  </div> -->
 
-                  <h5 class="mb-4 pt-2">
-                    <del class="text-muted me-2"
-                      >50 dh</del
-                    >45 dh
-                    <span class="text-danger font-size-14 ml-2"
-                      >- 10 % Off</span
+                  <div v-if="myItem.disocunt">
+                    <div
+                      v-if="
+                        myItem.price -
+                          (myItem.price * myItem.disocunt.percentage) / 100 >
+                        0
+                      "
                     >
+                      <h5 class="mb-4 pt-2">
+                        <del class="text-muted me-2">{{ myItem.price }} dh</del
+                        >{{
+                          myItem.price -
+                          (myItem.price * myItem.disocunt.percentage) / 100
+                        }}
+                        dh
+                        <span class="text-danger font-size-14 ml-2"
+                          >- {{ myItem.disocunt.percentage }} % Off</span
+                        >
+                      </h5>
+                    </div>
+                    <div v-else>
+                      <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
+                    </div>
+                  </div>
+                  <h5 class="mb-4 pt-2" v-else>
+                    <div v-if="myItem.price > 0">
+                      {{ myItem.price }}
+                      dh
+                    </div>
+                    <div v-else>
+                      <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
+                    </div>
                   </h5>
                   <p class="text-muted mb-4">
-                    To achieve this, it would be necessary to have uniform
-                    grammar pronunciation and more common words If several
-                    languages coalesce
+                    {{ myItem.description }}
                   </p>
                   <div class="row">
                     <div class="col-md-6">
@@ -110,102 +87,92 @@
 
                         <ul class="list-unstyled product-desc-list text-muted">
                           <li
-                           
+                            v-for="(spec, index) in myItem.specification"
+                            :key="index"
                           >
                             <i
                               class="mdi mdi-circle-medium me-1 align-middle"
                             ></i>
-                            item 
+                            {{ spec.specText }}
                           </li>
                         </ul>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="mt-3">
-                        <h5 class="font-size-14">Services :</h5>
-                        <ul class="list-unstyled product-desc-list text-muted">
-                          <!-- <li>
-                            <i
-                              class="uil uil-exchange text-primary me-1 font-size-16"
-                            ></i>
-                            10 Days Replacement
-                          </li> -->
-                          <li>
-                            <i
+                        <h5 class="font-size-14 mb-3">
+                          <i
+                            class="
+                              uil uil-shopping-basket
+                              font-size-20
+                              text-primary
+                              align-middle
+                              me-2
+                            "
+                          ></i>
+                          Order option
+                        </h5>
+                        <div class="mt-3">
+                          <div class="col" v-if="!itemAlreadyAdded">
+                            <div
                               class="
-                                uil uil-bill
-                                text-primary
-                                me-1
-                                font-size-16
+                                d-flex
+                                justify-content-start
+                                align-items-start
+                                my-4
                               "
-                            ></i>
-                            Cash on Delivery available
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="mt-3">
-                    <h5 class="font-size-14 mb-3">
-                      <i
-                        class="
-                          uil uil-shopping-basket
-                          font-size-20
-                          text-primary
-                          align-middle
-                          me-2
-                        "
-                      ></i>
-                      Order option
-                    </h5>
-
-                    <div class="row">
-                      <div
-                        class="
-                          d-flex
-                          justify-content-center
-                          align-items-start
-                          col-12 col-md-3
-                        "
-                      >
-                        <b-button
-                
-                          variant="outline-primary"
-                          >Add to cart</b-button
-                        >
-                        <div class="d-flex align-items-center" >
-                          <b-button
-                            @click.prevent="updateQuantity('decrease')"
-                            variant="outline-primary"
-                            >-</b-button
-                          >
-                          <span class="mx-2"
-                            >Quantity:
-                            {{
-                              0
-                            }}</span
-                          >
-                          <b-button
-                            @click.prevent="updateQuantity('increase')"
-                            variant="outline-primary"
-                            >+</b-button
-                          >
-                        </div>
-                      </div>
-                      <div class="col-12 col-md-9">
-                        <div class="form-inline">
-                          <div class="input-group mb-3">
-                            <input
-                              type="text"
-                              class="form-control"
-                              placeholder="If you have a special order , enter the details her..."
-                            />
-                            <div class="input-group-append">
-                              <button class="btn btn-light mx-2" type="button">
-                                Submit
-                              </button>
+                            >
+                              <div class="d-flex align-items-center">
+                                <b-button
+                                  v-if="itemForOrder.quantity > 0"
+                                  @click.prevent="calculateQuantity('sub')"
+                                  variant="outline-primary"
+                                  >-</b-button
+                                >
+                                <b-button
+                                  v-else
+                                  @click.prevent="calculateQuantity('sub')"
+                                  disabled
+                                  variant="outline-primary"
+                                  >-</b-button
+                                >
+                                <span class="mx-2"
+                                  >Quantity: {{ itemForOrder.quantity }}</span
+                                >
+                                <b-button
+                                  @click.prevent="calculateQuantity('add')"
+                                  variant="outline-primary"
+                                  >+</b-button
+                                >
+                              </div>
                             </div>
+                            <div class="col-12 col-md-12">
+                              <div class="form-inline">
+                                <div
+                                  class="input-group mb-3"
+                                  v-if="itemForOrder.quantity > 0"
+                                >
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    v-model="itemForOrder.comment"
+                                    placeholder="Enter the details for special order..."
+                                  />
+                                  <div class="input-group-append">
+                                    <button
+                                      @click="addItemtoCart"
+                                      class="btn btn-light mx-2"
+                                      type="button"
+                                    >
+                                      Add to cart
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div v-else>
+                            <h6 class="text-success "><i class="fas fa-check mx-3"></i>  Already added to cart</h6>
                           </div>
                         </div>
                       </div>
@@ -299,7 +266,7 @@
             </div>
             <!-- end row -->
 
-            <div class="mt-4">
+            <!-- <div class="mt-4">
               <h5 class="font-size-14 mb-3">Dish description:</h5>
               <div class="product-desc">
                 <b-tabs
@@ -396,53 +363,7 @@
                   </b-tab>
                 </b-tabs>
               </div>
-            </div>
-
-            <div class="mt-4">
-              <h5 class="font-size-14 mb-3">Reviews :</h5>
-              <div class="text-muted mb-3">
-                <span class="badge bg-success font-size-14 me-1"
-                  ><i class="mdi mdi-star"></i> 4.2</span
-                >
-                234 Reviews
-              </div>
-              <div class="border p-4 rounded">
-                <div class="border-bottom pb-3">
-                  <p class="float-sm-right text-muted font-size-13">
-                    12 July, 2020
-                  </p>
-                  <div class="badge bg-success mb-2">
-                    <i class="mdi mdi-star"></i> 4.1
-                  </div>
-                  <p class="text-muted mb-4">
-                    It will be as simple as in fact, it will be Occidental. It
-                    will seem like simplified
-                  </p>
-                  <div class="media">
-                    <div class="media-body">
-                      <h5 class="font-size-15 mb-0">Samuel</h5>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="border-bottom py-3">
-                  <p class="float-sm-right text-muted font-size-13">
-                    06 July, 2020
-                  </p>
-                  <div class="badge bg-success mb-2">
-                    <i class="mdi mdi-star"></i> 4.0
-                  </div>
-                  <p class="text-muted mb-4">
-                    Sed ut perspiciatis unde omnis iste natus error sit
-                  </p>
-                  <div class="media">
-                    <div class="media-body">
-                      <h5 class="font-size-15 mb-0">Joseph</h5>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- end card -->
@@ -454,7 +375,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
+import axios from "axios";
 
 /**
  * Product-detail component
@@ -466,13 +387,55 @@ export default {
     };
   },
 
-
-  asyncData({ params }) {
-    
+  async mounted() {
+    try {
+      let result = await axios.get(
+        process.env.baseUrl + "/restaurations/" + this.$route.params.id
+      );
+      this.restaurant = result.data;
+      let allItems = result.data.items;
+      for (let i = 0; i < allItems.length; i++) {
+        if (allItems[i].id == this.$route.params.item) {
+          this.myItem = allItems[i];
+        }
+      }
+      console.log(this.restaurant);
+      console.log(this.myItem);
+      let myItemPrice = null;
+      let myItemDiscount = null;
+      if (this.myItem.disocunt) {
+        myItemPrice =
+          this.myItem.price -
+          (this.myItem.price * this.myItem.disocunt.percentage) / 100;
+        myItemDiscount = this.myItem.disocunt.percentage;
+      } else {
+        myItemPrice = this.myItem.price;
+        myItemDiscount = 0;
+      }
+      this.itemForOrder = {
+        firstImage: this.myItem.firstImage.url,
+        id: this.myItem.id,
+        name: this.myItem.name,
+        price: myItemPrice,
+        quantity: 0,
+        comment: null,
+        disocount: myItemDiscount,
+      };
+      console.log("item");
+      console.log(this.itemForOrder);
+    } catch (error) {}
   },
   data() {
     return {
-
+      order: {},
+      dummyThing: {
+        name: "dzd",
+      },
+      itemAlreadyAdded: false,
+      itemForOrder: null,
+      myItem: null,
+      restaurant: null,
+      baseUrl: process.env.baseUrl,
       title: "Dish detail",
       details: [
         {
@@ -498,10 +461,27 @@ export default {
       updateProductQuantity: "updateCartQuantity",
     }),
     addToCart() {
-      this.addItemToCart({ product: this.productDetail, quantity: 1 });
+      this.addItemToCart({ product: this.dummyThing, quantity: 1 });
     },
     updateQuantity(type) {
       this.updateProductQuantity(type);
+    },
+
+    //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
+
+    calculateQuantity(operation) {
+      if (operation == "add") {
+        this.itemForOrder.quantity = this.itemForOrder.quantity + 1;
+      } else {
+        if (this.itemForOrder.quantity > 0) {
+          this.itemForOrder.quantity = this.itemForOrder.quantity - 1;
+        }
+      }
+    },
+
+    addItemtoCart() {
+      console.log(this.itemForOrder);
+      this.itemAlreadyAdded = true;
     },
   },
 };
