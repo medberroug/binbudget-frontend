@@ -51,7 +51,24 @@ export const menuItems = [
     id: 5,
     label: "Events",
     icon: "uil-schedule",
-    link: "/clients/events"
+    link: "/clients/events",
+    subItems: [
+      {
+        id: 1,
+        label: "Planifier un événement",
+        link: "/clients/events/planifier-un-evenement"
+      },
+      {
+        id: 2,
+        label: "Gérer les tickets",
+        link: "/clients/events/gerer-les-tickets",
+      },
+      {
+        id: 2,
+        label: "Mes événements",
+        link: "/clients/events/mes-evenements",
+      }
+    ]
   },
   {
     id: 6,
