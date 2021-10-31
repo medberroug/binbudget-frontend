@@ -5,6 +5,8 @@ import DatePicker from "vue2-datepicker";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import "vue2-datepicker/index.css";
+import Switches from "vue-switches";
+import { MoroccoCities } from "../../../../components/widgets/MaCities";
 /**
  * Add-product component
  */
@@ -13,31 +15,83 @@ export default {
     vueDropzone: vue2Dropzone,
     Multiselect,
     DatePicker,
+    Switches,
   },
   head() {
     return {
       title: `${this.title} | Nuxtjs Responsive Bootstrap 5 Admin Dashboard`,
     };
   },
-  methods:{
-    stepperCalculate(op){
-      if(op=="add"){
-        this.numberOfSteppers=this.numberOfSteppers+1
-      }else {
-        this.numberOfSteppers=this.numberOfSteppers-1
+  methods: {
+    createEvent() {
+      this.eventDetails.placeCheck = this.placeCheck;
+      this.eventDetails.hostingCheck = this.hostingCheck;
+      this.eventDetails.restaurationCheck = this.restaurationCheck;
+      this.eventDetails.tmsCheck = this.tmsCheck;
+      console.log(this.eventDetails);
+    },
+    stepperCalculate(checker) {
+      console.log("Im clicked " + checker);
+      if (checker == "placeCheck") {
+        if (this.placeCheck) {
+          this.placeCheck = false;
+          this.numberOfSteppers = this.numberOfSteppers - 1;
+        } else {
+          this.placeCheck = true;
+          this.numberOfSteppers = this.numberOfSteppers + 1;
+        }
       }
-    }
+      if (checker == "hostingCheck") {
+        if (this.hostingCheck) {
+          this.hostingCheck = false;
+          this.numberOfSteppers = this.numberOfSteppers - 1;
+        } else {
+          this.hostingCheck = true;
+          this.numberOfSteppers = this.numberOfSteppers + 1;
+        }
+      }
+      if (checker == "restaurationCheck") {
+        if (this.restaurationCheck) {
+          this.restaurationCheck = false;
+          this.numberOfSteppers = this.numberOfSteppers - 1;
+        } else {
+          this.restaurationCheck = true;
+          this.numberOfSteppers = this.numberOfSteppers + 1;
+        }
+      }
+      if (checker == "tmsCheck") {
+        if (this.tmsCheck) {
+          this.tmsCheck = false;
+          this.numberOfSteppers = this.numberOfSteppers - 1;
+        } else {
+          this.tmsCheck = true;
+          this.numberOfSteppers = this.numberOfSteppers + 1;
+        }
+      }
+    },
   },
   data() {
     return {
       defaultdate: "",
       title: "Planifier un evenement ",
-      placeCheck:false,
-      placeCheck:false,
-      placeCheck:false,
-      placeCheck:false,
-      numberOfSteppers:2,
-      actualStepper:1,
+      placeCheck: false,
+      hostingCheck: false,
+      restaurationCheck: false,
+      tmsCheck: false,
+      numberOfSteppers: 2,
+      actualStepper: 1,
+      moroccoCities: MoroccoCities,
+      eventDetails: {
+        description: null,
+        city: null,
+        startDate: null,
+        endDate: null,
+        numberOfPeople: null,
+        placeCheck: this.placeCheck,
+        hostingCheck: this.hostingCheck,
+        restaurationCheck: this.restaurationCheck,
+        tmsCheck: this.tmsCheck,
+      },
       details: [
         {
           text: "Evenement",
@@ -71,7 +125,7 @@ export default {
 
 <template>
   <div>
-    <PageHeader :title="title+this.actualStepper+'/'+this.numberOfSteppers" :details="details" />
+    <PageHeader :title="title" :details="details" />
     <div class="row mt-3">
       <div class="col-lg-12">
         <div id="addproduct-accordion" class="custom-accordion">
@@ -129,12 +183,11 @@ export default {
                         <label for="manufacturername"
                           >Ville de l'événement</label
                         >
-                        <input
-                          id="manufacturername"
-                          name="manufacturername"
-                          type="text"
-                          class="form-control"
-                        />
+                        <multiselect
+                          v-model="eventDetails.city"
+                          :options="this.moroccoCities"
+                          :multiple="false"
+                        ></multiselect>
                       </div>
                     </div>
                     <div class="col-lg-3">
@@ -142,7 +195,8 @@ export default {
                         <label for="manufacturerbrand">Date de début</label>
                         <b-form-input
                           id="date-time"
-                          value="2019-08-19T13:45:00"
+                          v-model="eventDetails.startDate"
+                          value=""
                           type="datetime-local"
                         ></b-form-input>
                       </div>
@@ -152,7 +206,7 @@ export default {
                         <label for="manufacturerbrand">Jusqu'à</label>
                         <b-form-input
                           id="date-time"
-                          value="2019-08-19T13:45:00"
+                          v-model="eventDetails.endDate"
                           type="datetime-local"
                         ></b-form-input>
                       </div>
@@ -164,6 +218,7 @@ export default {
                           id="price"
                           name="price"
                           type="number"
+                          v-model="eventDetails.numberOfPeople"
                           class="form-control"
                         />
                       </div>
@@ -174,6 +229,7 @@ export default {
                     <label for="productdesc">Description ou commentaire</label>
                     <textarea
                       class="form-control"
+                      v-model="eventDetails.description"
                       id="productdesc"
                       rows="4"
                     ></textarea>
@@ -188,7 +244,7 @@ export default {
               href="javascript: void(0);"
               class="text-dark collapsed"
               data-toggle="collapse"
-              aria-expanded="false"
+              aria-expanded="true"
               aria-controls="addproduct-img-collapse"
               v-b-toggle.accordion-2
             >
@@ -235,61 +291,101 @@ export default {
                   <div class="row">
                     <div class="col-lg-3">
                       <div class="mb-3">
-                        <label for="manufacturername"
-                          >Salle de conférence (ou lieu)</label
-                        >
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          checked="true"
-                        />
-                        <p class="mx-4"> Un lieu pour organiser l'événement, choisissez parmi une variété de types, salles de conférence, salles de réunion, etc.</p>
+                        <center>
+                          <label for="manufacturername"
+                            >Salle de conférence (ou lieu)</label
+                          >
+                          <div class="mt-3">
+                            <switches
+                              v-model="placeCheck"
+                              type-bold="false"
+                              color="info"
+                              class="ml-1 mb-0"
+                              @click="stepperCalculate('placeCheck')"
+                            ></switches>
+                          </div>
+                          <p class="mx-4">
+                            Un lieu pour organiser l'événement, choisissez parmi
+                            une variété de types, salles de conférence, salles
+                            de réunion, etc.
+                          </p>
+                        </center>
                       </div>
                     </div>
                     <div class="col-lg-3">
                       <div class="mb-3">
-                        <div>
-                          <label for="manufacturerbrand">Hébergement </label>
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          checked="true"
-                        />
-                        </div>
-                        <p class="mx-4">Pour les participants ou le personnel.</p>
+                        <center>
+                          <div>
+                            <label for="manufacturerbrand"
+                              >Hotel (ou hébergement)
+                            </label>
+                          </div>
+                          <div class="mt-3">
+                            <switches
+                              v-model="hostingCheck"
+                              type-bold="false"
+                              color="info"
+                              class="ml-1 mb-0"
+                              @click="stepperCalculate('hostingCheck')"
+                            ></switches>
+                          </div>
+                          <p class="mx-4">
+                            Pour les participants ou le personnel.
+                          </p>
+                        </center>
                       </div>
                     </div>
                     <div class="col-lg-3">
                       <div class="mb-3">
-                        <label for="manufacturerbrand">Services de restauration</label>
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          checked="true"
-                          @click="stepperCalculate()"
-                        />
-                        <p class="mx-4">  Services de restauration, choisissez entre les fournisseurs de nourriture, des traiteurs aux restaurants spécifiques. </p>
+                        <center>
+                          <label for="manufacturerbrand"
+                            >Services de restauration</label
+                          >
+                          <div class="mt-3">
+                            <switches
+                              v-model="restaurationCheck"
+                              type-bold="false"
+                              color="info"
+                              class="ml-1 mb-0"
+                              @click="stepperCalculate('restaurationCheck')"
+                            ></switches>
+                          </div>
+                          <p class="mx-4">
+                            Services de restauration, choisissez entre les
+                            fournisseurs de nourriture, des traiteurs aux
+                            restaurants spécifiques.
+                          </p>
+                        </center>
                       </div>
-                      
                     </div>
                     <div class="col-lg-3">
                       <div class="mb-3">
-                        <label for="price">Système de gestion des tickets</label>
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          checked="true"
-                        />
-                        <p class="mx-4">Si vous avez des invités, vous pouvez utiliser notre système de gestion des tickets où vous pouvez gérer les entrées et sorties des invités avec un code QR ainsi que vérifier le statut de leur présence.</p>
+                        <center>
+                          <label for="price"
+                            >Système de gestion des tickets</label
+                          >
+                          <div class="mt-3">
+                            <switches
+                              v-model="tmsCheck"
+                              type-bold="false"
+                              color="info"
+                              class="ml-1 mb-0"
+                              @change="stepperCalculate('tmsCheck')"
+                            ></switches>
+                          </div>
+                          <p class="mx-4">
+                            Si vous avez des invités, vous pouvez utiliser notre
+                            système de gestion des tickets où vous pouvez gérer
+                            les entrées et sorties des invités avec un code QR
+                            ainsi que vérifier le statut de leur présence.
+                          </p>
+                        </center>
                       </div>
-                      
                     </div>
                   </div>
-
-                  
                 </form>
                 <div class="row d-flex justify-content-end p-2 pt-4">
-                  <b-button variant="primary" class="btn-lg">
+                  <b-button variant="primary" class="btn-lg" @click="createEvent">
                     Créez votre événement
                     <i class="uil-arrow-from-right"></i>
                   </b-button>
