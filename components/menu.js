@@ -48,77 +48,77 @@ export const menuItems = [
     ]
   },
   {
-    id: 5,
+    id: 10,
     label: "Events",
     icon: "uil-schedule",
     link: "/clients/events",
     subItems: [
       {
-        id: 1,
+        id: 11,
         label: "Planifier un événement",
         link: "/clients/events/planifier-un-evenement"
       },
       {
-        id: 2,
+        id: 12,
         label: "Gérer les tickets",
         link: "/clients/events/gerer-les-tickets",
       },
       {
-        id: 2,
+        id: 13,
         label: "Mes événements",
         link: "/clients/events/mes-evenements",
       }
     ]
   },
   {
-    id: 6,
+    id: 14,
     label: "Note De Frais",
     icon: "uil-moneybag",
     link: "/clients/note-de-frais",
 
     subItems: [
       {
-        id: 1,
+        id: 15,
         label: "Nouvelle déclaration",
         link: "/clients/note-de-frais/declaration"
       },
       {
-        id: 2,
+        id: 16,
         label: "Mes notes de frais",
         link: "/clients/note-de-frais/mes-notes-de-frais",
       }
     ]
   },
   {
-    id: 6,
+    id: 17,
     label: "Market",
     icon: "uil-store",
     link: "/clients/market"
   },
   {
-    id: 7,
+    id: 18,
     label: "My Account",
     isTitle: true
   },
   {
-    id: 8,
+    id: 19,
     label: "Orders",
     icon: "uil-calender",
     link: "/clients/orders"
   },
   {
-    id: 9,
+    id: 20,
     label: "Invoices and Billing",
     isTitle: true
   },
   {
-    id: 10,
+    id: 21,
     label: "Invoices",
     icon: "uil-invoice",
     link: "/clients/invoices"
   },
   {
-    id: 11,
+    id: 22,
     label: "Settings",
     icon: "uil-setting",
     link: "/clients/settings"

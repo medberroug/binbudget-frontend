@@ -7,6 +7,10 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
 import "vue2-datepicker/index.css";
 import Switches from "vue-switches";
 import { MoroccoCities } from "../../../../components/widgets/MaCities";
+import {
+  persistData,
+  getData,
+} from "../../../../components/controllers/savingData";
 /**
  * Add-product component
  */
@@ -22,13 +26,18 @@ export default {
       title: `${this.title} | Nuxtjs Responsive Bootstrap 5 Admin Dashboard`,
     };
   },
+  mounted() {
+    // this.tester = getData("event");
+    // console.log(getData("event"));
+    // persistData("event", this.eventDetails);
+  },
   methods: {
     createEvent() {
       this.eventDetails.placeCheck = this.placeCheck;
       this.eventDetails.hostingCheck = this.hostingCheck;
       this.eventDetails.restaurationCheck = this.restaurationCheck;
       this.eventDetails.tmsCheck = this.tmsCheck;
-      console.log(this.eventDetails);
+      persistData("event", this.eventDetails);
     },
     stepperCalculate(checker) {
       console.log("Im clicked " + checker);
@@ -92,6 +101,7 @@ export default {
         restaurationCheck: this.restaurationCheck,
         tmsCheck: this.tmsCheck,
       },
+
       details: [
         {
           text: "Evenement",
@@ -335,6 +345,7 @@ export default {
                         </center>
                       </div>
                     </div>
+
                     <div class="col-lg-3">
                       <div class="mb-3">
                         <center>
@@ -385,7 +396,11 @@ export default {
                   </div>
                 </form>
                 <div class="row d-flex justify-content-end p-2 pt-4">
-                  <b-button variant="primary" class="btn-lg" @click="createEvent">
+                  <b-button
+                    variant="primary"
+                    class="btn-lg"
+                    @click="createEvent"
+                  >
                     Créez votre événement
                     <i class="uil-arrow-from-right"></i>
                   </b-button>
