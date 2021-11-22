@@ -35,5 +35,22 @@ module.exports = {
         } catch (error) {
             return false
         }
+    },
+    eventStepperCalculator() {
+        let myData = JSON.parse(window.localStorage.getItem("event"));
+        let stepperTotal = 3;
+        if (myData.placeCheck) {
+            stepperTotal = stepperTotal + 1;
+        }
+        if (myData.hostingCheck) {
+            stepperTotal = stepperTotal + 1;
+        }
+        if (myData.restaurationCheck) {
+            stepperTotal = stepperTotal + 1;
+        }
+        if (myData.tmsCheck) {
+            stepperTotal = stepperTotal + 1;
+        }
+        return stepperTotal
     }
 }

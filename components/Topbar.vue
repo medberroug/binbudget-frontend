@@ -34,7 +34,6 @@
         </button>
 
         <!-- App Search-->
-        
       </div>
 
       <div class="d-flex">
@@ -294,9 +293,12 @@
 /**
  * Topbar component
  */
+
 export default {
+  
   data() {
     return {
+
       languages: [
         {
           flag: require("~/assets/images/flags/us.jpg"),
@@ -334,6 +336,7 @@ export default {
     this.value = this.languages.find((x) => x.language === this.$i18n.locale);
     this.text = this.value.title;
     this.flag = this.value.flag;
+
   },
   methods: {
     /**
@@ -400,5 +403,4 @@ export default {
 </script>
 
 <style >
-
 </style>

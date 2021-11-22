@@ -9,7 +9,7 @@ import Switches from "vue-switches";
 import { MoroccoCities } from "../../../../components/widgets/MaCities";
 import {
   persistData,
-  getData,
+
 } from "../../../../components/controllers/savingData";
 /**
  * Add-product component
@@ -38,6 +38,23 @@ export default {
       this.eventDetails.restaurationCheck = this.restaurationCheck;
       this.eventDetails.tmsCheck = this.tmsCheck;
       persistData("event", this.eventDetails);
+      //       this.$router.push({
+      //     path: '/clients/restauration/livraison-de-repas'
+      // })
+      // this.$router.go();
+      if (this.placeCheck) {
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/place",
+        });
+      } else if (this.hostingCheck) {
+        console.log("go to hosting");
+      } else if (this.restaurationCheck) {
+        console.log("go to restaurationCheck");
+      } else if (this.tmsCheck) {
+        console.log("go to tmsCheck");
+      } else {
+        console.log("go to services");
+      }
     },
     stepperCalculate(checker) {
       console.log("Im clicked " + checker);
@@ -91,6 +108,7 @@ export default {
       actualStepper: 1,
       moroccoCities: MoroccoCities,
       eventDetails: {
+        name: null,
         description: null,
         city: null,
         startDate: null,
@@ -100,6 +118,8 @@ export default {
         hostingCheck: this.hostingCheck,
         restaurationCheck: this.restaurationCheck,
         tmsCheck: this.tmsCheck,
+        whereIam: 1,
+       
       },
 
       details: [
@@ -187,6 +207,20 @@ export default {
             >
               <div class="p-4 border-top">
                 <form>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="mb-3">
+                        <label for="price">Nom de l'évènement</label>
+                        <input
+                          id="price"
+                          name="price"
+                          type="text"
+                          v-model="eventDetails.name"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <div class="row">
                     <div class="col-lg-3">
                       <div class="mb-3">
