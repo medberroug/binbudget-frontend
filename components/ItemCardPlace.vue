@@ -38,7 +38,7 @@
             class="d-flex justify-content-center align-self-center col-12 col-md-4"
           >
             <nuxt-link
-              :to="'/clients/restauration/'+parentlink+'/'+id"
+              :to="'/clients/events/planifier-un-evenement/'+parentlink+'/'+id+'++'+spId"
               class="btn btn-primary my-2"
               >Consultez <i class="uil-arrow-right"></i
             ></nuxt-link>
@@ -84,7 +84,8 @@ export default {
     "speciality",
     "bg-color",
     "text-color",
-    "parentlink"
+    "parentlink",
+    "spId"
   ],
   data() {
     return {};

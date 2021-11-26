@@ -2,14 +2,17 @@
   <div>
     <PageHeader :title="title" :details="details" />
     <div class="row mt-3">
-      <div class="col-lg-12" v-if="myItem">
+      <div class="col-lg-12" v-if="placeData">
         <div class="card">
           <div class="card-body">
             <div class="row">
               <div class="col-xl-5">
                 <div class="product-detail">
                   <b-tabs pills vertical nav-wrapper-class="col-3">
-                    <b-tab v-for="(pic, index) in myItem.images" :key="index">
+                    <b-tab
+                      v-for="(pic, index) in placeData.images"
+                      :key="index"
+                    >
                       <template v-slot:title>
                         <img
                           :src="baseUrl + pic.url"
@@ -33,10 +36,10 @@
                 <div class="mt-4 mt-xl-3 pl-xl-4">
                   <h5 class="font-size-14">
                     <a href="#" class="text-muted">{{
-                      restaurant.knownName
+                      serviceProvider.knownName
                     }}</a>
                   </h5>
-                  <h4 class="font-size-20 mb-3">{{ myItem.name }}</h4>
+                  <h4 class="font-size-20 mb-3">{{ placeData.name }}</h4>
                   <!-- <div class="text-muted">
                     <span class="badge bg-success font-size-14 me-1"
                       ><i class="mdi mdi-star"></i> 4.2</span
@@ -44,23 +47,26 @@
                     234 Reviews
                   </div> -->
 
-                  <div v-if="myItem.disocunt">
+                  <div v-if="placeData.disocunt">
                     <div
                       v-if="
-                        myItem.price -
-                          (myItem.price * myItem.disocunt.percentage) / 100 >
+                        placeData.price -
+                          (placeData.price * placeData.disocunt.percentage) /
+                            100 >
                         0
                       "
                     >
                       <h5 class="mb-4 pt-2">
-                        <del class="text-muted me-2">{{ myItem.price }} dh</del
+                        <del class="text-muted me-2"
+                          >{{ placeData.price }} dh / {{ placeData.unit }}</del
                         >{{
-                          myItem.price -
-                          (myItem.price * myItem.disocunt.percentage) / 100
+                          placeData.price -
+                          (placeData.price * placeData.disocunt.percentage) /
+                            100
                         }}
-                        dh
+                        dh / {{ placeData.unit }}
                         <span class="text-danger font-size-14 ml-2"
-                          >- {{ myItem.disocunt.percentage }} % Off</span
+                          >- {{ placeData.disocunt.percentage }} % Off</span
                         >
                       </h5>
                     </div>
@@ -69,16 +75,19 @@
                     </div>
                   </div>
                   <h5 class="mb-4 pt-2" v-else>
-                    <div v-if="myItem.price > 0">
-                      {{ myItem.price }}
-                      dh
+                    <div v-if="placeData.price > 0">
+                      {{ placeData.price }}
+                      dh / {{ placeData.unit }}
+                    </div>
+                    <div v-if="placeData.price < 0">
+                      <h5 class="mb-4 pt-2 text-primary">Sur devis</h5>
                     </div>
                     <div v-else>
                       <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
                     </div>
                   </h5>
                   <p class="text-muted mb-4">
-                    {{ myItem.description }}
+                    {{ placeData.description }}
                   </p>
                   <div class="row">
                     <div class="col-md-6">
@@ -87,7 +96,7 @@
 
                         <ul class="list-unstyled product-desc-list text-muted">
                           <li
-                            v-for="(spec, index) in myItem.specification"
+                            v-for="(spec, index) in placeData.specification"
                             :key="index"
                           >
                             <i
@@ -172,7 +181,9 @@
                             </div>
                           </div>
                           <div v-else>
-                            <h6 class="text-success "><i class="fas fa-check mx-3"></i>  Already added to cart</h6>
+                            <h6 class="text-success">
+                              <i class="fas fa-check mx-3"></i> Added to cart
+                            </h6>
                           </div>
                         </div>
                       </div>
@@ -374,12 +385,16 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 
 /**
  * Product-detail component
  */
+import {
+  getData,
+  eventStepperCalculator,
+  persistData,
+} from "../../../../../components/controllers/savingData";
 export default {
   head() {
     return {
@@ -388,54 +403,91 @@ export default {
   },
 
   async mounted() {
-    try {
-      let result = await axios.get(
-        process.env.baseUrl + "/restaurations/" + this.$route.params.id
-      );
-      this.restaurant = result.data;
-      let allItems = result.data.items;
-      for (let i = 0; i < allItems.length; i++) {
-        if (allItems[i].id == this.$route.params.item) {
-          this.myItem = allItems[i];
+    this.myEvent = getData("event");
+    if (this.myEvent.eventOrderDetails) {
+      for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
+        if (
+          this.myEvent.eventOrderDetails[i].eventServiceProvider ==
+          this.$route.params.place.split("++")[1]
+        ) {
+          for (
+            let j = 0;
+            j < this.myEvent.eventOrderDetails[i].articles.length;
+            j++
+          ) {
+            if (
+              this.myEvent.eventOrderDetails[i].articles[j].itemId ==
+              this.$route.params.place.split("++")[0]
+            ) {
+              this.itemAlreadyAdded = true;
+              break;
+            }
+          }
         }
       }
-      console.log(this.restaurant);
-      console.log(this.myItem);
-      let myItemPrice = null;
-      let myItemDiscount = null;
-      if (this.myItem.disocunt) {
-        myItemPrice =
-          this.myItem.price -
-          (this.myItem.price * this.myItem.disocunt.percentage) / 100;
-        myItemDiscount = this.myItem.disocunt.percentage;
-      } else {
-        myItemPrice = this.myItem.price;
-        myItemDiscount = 0;
+    }
+    this.myEvent.whereIam = this.myEvent.whereIam + 1;
+    this.stepperTotal = eventStepperCalculator();
+    this.stepperText =
+      ": Salle de conférence (ou lieu) | " +
+      this.myEvent.whereIam +
+      "/" +
+      this.stepperTotal;
+    this.title = this.title + this.stepperText;
+    console.log(this.$route.param);
+    let placeID = this.$route.params.place.split("++")[0];
+    let serviceProviderID = this.$route.params.place.split("++")[1];
+    this.placeID = placeID;
+    this.baseUrl = process.env.baseUrl;
+
+    try {
+      // /Eventserviceproviders/6196730106b47e37eca51d28
+      let result = await axios.get(
+        this.baseUrl + "/Eventserviceproviders/" + serviceProviderID
+      );
+      result = result.data;
+      this.serviceProvider = result;
+      this.placeData = null;
+      for (let i = 0; i < this.serviceProvider.items.length; i++) {
+        if (result.items[i].id == this.placeID) {
+          this.placeData = result.items[i];
+          break;
+        }
       }
-      this.itemForOrder = {
-        firstImage: this.myItem.firstImage.url,
-        id: this.myItem.id,
-        name: this.myItem.name,
-        price: myItemPrice,
-        quantity: 0,
-        comment: null,
-        disocount: myItemDiscount,
-      };
-      console.log("item");
-      console.log(this.itemForOrder);
+      console.log(this.placeData);
+      this.itemForOrder.name = this.placeData.name;
+      this.itemForOrder.itemId = this.placeData.id;
+      this.itemForOrder.price = this.placeData.price;
+      if (this.placeData.disocunt) {
+        this.itemForOrder.discount = this.placeData.disocunt.percentage;
+      } else {
+        this.itemForOrder.discount = 0;
+      }
+
+      this.itemForOrder.unit = this.placeData.unit;
     } catch (error) {}
   },
   data() {
     return {
-      order: {},
-      dummyThing: {
-        name: "dzd",
+      myEvent: null,
+      stepperTotal: null,
+      stepperText: null,
+      title: null,
+      placeID: null,
+      baseUrl: null,
+      itemForOrder: {
+        itemId: null,
+        name: null,
+        price: null,
+        discount: null,
+        quantity: 0,
+        comment: null,
+        unit: null,
+        subTotal: null,
       },
+      serviceProvider: null,
+      placeData: null,
       itemAlreadyAdded: false,
-      itemForOrder: null,
-      myItem: null,
-      restaurant: null,
-      baseUrl: process.env.baseUrl,
       title: "Dish detail",
       details: [
         {
@@ -449,39 +501,100 @@ export default {
     };
   },
   middleware: "authentication",
-  computed: {
-    ...mapGetters("products", {
-      isItemInCart: "isProductInCart",
-      getThisProductInCart: "fetchOneProduct",
-    }),
-  },
+  computed: {},
   methods: {
-    ...mapActions("products", {
-      addItemToCart: "addToCart",
-      updateProductQuantity: "updateCartQuantity",
-    }),
-    addToCart() {
-      this.addItemToCart({ product: this.dummyThing, quantity: 1 });
-    },
-    updateQuantity(type) {
-      this.updateProductQuantity(type);
-    },
-
     //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
 
     calculateQuantity(operation) {
       if (operation == "add") {
         this.itemForOrder.quantity = this.itemForOrder.quantity + 1;
+        if (this.itemForOrder.price > 0) {
+          this.itemForOrder.subTotal =
+            this.itemForOrder.quantity *
+            (this.itemForOrder.price -
+              (this.itemForOrder.price * this.itemForOrder.discount) / 100);
+        } else if (this.itemForOrder.pric < 0) {
+          this.itemForOrder.subTotal = -1;
+        } else {
+          this.itemForOrder.subTotal = 0;
+        }
       } else {
         if (this.itemForOrder.quantity > 0) {
           this.itemForOrder.quantity = this.itemForOrder.quantity - 1;
+          if (this.itemForOrder.price > 0) {
+            this.itemForOrder.subTotal =
+              this.itemForOrder.quantity *
+              (this.itemForOrder.price -
+                (this.itemForOrder.price * this.itemForOrder.discount) / 100);
+          } else {
+            this.itemForOrder.subTotal = -1;
+          }
         }
       }
     },
 
     addItemtoCart() {
       console.log(this.itemForOrder);
+      let myEvent = getData("event");
+      console.log(myEvent);
+      if (myEvent.eventOrderDetails) {
+        let foundSP = false;
+        for (let i = 0; i < myEvent.eventOrderDetails.length; i++) {
+          if (
+            myEvent.eventOrderDetails[i].eventServiceProvider ==
+            this.$route.params.place.split("++")[1]
+          ) {
+            foundSP = true;
+            myEvent.eventOrderDetails[i].articles.push(this.itemForOrder);
+            if (this.itemForOrder.subTotal > 0) {
+              myEvent.eventOrderDetails[i].subTotal =
+                myEvent.eventOrderDetails[i].subTotal +
+                this.itemForOrder.subTotal;
+            }
+          }
+        }
+        if (!foundSP) {
+          let toInseretSubTotal = 0;
+          if (this.itemForOrder.subTotal > 0) {
+            toInseretSubTotal = this.itemForOrder.subTotal;
+          }
+          let newEventOrderDetails = {
+            eventServiceProvider: this.$route.params.place.split("++")[1],
+            articles: [this.itemForOrder],
+            subTotal: toInseretSubTotal,
+            discount: null,
+            status: [{
+              name:"created",
+              comment:"La commande a été créée par le client",
+              date:new Date()
+            }],
+            type: null,
+          };
+          myEvent.eventOrderDetails.push(newEventOrderDetails);
+        }
+      } else {
+        let toInseretSubTotal = 0;
+        if (this.itemForOrder.subTotal > 0) {
+          toInseretSubTotal = this.itemForOrder.subTotal;
+        }
+        let newEventOrderDetails = {
+          eventServiceProvider: this.$route.params.place.split("++")[1],
+          articles: [this.itemForOrder],
+          subTotal: toInseretSubTotal,
+          discount: null,
+          status: [{
+            name:"created",
+            comment:"La commande a été créée par le client",
+            date:new Date()
+          }],
+          type: null,
+        };
+        myEvent.eventOrderDetails = [newEventOrderDetails];
+      }
       this.itemAlreadyAdded = true;
+      // console.log(myEvent);
+      persistData("event", myEvent);
+      console.log(getData("event"));
     },
   },
 };

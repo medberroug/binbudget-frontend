@@ -20,7 +20,8 @@
             :rating="item.rating"
             :city="item.city"
             :speciality="item.spec"
-            :parentlink="'livraison-de-repas'"
+            :parentlink="'place'"
+            :spId="item.spId"
           />
         </div>
       </div>
@@ -55,7 +56,7 @@ export default {
     this.stepperTotal = eventStepperCalculator();
     this.stepperText=": Salle de conférence (ou lieu) | "+this.myEvent.whereIam+"/"+this.stepperTotal
     this.title=this.title+this.stepperText
-    console.log(this.myEvent);
+    
     try {
       let result = await axios.get(
         process.env.baseUrl + "/getListOfPlaces/"+this.myEvent.city
