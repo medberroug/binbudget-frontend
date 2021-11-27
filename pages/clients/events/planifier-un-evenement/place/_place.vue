@@ -1,6 +1,9 @@
 <template>
   <div>
     <PageHeader :title="title" :details="details" />
+    <b-button @click="routerGo(-1)" class="mt-3" variant="primary">
+      <i class="uil-arrow-left"> </i> Page précédente</b-button
+    >
     <div class="row mt-3">
       <div class="col-lg-12" v-if="placeData">
         <div class="card">
@@ -504,7 +507,9 @@ export default {
   computed: {},
   methods: {
     //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
-
+    routerGo(pages) {
+      this.$router.go(pages);
+    },
     calculateQuantity(operation) {
       if (operation == "add") {
         this.itemForOrder.quantity = this.itemForOrder.quantity + 1;
@@ -563,11 +568,13 @@ export default {
             articles: [this.itemForOrder],
             subTotal: toInseretSubTotal,
             discount: null,
-            status: [{
-              name:"created",
-              comment:"La commande a été créée par le client",
-              date:new Date()
-            }],
+            status: [
+              {
+                name: "created",
+                comment: "La commande a été créée par le client",
+                date: new Date(),
+              },
+            ],
             type: null,
           };
           myEvent.eventOrderDetails.push(newEventOrderDetails);
@@ -582,11 +589,13 @@ export default {
           articles: [this.itemForOrder],
           subTotal: toInseretSubTotal,
           discount: null,
-          status: [{
-            name:"created",
-            comment:"La commande a été créée par le client",
-            date:new Date()
-          }],
+          status: [
+            {
+              name: "created",
+              comment: "La commande a été créée par le client",
+              date: new Date(),
+            },
+          ],
           type: null,
         };
         myEvent.eventOrderDetails = [newEventOrderDetails];

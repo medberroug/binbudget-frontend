@@ -9,7 +9,7 @@ import Switches from "vue-switches";
 import { MoroccoCities } from "../../../../components/widgets/MaCities";
 import {
   persistData,
-
+  getData,
 } from "../../../../components/controllers/savingData";
 /**
  * Add-product component
@@ -30,6 +30,29 @@ export default {
     // this.tester = getData("event");
     // console.log(getData("event"));
     // persistData("event", this.eventDetails);
+    if (getData("event")) {
+      if (getData("event").whereIamName == "place") {
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/place",
+        });
+      } else if (getData("event").whereIamName == "hosting") {
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/hosting",
+        });
+      } else if (getData("event").whereIamName == "restauration") {
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/restauration",
+        });
+      } else if (getData("event").whereIamName == "tms") {
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/tms",
+        });
+      } else if (getData("event").whereIamName == "service") {
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/service",
+        });
+      }
+    }
   },
   methods: {
     createEvent() {
@@ -37,6 +60,18 @@ export default {
       this.eventDetails.hostingCheck = this.hostingCheck;
       this.eventDetails.restaurationCheck = this.restaurationCheck;
       this.eventDetails.tmsCheck = this.tmsCheck;
+      this.eventDetails.whereIam = 2;
+      this.eventDetails.whereIamName = "service";
+
+      if (this.placeCheck) {
+        this.eventDetails.whereIamName = "place";
+      } else if (this.hostingCheck) {
+        this.eventDetails.whereIamName = "hosting";
+      } else if (this.restaurationCheck) {
+        this.eventDetails.whereIamName = "restauration";
+      } else if (this.tmsCheck) {
+        this.eventDetails.whereIamName = "tms";
+      }
       persistData("event", this.eventDetails);
       //       this.$router.push({
       //     path: '/clients/restauration/livraison-de-repas'
@@ -119,7 +154,7 @@ export default {
         restaurationCheck: this.restaurationCheck,
         tmsCheck: this.tmsCheck,
         whereIam: 1,
-       
+        whereIamName: null,
       },
 
       details: [

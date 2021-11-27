@@ -1,6 +1,7 @@
 <template>
   <div>
     <PageHeader :title="title" :details="details" />
+
     <div class="row mt-3">
       <div class="col-lg-12" v-if="myItem">
         <div class="card">
@@ -172,7 +173,10 @@
                             </div>
                           </div>
                           <div v-else>
-                            <h6 class="text-success "><i class="fas fa-check mx-3"></i>  Already added to cart</h6>
+                            <h6 class="text-success">
+                              <i class="fas fa-check mx-3"></i> Already added to
+                              cart
+                            </h6>
                           </div>
                         </div>
                       </div>

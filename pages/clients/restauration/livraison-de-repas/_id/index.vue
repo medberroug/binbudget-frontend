@@ -110,6 +110,7 @@ export default {
   },
   middleware: "authentication",
   methods: {
+     
     ...mapActions({
       likeProduct: "products/likeProduct",
     }),

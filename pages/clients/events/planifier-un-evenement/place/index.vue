@@ -1,6 +1,18 @@
 <template>
   <div>
     <PageHeader :title="title" :details="details" />
+    <div class="row">
+      <div class="col-xl-6 col-lg-6">
+        <b-button @click="cancelEvent()" class="mt-3" variant="outline-danger">
+          <i class="uil-trash-alt"> </i> Annuler mon evenement</b-button
+        >
+      </div>
+      <div class="col-xl-6 col-lg-6 flex d-flex justify-content-end">
+        <b-button @click="goNextStep()" class="mt-3" variant="primary">
+          {{nextPage}} <i class="uil-arrow-right"> </i
+        ></b-button>
+      </div>
+    </div>
     <div class="row mt-4" v-if="loader">
       <div class="col-xl-12 col-lg-12">
         <div class="row">
@@ -36,6 +48,8 @@ import PageHeader from "../../../../../components/Page-header.vue";
 import {
   getData,
   eventStepperCalculator,
+  removeData,
+  eventNextStep
 } from "../../../../../components/controllers/savingData";
 export default {
   head() {
@@ -52,81 +66,47 @@ export default {
    */
   async mounted() {
     this.myEvent = getData("event");
-    this.myEvent.whereIam = this.myEvent.whereIam + 1;
-    this.stepperTotal = eventStepperCalculator();
-    this.stepperText=": Salle de conférence (ou lieu) | "+this.myEvent.whereIam+"/"+this.stepperTotal
-    this.title=this.title+this.stepperText
     
+    this.nextPage=eventNextStep(false)
+    this.stepperTotal = eventStepperCalculator();
+    this.stepperText =
+      ": Salle de conférence (ou lieu) | " +
+      this.myEvent.whereIam +
+      "/" +
+      this.stepperTotal;
+    this.title = this.title + this.stepperText;
+
     try {
       let result = await axios.get(
-        process.env.baseUrl + "/getListOfPlaces/"+this.myEvent.city
+        process.env.baseUrl + "/getListOfPlaces/" + this.myEvent.city
       );
-      result=result.data
-      this.myItems=result
+      result = result.data;
+      this.myItems = result;
       console.log("PLACES");
       console.log(result);
-      this.loader=true
-    } catch (error) {
-      
-    }
-    // try {
-    //   let result = await axios.get(
-    //     process.env.baseUrl + "/restaurations?status=true"
-    //   );
-    //   result = result.data;
-    //   for (let i = 0; i < result.length; i++) {
-    //     let exist = false;
-    //     for (let j = 0; j < result[i].shownIn.length; j++) {
-    //       if (result[i].shownIn[j].serviceName == "livraison-de-repas") {
-    //         exist = true;
-    //       }
-    //     }
-    //     if (exist) {
-    //       let myspeciality = "";
-    //       for (let k = 0; k < result[i].speciality.length; k++) {
-    //         if (!this.filterSpeciality.includes(result[i].speciality[k].name)) {
-    //           this.filterSpeciality.push(result[i].speciality[k].name);
-    //         }
-    //         myspeciality = myspeciality + result[i].speciality[k].name + ", ";
-    //       }
-
-    //       let newItem = {
-    //         _id: result[i]._id,
-    //         knownName: result[i].knownName,
-    //         city: result[i].address.city,
-    //         speciality: myspeciality,
-    //         rating: result[i].ratingTotal,
-    //         logo: process.env.baseUrl + result[i].logo.url,
-    //         topImage: process.env.baseUrl + result[i].topImage.url,
-    //       };
-
-    //       this.restaurants.push(newItem);
-    //       this.filtredRestaurants.push(newItem);
-    //       if (!this.cities.includes(result[i].address.city)) {
-    //         this.cities.push(result[i].address.city);
-    //       }
-    //     }
-    //   }
-    //   this.loader=true
-    // } catch (error) {}
+      this.loader = true;
+    } catch (error) {}
   },
   methods: {
-    
-  
+    goNextStep(){},
+    cancelEvent() {
+      removeData("event");
+      this.$router.go(-1);
+    },
   },
   data() {
     return {
-      title:
-        "Planifier mon evenement ",
+      title: "Planifier mon evenement ",
       restaurants: [],
       filtredRestaurants: [],
       shownInIndicator: "livraison-de-repas",
       cities: [],
+      nextPage:null,
       myEvent: null,
-      myItems:null,
+      myItems: null,
       stepperTotal: null,
-      stepperText:null,
-      loader:false,
+      stepperText: null,
+      loader: false,
       details: [
         {
           text: "Restauration",
@@ -145,8 +125,8 @@ export default {
       ],
     };
   },
-  computed: {
-  
-  },
+  computed: {},
 };
 </script>
+<style scoped>
+</style>

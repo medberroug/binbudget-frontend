@@ -36,6 +36,104 @@ module.exports = {
             return false
         }
     },
+    eventNextStep(add) {
+        try {
+
+            let myData = JSON.parse(window.localStorage.getItem("event"));
+            if (myData.whereIamName == "place") {
+                if (myData.hostingCheck) {
+                    if (add) {
+                        myData.whereIamName = "hosting"
+                        myData.whereIam = myData.whereIam + 1
+                        window.localStorage.setItem("event", JSON.stringify(myData));
+                    }
+                    return "Hotel (ou hébergement)"
+                } else
+                    if (myData.restaurationCheck) {
+                        if (add) {
+                            myData.whereIamName = "restauration"
+                            myData.whereIam = myData.whereIam + 1
+                            window.localStorage.setItem("event", JSON.stringify(myData));
+                        }
+                        return "Services de restauration"
+                    } else
+                        if (myData.tmsCheck) {
+                            if (add) {
+                                myData.whereIamName = "tms"
+                                myData.whereIam = myData.whereIam + 1
+                                window.localStorage.setItem("event", JSON.stringify(myData));
+                            }
+                            return "Système de gestion des tickets"
+                        } else {
+                            if (add) {
+                                myData.whereIamName = "service"
+                                myData.whereIam = myData.whereIam + 1
+                                window.localStorage.setItem("event", JSON.stringify(myData));
+                            }
+                            return "Autre Services"
+                        }
+            } else if (myData.whereIamName == "hosting") {
+                if (myData.restaurationCheck) {
+                    if (add) {
+                        myData.whereIamName = "restauration"
+                        myData.whereIam = myData.whereIam + 1
+                        window.localStorage.setItem("event", JSON.stringify(myData));
+                    }
+                    return "Services de restauration"
+                } else
+                    if (myData.tmsCheck) {
+                        if (add) {
+                            myData.whereIamName = "tms"
+                            myData.whereIam = myData.whereIam + 1
+                            window.localStorage.setItem("event", JSON.stringify(myData));
+                        }
+                        return "Système de gestion des tickets"
+                    } else {
+                        if (add) {
+                            myData.whereIamName = "service"
+                            myData.whereIam = myData.whereIam + 1
+                            window.localStorage.setItem("event", JSON.stringify(myData));
+                        }
+                        return "Autre Services"
+                    }
+            } else if (myData.whereIamName == "restauration") {
+                if (myData.tmsCheck) {
+                    if (add) {
+                        myData.whereIamName = "tms"
+                        myData.whereIam = myData.whereIam + 1
+                        window.localStorage.setItem("event", JSON.stringify(myData));
+                    }
+                    return "Système de gestion des tickets"
+                } else {
+                    if (add) {
+                        myData.whereIamName = "service"
+                        myData.whereIam = myData.whereIam + 1
+                        window.localStorage.setItem("event", JSON.stringify(myData));
+                    }
+                    return "Autre Services"
+                }
+            } else if (myData.whereIamName == "tms") {
+
+                if (add) {
+                    myData.whereIamName = "service"
+                    myData.whereIam = myData.whereIam + 1
+                    window.localStorage.setItem("event", JSON.stringify(myData));
+                }
+                return "Autre Services"
+
+            } else {
+                if (add) {
+                    myData.whereIamName = "service"
+                    myData.whereIam = myData.whereIam + 1
+                    window.localStorage.setItem("event", JSON.stringify(myData));
+                }
+                return "Autre Services"
+            }
+            return true
+        } catch (error) {
+            return false
+        }
+    },
     eventStepperCalculator() {
         let myData = JSON.parse(window.localStorage.getItem("event"));
         let stepperTotal = 3;
