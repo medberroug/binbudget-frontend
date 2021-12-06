@@ -1,4 +1,6 @@
 <script>
+import NumberInputSpinner from "vue-number-input-spinner";
+
 /**
  * Cart component
  */
@@ -17,10 +19,39 @@ export default {
       title: `${this.title} | Nuxtjs Responsive Bootstrap 5 Admin Dashboard`,
     };
   },
-
+  components: {
+    NumberInputSpinner,
+  },
   methods: {
     beautifyPrices(price) {
       price = price + "";
+    },
+    getSpName(id) {
+      console.log("fddddddddddddddddddddddddddd");
+      console.log(this.spNames.length);
+      for (let i = 0; i < this.spNames.length; i++) {
+        if (this.spNames.id == id) {
+          return this.spNames.name;
+        }
+      }
+    },
+    async createEvent() {
+      this.eventCreatorLoader = true;
+      this.myEvent.status = [
+        {
+          name: "created",
+          comment: "Événement créé par le client",
+          date: new Date(),
+        },
+      ];
+
+      let result = await axios.post(
+        process.env.baseUrl + "/events",
+        this.myEvent
+      );
+      removeData("event");
+      this.$router.push("/clients/events/mes-evenements");
+      console.log(result);
     },
   },
 
@@ -32,59 +63,65 @@ export default {
       );
 
       this.myEvent = result.data;
+      console.log(this.myEvent);
     } catch (error) {}
-
+    this.nextPage = "ff";
+    this.stepperTotal = "fff";
     this.stepperText = ": Terminer | ";
 
     try {
       let result = await axios.get(this.baseUrl + "/generalsettingsdefaults");
 
       this.generalSettings = result.data;
-      for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
-        switch (this.myEvent.eventOrderDetails[i].type) {
-          case "place":
-            this.placeNoServiceController = true;
-            break;
-          case "hosting":
-            this.hostingNoServiceController = true;
-            break;
-          case "restauration":
-            this.restaurationNoServiceController = true;
-            break;
-          case "tms":
-            this.tmsNoServiceController = true;
-            break;
-          case "service":
-            this.serviceNoServiceController = true;
-            break;
-        }
-        for (
-          let j = 0;
-          j < this.myEvent.eventOrderDetails[i].articles.length;
-          j++
-        ) {
-          if (this.myEvent.eventOrderDetails[i].articles[j].price < 0) {
-            this.isEverythingPriced = false;
-            break;
-          }
-        }
-        this.subTotal =
-          this.subTotal + this.myEvent.eventOrderDetails[i].subTotal;
-      }
-
-      this.tva = (this.subTotal * this.generalSettings.tva) / 100;
-      this.total = this.subTotal + this.tva;
     } catch (error) {}
+    console.log(this.myEvent);
+    for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
+      switch (this.myEvent.eventOrderDetails[i].type) {
+        case "place":
+          this.placeNoServiceController = true;
+          break;
+        case "hosting":
+          this.hostingNoServiceController = true;
+          break;
+        case "restauration":
+          this.restaurationNoServiceController = true;
+          break;
+        case "tms":
+          this.tmsNoServiceController = true;
+          break;
+        case "service":
+          this.serviceNoServiceController = true;
+          break;
+      }
+      for (
+        let j = 0;
+        j < this.myEvent.eventOrderDetails[i].articles.length;
+        j++
+      ) {
+        if (this.myEvent.eventOrderDetails[i].articles[j].price < 0) {
+          this.isEverythingPriced = false;
+          break;
+        }
+      }
+      this.subTotal =
+        this.subTotal + this.myEvent.eventOrderDetails[i].subTotal;
+    }
+
+    this.tva = (this.subTotal * this.generalSettings.tva) / 100;
+    this.total = this.subTotal + this.tva;
   },
   data() {
     return {
-      title: "Planifier mon evenement ",
+      title: "Mon evenement archivés",
+      nextPage: null,
       myEvent: null,
+      myItems: null,
+      eventCreatorLoader: false,
+      stepperTotal: null,
       stepperText: null,
       subTotal: null,
       tva: null,
       total: null,
-      cancelModalShow: false,
       isEverythingPriced: true,
       placeNoServiceController: false,
       hostingNoServiceController: false,
@@ -93,7 +130,8 @@ export default {
       serviceNoServiceController: false,
       baseUrl: null,
       generalSettings: null,
-
+      spNames: [],
+      itemImages: [],
       items: [
         {
           text: "Planifier mon evenement ",
@@ -111,20 +149,6 @@ export default {
 
 <template>
   <div>
-    <b-modal v-model="cancelModalShow" centered hide-footer>
-      <template #modal-title> Edit Percentage </template
-      ><b-form-input
-        type="number"
-        required
-        placeholder="Indicate seller percentage.."
-      >
-      </b-form-input>
-      <center>
-        <b-button class="mt-3" block variant="primary">Submit</b-button>
-      </center></b-modal
-    >
-    <!-- Modals are beyond  -->
-
     <PageHeader :title="title" :items="items" />
     <div class="row mt-3" v-if="myEvent">
       <div class="col-xl-8">
@@ -142,19 +166,19 @@ export default {
                   class="badge badge-pill font-size-12"
                   :class="{
                     'bg-info':
-                      sp.status[sp.status.length - 1].name == 'created' ||
-                      sp.status[sp.status.length - 1].name == 'quoteSent',
+                      sp.status[sp.status.length - 1].name === 'created' ||
+                      sp.status[sp.status.length - 1].name === 'quoteSent',
                     'bg-warning':
-                      sp.status[sp.status.length - 1].name == 'pendingQuote' ||
-                      sp.status[sp.status.length - 1].name ==
+                      sp.status[sp.status.length - 1].name === 'pendingQuote' ||
+                      sp.status[sp.status.length - 1].name ===
                         'pendingValidation',
                     'bg-success':
-                      sp.status[sp.status.length - 1].name == 'validated' ||
-                      sp.status[sp.status.length - 1].name == 'pending',
+                      sp.status[sp.status.length - 1].name === 'validated' ||
+                      sp.status[sp.status.length - 1].name === 'pending',
                     'bg-secondary':
-                      sp.status[sp.status.length - 1].name == 'closed',
+                      sp.status[sp.status.length - 1].name === 'closed',
                     'bg-danger':
-                      sp.status[sp.status.length - 1].name == 'cancelled',
+                      sp.status[sp.status.length - 1].name === 'cancelled',
                   }"
                 >
                   <span
@@ -302,19 +326,19 @@ export default {
                   class="badge badge-pill font-size-12"
                   :class="{
                     'bg-info':
-                      sp.status[sp.status.length - 1].name == 'created' ||
-                      sp.status[sp.status.length - 1].name == 'quoteSent',
+                      sp.status[sp.status.length - 1].name === 'created' ||
+                      sp.status[sp.status.length - 1].name === 'quoteSent',
                     'bg-warning':
-                      sp.status[sp.status.length - 1].name == 'pendingQuote' ||
-                      sp.status[sp.status.length - 1].name ==
+                      sp.status[sp.status.length - 1].name === 'pendingQuote' ||
+                      sp.status[sp.status.length - 1].name ===
                         'pendingValidation',
                     'bg-success':
-                      sp.status[sp.status.length - 1].name == 'validated' ||
-                      sp.status[sp.status.length - 1].name == 'pending',
+                      sp.status[sp.status.length - 1].name === 'validated' ||
+                      sp.status[sp.status.length - 1].name === 'pending',
                     'bg-secondary':
-                      sp.status[sp.status.length - 1].name == 'closed',
+                      sp.status[sp.status.length - 1].name === 'closed',
                     'bg-danger':
-                      sp.status[sp.status.length - 1].name == 'cancelled',
+                      sp.status[sp.status.length - 1].name === 'cancelled',
                   }"
                 >
                   <span
@@ -462,19 +486,19 @@ export default {
                   class="badge badge-pill font-size-12"
                   :class="{
                     'bg-info':
-                      sp.status[sp.status.length - 1].name == 'created' ||
-                      sp.status[sp.status.length - 1].name == 'quoteSent',
+                      sp.status[sp.status.length - 1].name === 'created' ||
+                      sp.status[sp.status.length - 1].name === 'quoteSent',
                     'bg-warning':
-                      sp.status[sp.status.length - 1].name == 'pendingQuote' ||
-                      sp.status[sp.status.length - 1].name ==
+                      sp.status[sp.status.length - 1].name === 'pendingQuote' ||
+                      sp.status[sp.status.length - 1].name ===
                         'pendingValidation',
                     'bg-success':
-                      sp.status[sp.status.length - 1].name == 'validated' ||
-                      sp.status[sp.status.length - 1].name == 'pending',
+                      sp.status[sp.status.length - 1].name === 'validated' ||
+                      sp.status[sp.status.length - 1].name === 'pending',
                     'bg-secondary':
-                      sp.status[sp.status.length - 1].name == 'closed',
+                      sp.status[sp.status.length - 1].name === 'closed',
                     'bg-danger':
-                      sp.status[sp.status.length - 1].name == 'cancelled',
+                      sp.status[sp.status.length - 1].name === 'cancelled',
                   }"
                 >
                   <span
@@ -622,19 +646,19 @@ export default {
                   class="badge badge-pill font-size-12"
                   :class="{
                     'bg-info':
-                      sp.status[sp.status.length - 1].name == 'created' ||
-                      sp.status[sp.status.length - 1].name == 'quoteSent',
+                      sp.status[sp.status.length - 1].name === 'created' ||
+                      sp.status[sp.status.length - 1].name === 'quoteSent',
                     'bg-warning':
-                      sp.status[sp.status.length - 1].name == 'pendingQuote' ||
-                      sp.status[sp.status.length - 1].name ==
+                      sp.status[sp.status.length - 1].name === 'pendingQuote' ||
+                      sp.status[sp.status.length - 1].name ===
                         'pendingValidation',
                     'bg-success':
-                      sp.status[sp.status.length - 1].name == 'validated' ||
-                      sp.status[sp.status.length - 1].name == 'pending',
+                      sp.status[sp.status.length - 1].name === 'validated' ||
+                      sp.status[sp.status.length - 1].name === 'pending',
                     'bg-secondary':
-                      sp.status[sp.status.length - 1].name == 'closed',
+                      sp.status[sp.status.length - 1].name === 'closed',
                     'bg-danger':
-                      sp.status[sp.status.length - 1].name == 'cancelled',
+                      sp.status[sp.status.length - 1].name === 'cancelled',
                   }"
                 >
                   <span
@@ -787,7 +811,7 @@ export default {
             <div class="card-header bg-transparent py-3 px-4">
               <h5 class="font-size-16 mb-0">
                 Order Summary
-                <span class="float-end text-muted"></span>
+                <span class="float-end"></span>
               </h5>
             </div>
             <div class="card-body p-4" v-if="isEverythingPriced">
@@ -855,9 +879,6 @@ export default {
         </div>
 
         <ActivityEvent :status="myEvent.status.reverse()" />
-        <div>
-          <button type="button" class="btn btn-outline-danger">Danger</button>
-        </div>
       </div>
     </div>
     <!-- end row -->

@@ -67,6 +67,11 @@ export const menuItems = [
         id: 13,
         label: "Mes événements",
         link: "/clients/events/mes-evenements",
+      },
+      {
+        id: 23,
+        label: "Événements archivés",
+        link: "/clients/events/archive",
       }
     ]
   },

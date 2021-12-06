@@ -37,19 +37,41 @@ export default {
     },
     async createEvent() {
       this.eventCreatorLoader = true;
-      this.myEvent.status = [
-        {
-          name: "created",
-          comment: "Événement créé par le client",
-          date: new Date(),
-        },
-      ];
+      if (!this.isEverythingPriced) {
+        this.myEvent.status = [
+          {
+            name: "created",
+            comment: "Événement créé par le client",
+            date: new Date(),
+          },
+          {
+            name: "pendingQuote",
+            comment:
+              "Certains articles de votre commande sont encore en attente d'un devis du fournisseur, nous vous informerons lorsque le devis global sera prêt.",
+            date: new Date(),
+          },
+        ];
+      } else {
+        this.myEvent.status = [
+          {
+            name: "created",
+            comment: "Événement créé par le client",
+            date: new Date(),
+          },
+          {
+            name: "pendingValidation",
+            comment:
+              "Tous les articles de votre commande sont tarifés, en attendant la révision finale et la validation du fournisseur. ",
+            date: new Date(),
+          },
+        ];
+      }
 
       let result = await axios.post(
         process.env.baseUrl + "/events",
         this.myEvent
       );
-      removeData('event')
+      removeData("event");
       this.$router.push("/clients/events/mes-evenements");
       console.log(result);
     },
@@ -189,7 +211,22 @@ export default {
                           <div class="col-md-4">
                             <div class="mt-3">
                               <p class="text-muted mb-2">Price</p>
-                              <h5 class="font-size-16" v-if="article.price > 0">
+                              <h5
+                                class="font-size-16"
+                                v-if="article.price > 0 && article.discount"
+                              >
+                                {{
+                                  article.price -
+                                  (article.price * article.discount) / 100
+                                }}
+                                <span class="font-size-10 text-danger"
+                                  >(-{{ article.discount }}%)</span
+                                >
+                              </h5>
+                              <h5
+                                class="font-size-16"
+                                v-if="article.price > 0 && !article.discount"
+                              >
                                 {{ article.price }}
                               </h5>
                               <h5
@@ -280,13 +317,23 @@ export default {
                           <div class="col-md-4">
                             <div class="mt-3">
                               <p class="text-muted mb-2">Price</p>
-                              <h5 class="font-size-16" v-if="article.price > 0">
+                              <h5
+                                class="font-size-16"
+                                v-if="article.price > 0 && article.discount"
+                              >
                                 {{
-                                  Intl.NumberFormat("ar-MA", {
-                                    style: "currency",
-                                    currency: "MAD",
-                                  }).format(article.price)
+                                  article.price -
+                                  (article.price * article.discount) / 100
                                 }}
+                                <span class="font-size-10 text-danger"
+                                  >(-{{ article.discount }}%)</span
+                                >
+                              </h5>
+                              <h5
+                                class="font-size-16"
+                                v-if="article.price > 0 && !article.discount"
+                              >
+                                {{ article.price }}
                               </h5>
                               <h5
                                 class="font-size-16 text-success"
@@ -383,13 +430,23 @@ export default {
                           <div class="col-md-4">
                             <div class="mt-3">
                               <p class="text-muted mb-2">Price</p>
-                              <h5 class="font-size-16" v-if="article.price > 0">
+                              <h5
+                                class="font-size-16"
+                                v-if="article.price > 0 && article.discount"
+                              >
                                 {{
-                                  Intl.NumberFormat("ar-MA", {
-                                    style: "currency",
-                                    currency: "MAD",
-                                  }).format(article.price)
+                                  article.price -
+                                  (article.price * article.discount) / 100
                                 }}
+                                <span class="font-size-10 text-danger"
+                                  >(-{{ article.discount }}%)</span
+                                >
+                              </h5>
+                              <h5
+                                class="font-size-16"
+                                v-if="article.price > 0 && !article.discount"
+                              >
+                                {{ article.price }}
                               </h5>
                               <h5
                                 class="font-size-16 text-success"
@@ -484,13 +541,23 @@ export default {
                           <div class="col-md-4">
                             <div class="mt-3">
                               <p class="text-muted mb-2">Price</p>
-                              <h5 class="font-size-16" v-if="article.price > 0">
+                              <h5
+                                class="font-size-16"
+                                v-if="article.price > 0 && article.discount"
+                              >
                                 {{
-                                  Intl.NumberFormat("ar-MA", {
-                                    style: "currency",
-                                    currency: "MAD",
-                                  }).format(article.price)
+                                  article.price -
+                                  (article.price * article.discount) / 100
                                 }}
+                                <span class="font-size-10 text-danger"
+                                  >(-{{ article.discount }}%)</span
+                                >
+                              </h5>
+                              <h5
+                                class="font-size-16"
+                                v-if="article.price > 0 && !article.discount"
+                              >
+                                {{ article.price }}
                               </h5>
                               <h5
                                 class="font-size-16 text-success"
@@ -622,7 +689,7 @@ export default {
                 </h6>
               </center>
             </div>
-            
+
             <center class="pb-5">
               <div class="btn btn-success" @click="createEvent">
                 <span
@@ -631,7 +698,12 @@ export default {
                   aria-hidden="true"
                   v-if="eventCreatorLoader"
                 ></span>
-                <span v-if="!eventCreatorLoader">Créer mon événement</span> <span  v-if="eventCreatorLoader">Chargement...</span> <i class="uil uil-arrow-to-right mr-1"  v-if="!eventCreatorLoader"></i>
+                <span v-if="!eventCreatorLoader">Créer mon événement</span>
+                <span v-if="eventCreatorLoader">Chargement...</span>
+                <i
+                  class="uil uil-arrow-to-right mr-1"
+                  v-if="!eventCreatorLoader"
+                ></i>
               </div>
             </center>
           </div>

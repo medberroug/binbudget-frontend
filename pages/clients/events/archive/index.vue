@@ -31,7 +31,6 @@
       </div>
       <!-- End search -->
     </div>
-    <!-- Table -->
     <div v-if="loader">
       <center>
         <div class="spinner-border" role="status">
@@ -39,9 +38,10 @@
         </div>
       </center>
     </div>
-    <div v-if="myEvents.length == 0 && !loader" >
+    <div v-if="myEvents.length == 0 && !loader">
       <center>Vous n'avez pas encore créé d'événements.</center>
     </div>
+    <!-- Table -->
     <div class="table-responsive mb-0" v-if="myEvents.length > 0">
       <b-table
         table-class="table table-centered datatable table-card-list"
@@ -168,9 +168,7 @@
                 v-b-tooltip.hover
                 title="Consulter"
               >
-                <nuxt-link
-                  :to="'/clients/events/mes-evenements/' + data.item.id"
-                >
+                <nuxt-link :to="'/clients/events/archive/' + data.item.id">
                   <i class="uil uil-eye font-size-18"></i>
                 </nuxt-link>
               </a>
@@ -233,14 +231,13 @@ export default {
   },
   data() {
     return {
-      title: "Mes événements ",
-      loader:false,
+      title: "Mes événements archivés",
       items: [
         {
-          text: "Mes événements ",
+          text: "Mes événements archivés",
         },
       ],
-
+      loader: false,
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
@@ -296,34 +293,30 @@ export default {
   },
 
   async mounted() {
+    this.loader = true;
     // Set the initial number of items
-    this.loader=true
     this.baseUrl = process.env.baseUrl;
 
     try {
       let result = await axios.get(this.baseUrl + "/events");
       result = result.data;
-      let activeEvents = [];
+      // this.myEvents = result;
+      let archivedEvents = [];
       for (let i = 0; i < result.length; i++) {
-        let itsArchived = false;
         for (let j = 0; j < result[i].status.length; j++) {
           if (
             result[i].status[j].name == "closed" ||
             result[i].status[j].name == "cancelled"
           ) {
-            itsArchived = true;
-
+            archivedEvents.push(result[i]);
             break;
           }
         }
-        if (!itsArchived) {
-          activeEvents.push(result[i]);
-        }
       }
       //   console.log(result);
-      this.myEvents = activeEvents;
+      this.myEvents = archivedEvents;
       this.totalRows = this.myEvents.length;
-       this.loader=false
+      this.loader = false;
     } catch (error) {}
   },
   methods: {

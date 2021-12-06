@@ -19,7 +19,7 @@ export default {
 
 <template>
   <div class="col-xl-12">
-    <div class="card">
+    <div class="card shadow-none">
       <div class="card-body">
         <h4 class="card-title mb-4">Activité récente</h4>
 

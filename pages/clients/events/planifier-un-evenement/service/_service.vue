@@ -429,16 +429,13 @@ export default {
         }
       }
     }
-    
+
     this.stepperTotal = eventStepperCalculator();
     this.stepperText =
-      ": Autre services | " +
-      this.myEvent.whereIam +
-      "/" +
-      this.stepperTotal;
+      ": Autre services | " + this.myEvent.whereIam + "/" + this.stepperTotal;
     this.title = this.title + this.stepperText;
     console.log(this.$route.param);
-    
+
     let placeID = this.$route.params.service.split("++")[0];
     let serviceProviderID = this.$route.params.service.split("++")[1];
     this.placeID = placeID;
@@ -552,53 +549,103 @@ export default {
           ) {
             foundSP = true;
             myEvent.eventOrderDetails[i].articles.push(this.itemForOrder);
+
             if (this.itemForOrder.subTotal > 0) {
               myEvent.eventOrderDetails[i].subTotal =
                 myEvent.eventOrderDetails[i].subTotal +
                 this.itemForOrder.subTotal;
+            } else {
+              myEvent.eventOrderDetails[i].status.push({
+                name: "pendingValidation",
+                comment:
+                  "En attendant la révision finale et la validation du fournisseur. ",
+                date: new Date(),
+              });
             }
           }
         }
         if (!foundSP) {
           let toInseretSubTotal = 0;
-          if (this.itemForOrder.subTotal > 0) {
-            toInseretSubTotal = this.itemForOrder.subTotal;
-          }
-          let newEventOrderDetails = {
-            eventServiceProvider: this.$route.params.service.split("++")[1],
-               eventServiceProviderName: this.serviceProvider.knownName,
-            articles: [this.itemForOrder],
-            subTotal: toInseretSubTotal,
-            discount: null,
-            status: [
-              {
-                name: "created",
-                comment: "La commande a été créée par le client",
-                date: new Date(),
-              },
-            ],
-            type: "service",
-          };
-          myEvent.eventOrderDetails.push(newEventOrderDetails);
-        }
-      } else {
-        let toInseretSubTotal = 0;
-        if (this.itemForOrder.subTotal > 0) {
-          toInseretSubTotal = this.itemForOrder.subTotal;
-        }
-        let newEventOrderDetails = {
-          eventServiceProvider: this.$route.params.service.split("++")[1],
-             eventServiceProviderName: this.serviceProvider.knownName,
-          articles: [this.itemForOrder],
-          subTotal: toInseretSubTotal,
-          discount: null,
-          status: [
+          let myNextStatus = [
             {
               name: "created",
               comment: "La commande a été créée par le client",
               date: new Date(),
             },
-          ],
+            {
+              name: "pendingQuote",
+              comment:
+                "En attendant la révision finale et la validation du fournisseur. ",
+              date: new Date(),
+            },
+          ];
+          if (this.itemForOrder.subTotal > 0) {
+            toInseretSubTotal = this.itemForOrder.subTotal;
+            myNextStatus = [
+              {
+                name: "created",
+                comment: "La commande a été créée par le client",
+                date: new Date(),
+              },
+              {
+                name: "pendingValidation",
+                comment: "Article ajouté, en attente du devis du fournisseur",
+                date: new Date(),
+              },
+            ];
+          }
+           
+          let newEventOrderDetails = {
+            eventServiceProvider: this.$route.params.service.split("++")[1],
+            eventServiceProviderName: this.serviceProvider.knownName,
+            articles: [this.itemForOrder],
+            subTotal: toInseretSubTotal,
+            discount: null,
+            status: myNextStatus,
+            type: "service",
+          };
+
+          myEvent.eventOrderDetails.push(newEventOrderDetails);
+        }
+        persistData("event", myEvent);
+      } else {
+        let toInseretSubTotal = 0;
+        let myNextStatus = [
+          {
+            name: "created",
+            comment: "La commande a été créée par le client",
+            date: new Date(),
+          },
+          {
+            name: "pendingValidation",
+            comment:
+              "En attendant la révision finale et la validation du fournisseur. ",
+            date: new Date(),
+          },
+        ];
+        if (this.itemForOrder.subTotal > 0) {
+          toInseretSubTotal = this.itemForOrder.subTotal;
+        } else {
+          myNextStatus = [
+            {
+              name: "created",
+              comment: "La commande a été créée par le client",
+              date: new Date(),
+            },
+            {
+              name: "pendingQuote",
+              comment: "Article ajouté, en attente du devis du fournisseur",
+              date: new Date(),
+            },
+          ];
+        }
+        let newEventOrderDetails = {
+          eventServiceProvider: this.$route.params.service.split("++")[1],
+          eventServiceProviderName: this.serviceProvider.knownName,
+          articles: [this.itemForOrder],
+          subTotal: toInseretSubTotal,
+          discount: null,
+          status: myNextStatus,
           type: "service",
         };
         myEvent.eventOrderDetails = [newEventOrderDetails];
@@ -606,7 +653,7 @@ export default {
       this.itemAlreadyAdded = true;
       // console.log(myEvent);
       persistData("event", myEvent);
-      this.$router.go()
+      this.$router.go();
       console.log(getData("event"));
     },
   },
