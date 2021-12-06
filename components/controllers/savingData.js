@@ -121,13 +121,13 @@ module.exports = {
                 }
                 return "Autre Services"
 
-            } else {
+            } else if (myData.whereIamName == "service") {
                 if (add) {
-                    myData.whereIamName = "service"
+                    myData.whereIamName = "terminer"
                     myData.whereIam = myData.whereIam + 1
                     window.localStorage.setItem("event", JSON.stringify(myData));
                 }
-                return "Autre Services"
+                return "Terminer"
             }
             return true
         } catch (error) {

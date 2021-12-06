@@ -66,6 +66,7 @@
           </form>
         </b-dropdown>
         <!-- cart -->
+         <EventCart v-if="eventIsActive" />
         <shopping-cart />
 
         <!-- notifications -->
@@ -293,12 +294,12 @@
 /**
  * Topbar component
  */
-
+import {getData} from '../components/controllers/savingData'
 export default {
   
   data() {
     return {
-
+eventIsActive:false,
       languages: [
         {
           flag: require("~/assets/images/flags/us.jpg"),
@@ -333,9 +334,13 @@ export default {
     };
   },
   mounted() {
+    if(getData('event')){
+      this.eventIsActive=true
+    }
     this.value = this.languages.find((x) => x.language === this.$i18n.locale);
     this.text = this.value.title;
     this.flag = this.value.flag;
+    console.log('dddddddddddddddddddddddd');
 
   },
   methods: {

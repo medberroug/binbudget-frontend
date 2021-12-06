@@ -5,17 +5,14 @@
       <i class="uil-arrow-left"> </i> Page précédente</b-button
     >
     <div class="row mt-3">
-      <div class="col-lg-12" v-if="placeData">
+      <div class="col-lg-12" v-if="myItem">
         <div class="card">
           <div class="card-body">
             <div class="row">
               <div class="col-xl-5">
                 <div class="product-detail">
                   <b-tabs pills vertical nav-wrapper-class="col-3">
-                    <b-tab
-                      v-for="(pic, index) in placeData.images"
-                      :key="index"
-                    >
+                    <b-tab v-for="(pic, index) in myItem.images" :key="index">
                       <template v-slot:title>
                         <img
                           :src="baseUrl + pic.url"
@@ -39,10 +36,10 @@
                 <div class="mt-4 mt-xl-3 pl-xl-4">
                   <h5 class="font-size-14">
                     <a href="#" class="text-muted">{{
-                      serviceProvider.knownName
+                      restaurant.knownName
                     }}</a>
                   </h5>
-                  <h4 class="font-size-20 mb-3">{{ placeData.name }}</h4>
+                  <h4 class="font-size-20 mb-3">{{ myItem.name }}</h4>
                   <!-- <div class="text-muted">
                     <span class="badge bg-success font-size-14 me-1"
                       ><i class="mdi mdi-star"></i> 4.2</span
@@ -50,26 +47,23 @@
                     234 Reviews
                   </div> -->
 
-                  <div v-if="placeData.disocunt">
+                  <div v-if="myItem.disocunt">
                     <div
                       v-if="
-                        placeData.price -
-                          (placeData.price * placeData.disocunt.percentage) /
-                            100 >
+                        myItem.price -
+                          (myItem.price * myItem.disocunt.percentage) / 100 >
                         0
                       "
                     >
                       <h5 class="mb-4 pt-2">
-                        <del class="text-muted me-2"
-                          >{{ placeData.price }} dh / {{ placeData.unit }}</del
+                        <del class="text-muted me-2">{{ myItem.price }} dh</del
                         >{{
-                          placeData.price -
-                          (placeData.price * placeData.disocunt.percentage) /
-                            100
+                          myItem.price -
+                          (myItem.price * myItem.disocunt.percentage) / 100
                         }}
-                        dh / {{ placeData.unit }}
+                        dh / {{ myItem.unit }}
                         <span class="text-danger font-size-14 ml-2"
-                          >- {{ placeData.disocunt.percentage }} % Off</span
+                          >- {{ myItem.disocunt.percentage }} % Off</span
                         >
                       </h5>
                     </div>
@@ -78,19 +72,19 @@
                     </div>
                   </div>
                   <h5 class="mb-4 pt-2" v-else>
-                    <div v-if="placeData.price > 0">
-                      {{ placeData.price }}
-                      dh / {{ placeData.unit }}
+                    <div v-if="myItem.price > 0">
+                      {{ myItem.price }}
+                      dh / {{ myItem.unit }}
                     </div>
-                    <div v-if="placeData.price < 0">
-                      <h5 class="mb-4 pt-2 text-primary">Sur devis</h5>
-                    </div>
-                    <div v-if="placeData.price == 0">
+                    <div v-if="myItem.price == 0">
                       <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
+                    </div>
+                    <div v-if="myItem.price < 0">
+                      <h5 class="mb-4 pt-2 text-primary">Sur devis</h5>
                     </div>
                   </h5>
                   <p class="text-muted mb-4">
-                    {{ placeData.description }}
+                    {{ myItem.description }}
                   </p>
                   <div class="row">
                     <div class="col-md-6">
@@ -99,7 +93,7 @@
 
                         <ul class="list-unstyled product-desc-list text-muted">
                           <li
-                            v-for="(spec, index) in placeData.specification"
+                            v-for="(spec, index) in myItem.specification"
                             :key="index"
                           >
                             <i
@@ -185,7 +179,8 @@
                           </div>
                           <div v-else>
                             <h6 class="text-success">
-                              <i class="fas fa-check mx-3"></i> Added to cart
+                              <i class="fas fa-check mx-3"></i>Added to
+                              cart
                             </h6>
                           </div>
                         </div>
@@ -389,15 +384,16 @@
 
 <script>
 import axios from "axios";
-
-/**
- * Product-detail component
- */
 import {
   getData,
   eventStepperCalculator,
+  removeData,
+  eventNextStep,
   persistData,
-} from "../../../../../components/controllers/savingData";
+} from "../../../../../../components/controllers/savingData";
+/**
+ * Product-detail component
+ */
 export default {
   head() {
     return {
@@ -406,97 +402,108 @@ export default {
   },
 
   async mounted() {
-    this.myEvent = getData("event");
-    if (this.myEvent.eventOrderDetails) {
-      for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
-        if (
-          this.myEvent.eventOrderDetails[i].eventServiceProvider ==
-          this.$route.params.place.split("++")[1]
-        ) {
-          for (
-            let j = 0;
-            j < this.myEvent.eventOrderDetails[i].articles.length;
-            j++
+    try {
+      this.myEvent = getData("event");
+console.log(this.$route.params.id);
+      this.nextPage = eventNextStep(false);
+      this.stepperTotal = eventStepperCalculator();
+      this.stepperText =
+        ": Services de restauration | " +
+        this.myEvent.whereIam +
+        "/" +
+        this.stepperTotal;
+      this.title = this.title + this.stepperText;
+      let result = await axios.get(
+        process.env.baseUrl + "/Eventserviceproviders/" + this.$route.params.id
+      );
+      this.restaurant = result.data;
+      let allItems = result.data.items;
+      if (this.myEvent.eventOrderDetails) {
+        console.log("this.myEvent.eventOrderDetails");
+        for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
+          console.log(
+            " for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++)"
+          );
+          if (
+            this.myEvent.eventOrderDetails[i].eventServiceProvider ==
+            this.$route.params.id
           ) {
-            if (
-              this.myEvent.eventOrderDetails[i].articles[j].itemId ==
-              this.$route.params.place.split("++")[0]
+            console.log(
+              "this.myEvent.eventOrderDetails[i].eventServiceProvider == this.$route.params.id"
+            );
+            console.log(this.myEvent.eventOrderDetails[i].articles.length);
+            for (
+              let j = 0;
+              j < this.myEvent.eventOrderDetails[i].articles.length;
+              j++
             ) {
-              this.itemAlreadyAdded = true;
-              break;
+              console.log('Articles ');
+              if (
+                this.myEvent.eventOrderDetails[i].articles[j].itemId ==
+                this.$route.params.place
+              ) {
+                console.log('YES TRUUUE');
+                this.itemAlreadyAdded = true;
+                break;
+              }
             }
           }
         }
       }
-    }
-    this.myEvent.whereIam = this.myEvent.whereIam + 1;
-    this.stepperTotal = eventStepperCalculator();
-    this.stepperText =
-      ": Salle de conférence (ou lieu) | " +
-      this.myEvent.whereIam +
-      "/" +
-      this.stepperTotal;
-    this.title = this.title + this.stepperText;
-    console.log(this.$route.param);
-    let placeID = this.$route.params.place.split("++")[0];
-    let serviceProviderID = this.$route.params.place.split("++")[1];
-    this.placeID = placeID;
-    this.baseUrl = process.env.baseUrl;
-
-    try {
-      // /Eventserviceproviders/6196730106b47e37eca51d28
-      let result = await axios.get(
-        this.baseUrl + "/Eventserviceproviders/" + serviceProviderID
-      );
-      result = result.data;
-      this.serviceProvider = result;
- 
-      this.placeData = null;
-      for (let i = 0; i < this.serviceProvider.items.length; i++) {
-        if (result.items[i].id == this.placeID) {
-          this.placeData = result.items[i];
-          break;
+      for (let i = 0; i < allItems.length; i++) {
+        if (allItems[i].id == this.$route.params.item) {
+          this.myItem = allItems[i];
         }
       }
-      console.log(this.placeData);
-      this.itemForOrder.name = this.placeData.name;
-      this.itemForOrder.itemId = this.placeData.id;
-      this.itemForOrder.price = this.placeData.price;
-      if (this.placeData.disocunt) {
-        this.itemForOrder.discount = this.placeData.disocunt.percentage;
+      console.log(this.restaurant);
+      console.log(this.myItem);
+      let myItemPrice = null;
+      let myItemDiscount = null;
+      if (this.myItem.disocunt) {
+        myItemPrice =
+          this.myItem.price -
+          (this.myItem.price * this.myItem.disocunt.percentage) / 100;
+        myItemDiscount = this.myItem.disocunt.percentage;
       } else {
-        this.itemForOrder.discount = 0;
+        myItemPrice = this.myItem.price;
+        myItemDiscount = 0;
       }
-
-      this.itemForOrder.unit = this.placeData.unit;
+      this.itemForOrder = {
+        firstImage: this.myItem.firstImage.url,
+        itemId: this.myItem.id,
+        name: this.myItem.name,
+        price: myItemPrice,
+        quantity: 0,
+        comment: null,
+        disocount: myItemDiscount,
+        unit: this.myItem.unit,
+      };
+      console.log("item");
+      console.log(this.itemForOrder);
     } catch (error) {}
   },
   data() {
     return {
+      order: {},
+      dummyThing: {
+        name: "dzd",
+      },
+      itemAlreadyAdded: false,
+      itemForOrder: null,
+      myItem: null,
+      restaurant: null,
       myEvent: null,
+      myItems: null,
       stepperTotal: null,
       stepperText: null,
-      title: null,
-      placeID: null,
-      baseUrl: null,
-      itemForOrder: {
-        itemId: null,
-        name: null,
-        price: null,
-        discount: null,
-        quantity: 0,
-        comment: null,
-        unit: null,
-        subTotal: null,
-     
-      },
-      serviceProvider: null,
-      placeData: null,
-      itemAlreadyAdded: false,
-      title: "Dish detail",
+      baseUrl: process.env.baseUrl,
+      title: "Planifier mon evenement ",
       details: [
         {
-          text: "Dishes",
+          text: "Planifier mon evenement",
+        },
+        {
+          text: "Services de restauration",
         },
         {
           text: "Dish-detail",
@@ -508,7 +515,6 @@ export default {
   middleware: "authentication",
   computed: {},
   methods: {
-    //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
     routerGo(pages) {
       this.$router.go(pages);
     },
@@ -517,9 +523,7 @@ export default {
         this.itemForOrder.quantity = this.itemForOrder.quantity + 1;
         if (this.itemForOrder.price > 0) {
           this.itemForOrder.subTotal =
-            this.itemForOrder.quantity *
-            (this.itemForOrder.price -
-              (this.itemForOrder.price * this.itemForOrder.discount) / 100);
+            this.itemForOrder.quantity * this.itemForOrder.price;
         } else if (this.itemForOrder.pric < 0) {
           this.itemForOrder.subTotal = -1;
         } else {
@@ -530,15 +534,15 @@ export default {
           this.itemForOrder.quantity = this.itemForOrder.quantity - 1;
           if (this.itemForOrder.price > 0) {
             this.itemForOrder.subTotal =
-              this.itemForOrder.quantity *
-              (this.itemForOrder.price -
-                (this.itemForOrder.price * this.itemForOrder.discount) / 100);
+              this.itemForOrder.quantity * this.itemForOrder.price;
           } else {
             this.itemForOrder.subTotal = -1;
           }
         }
       }
     },
+
+    //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
 
     addItemtoCart() {
       console.log(this.itemForOrder);
@@ -549,10 +553,9 @@ export default {
         for (let i = 0; i < myEvent.eventOrderDetails.length; i++) {
           if (
             myEvent.eventOrderDetails[i].eventServiceProvider ==
-            this.$route.params.place.split("++")[1]
+            this.$route.params.id
           ) {
             foundSP = true;
-       
             myEvent.eventOrderDetails[i].articles.push(this.itemForOrder);
             if (this.itemForOrder.subTotal > 0) {
               myEvent.eventOrderDetails[i].subTotal =
@@ -567,8 +570,8 @@ export default {
             toInseretSubTotal = this.itemForOrder.subTotal;
           }
           let newEventOrderDetails = {
-            eventServiceProvider: this.$route.params.place.split("++")[1],
-            eventServiceProviderName: this.serviceProvider.knownName,
+            eventServiceProvider: this.$route.params.id,
+               eventServiceProviderName: this.restaurant.knownName,
             articles: [this.itemForOrder],
             subTotal: toInseretSubTotal,
             discount: null,
@@ -579,7 +582,7 @@ export default {
                 date: new Date(),
               },
             ],
-            type: "place",
+            type: "restauration",
           };
           myEvent.eventOrderDetails.push(newEventOrderDetails);
         }
@@ -589,8 +592,8 @@ export default {
           toInseretSubTotal = this.itemForOrder.subTotal;
         }
         let newEventOrderDetails = {
-          eventServiceProvider: this.$route.params.place.split("++")[1],
-          eventServiceProviderName: this.serviceProvider.knownName,
+          eventServiceProvider: this.$route.params.id,
+             eventServiceProviderName: this.restaurant.knownName,
           articles: [this.itemForOrder],
           subTotal: toInseretSubTotal,
           discount: null,
@@ -601,7 +604,7 @@ export default {
               date: new Date(),
             },
           ],
-          type: "place",
+          type: "restauration",
         };
         myEvent.eventOrderDetails = [newEventOrderDetails];
       }

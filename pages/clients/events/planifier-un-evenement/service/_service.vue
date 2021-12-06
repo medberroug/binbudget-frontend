@@ -411,7 +411,7 @@ export default {
       for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
         if (
           this.myEvent.eventOrderDetails[i].eventServiceProvider ==
-          this.$route.params.place.split("++")[1]
+          this.$route.params.service.split("++")[1]
         ) {
           for (
             let j = 0;
@@ -420,7 +420,7 @@ export default {
           ) {
             if (
               this.myEvent.eventOrderDetails[i].articles[j].itemId ==
-              this.$route.params.place.split("++")[0]
+              this.$route.params.service.split("++")[0]
             ) {
               this.itemAlreadyAdded = true;
               break;
@@ -429,17 +429,18 @@ export default {
         }
       }
     }
-    this.myEvent.whereIam = this.myEvent.whereIam + 1;
+    
     this.stepperTotal = eventStepperCalculator();
     this.stepperText =
-      ": Salle de conférence (ou lieu) | " +
+      ": Autre services | " +
       this.myEvent.whereIam +
       "/" +
       this.stepperTotal;
     this.title = this.title + this.stepperText;
     console.log(this.$route.param);
-    let placeID = this.$route.params.place.split("++")[0];
-    let serviceProviderID = this.$route.params.place.split("++")[1];
+    
+    let placeID = this.$route.params.service.split("++")[0];
+    let serviceProviderID = this.$route.params.service.split("++")[1];
     this.placeID = placeID;
     this.baseUrl = process.env.baseUrl;
 
@@ -450,7 +451,6 @@ export default {
       );
       result = result.data;
       this.serviceProvider = result;
- 
       this.placeData = null;
       for (let i = 0; i < this.serviceProvider.items.length; i++) {
         if (result.items[i].id == this.placeID) {
@@ -488,18 +488,17 @@ export default {
         comment: null,
         unit: null,
         subTotal: null,
-     
       },
       serviceProvider: null,
       placeData: null,
       itemAlreadyAdded: false,
-      title: "Dish detail",
+      title: "Planifier mon evenement",
       details: [
         {
-          text: "Dishes",
+          text: "Planifier mon evenement",
         },
         {
-          text: "Dish-detail",
+          text: "Autre Services",
           active: true,
         },
       ],
@@ -549,10 +548,9 @@ export default {
         for (let i = 0; i < myEvent.eventOrderDetails.length; i++) {
           if (
             myEvent.eventOrderDetails[i].eventServiceProvider ==
-            this.$route.params.place.split("++")[1]
+            this.$route.params.service.split("++")[1]
           ) {
             foundSP = true;
-       
             myEvent.eventOrderDetails[i].articles.push(this.itemForOrder);
             if (this.itemForOrder.subTotal > 0) {
               myEvent.eventOrderDetails[i].subTotal =
@@ -567,8 +565,8 @@ export default {
             toInseretSubTotal = this.itemForOrder.subTotal;
           }
           let newEventOrderDetails = {
-            eventServiceProvider: this.$route.params.place.split("++")[1],
-            eventServiceProviderName: this.serviceProvider.knownName,
+            eventServiceProvider: this.$route.params.service.split("++")[1],
+               eventServiceProviderName: this.serviceProvider.knownName,
             articles: [this.itemForOrder],
             subTotal: toInseretSubTotal,
             discount: null,
@@ -579,7 +577,7 @@ export default {
                 date: new Date(),
               },
             ],
-            type: "place",
+            type: "service",
           };
           myEvent.eventOrderDetails.push(newEventOrderDetails);
         }
@@ -589,8 +587,8 @@ export default {
           toInseretSubTotal = this.itemForOrder.subTotal;
         }
         let newEventOrderDetails = {
-          eventServiceProvider: this.$route.params.place.split("++")[1],
-          eventServiceProviderName: this.serviceProvider.knownName,
+          eventServiceProvider: this.$route.params.service.split("++")[1],
+             eventServiceProviderName: this.serviceProvider.knownName,
           articles: [this.itemForOrder],
           subTotal: toInseretSubTotal,
           discount: null,
@@ -601,7 +599,7 @@ export default {
               date: new Date(),
             },
           ],
-          type: "place",
+          type: "service",
         };
         myEvent.eventOrderDetails = [newEventOrderDetails];
       }

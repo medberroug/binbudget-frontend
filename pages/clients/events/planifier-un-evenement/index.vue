@@ -51,6 +51,10 @@ export default {
         this.$router.push({
           path: "/clients/events/planifier-un-evenement/service",
         });
+      }else if (getData("event").whereIamName == "terminer") {
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/terminer",
+        });
       }
     }
   },
@@ -76,20 +80,30 @@ export default {
       //       this.$router.push({
       //     path: '/clients/restauration/livraison-de-repas'
       // })
-      // this.$router.go();
+     
+
       if (this.placeCheck) {
         this.$router.push({
           path: "/clients/events/planifier-un-evenement/place",
         });
       } else if (this.hostingCheck) {
-        console.log("go to hosting");
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/hosting",
+        });
       } else if (this.restaurationCheck) {
-        console.log("go to restaurationCheck");
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/restauration",
+        });
       } else if (this.tmsCheck) {
-        console.log("go to tmsCheck");
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/tms",
+        });
       } else {
-        console.log("go to services");
+        this.$router.push({
+          path: "/clients/events/planifier-un-evenement/service",
+        });
       }
+       this.$router.go();
     },
     stepperCalculate(checker) {
       console.log("Im clicked " + checker);
@@ -148,7 +162,7 @@ export default {
         city: null,
         startDate: null,
         endDate: null,
-        numberOfPeople: null,
+        numberOfAttendees: null,
         placeCheck: this.placeCheck,
         hostingCheck: this.hostingCheck,
         restaurationCheck: this.restaurationCheck,
@@ -297,7 +311,7 @@ export default {
                           id="price"
                           name="price"
                           type="number"
-                          v-model="eventDetails.numberOfPeople"
+                          v-model="eventDetails.numberOfAttendees"
                           class="form-control"
                         />
                       </div>

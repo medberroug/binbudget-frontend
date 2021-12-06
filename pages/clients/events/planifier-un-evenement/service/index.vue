@@ -2,11 +2,7 @@
   <div>
     <PageHeader :title="title" :details="details" />
     <div class="row">
-      <div class="col-xl-6 col-lg-6">
-        <b-button @click="cancelEvent()" class="mt-3" variant="outline-danger">
-          <i class="uil-trash-alt"> </i> Annuler mon evenement</b-button
-        >
-      </div>
+      <div class="col-xl-6 col-lg-6"></div>
       <div class="col-xl-6 col-lg-6 flex d-flex justify-content-end">
         <b-button @click="goNextStep()" class="mt-3" variant="primary">
           {{ nextPage }} <i class="uil-arrow-right"> </i
@@ -32,7 +28,7 @@
             :rating="item.rating"
             :city="item.city"
             :speciality="item.spec"
-            :parentlink="'place'"
+            :parentlink="'service'"
             :spId="item.spId"
           />
         </div>
@@ -68,25 +64,22 @@ export default {
     this.myEvent = getData("event");
 
     this.nextPage = eventNextStep(false);
+
     if (this.nextPage == true) {
       this.nextPage = "Terminer";
     }
     this.stepperTotal = eventStepperCalculator();
     this.stepperText =
-      ": Salle de conférence (ou lieu) | " +
-      this.myEvent.whereIam +
-      "/" +
-      this.stepperTotal;
+      ": Autre service | " + this.myEvent.whereIam + "/" + this.stepperTotal;
     this.title = this.title + this.stepperText;
 
     try {
       let result = await axios.get(
-        process.env.baseUrl + "/getListOfPlaces/" + this.myEvent.city
+        process.env.baseUrl + "/getListOfService/" + this.myEvent.city
       );
       result = result.data;
       this.myItems = result;
-      console.log("PLACES");
-      console.log(result);
+
       this.loader = true;
     } catch (error) {}
   },
@@ -114,7 +107,7 @@ export default {
         this.$router.push({
           path: "/clients/events/planifier-un-evenement/service",
         });
-      }else if (getData("event").whereIamName == "terminer") {
+      } else if (getData("event").whereIamName == "terminer") {
         this.$router.push({
           path: "/clients/events/planifier-un-evenement/terminer",
         });
@@ -125,7 +118,6 @@ export default {
       this.$router.push({
         path: "/clients/events/planifier-un-evenement",
       });
-      
     },
   },
   data() {
@@ -133,7 +125,7 @@ export default {
       title: "Planifier mon evenement ",
       restaurants: [],
       filtredRestaurants: [],
-      shownInIndicator: "livraison-de-repas",
+      shownInIndicator: "event-service",
       cities: [],
       nextPage: null,
       myEvent: null,
@@ -146,7 +138,7 @@ export default {
           text: "Planifier mon evenement",
         },
         {
-          text: "Salle de conférence (ou lieu)",
+          text: "Autre service",
           active: true,
         },
       ],

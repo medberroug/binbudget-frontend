@@ -32,7 +32,7 @@
             :rating="item.rating"
             :city="item.city"
             :speciality="item.spec"
-            :parentlink="'place'"
+            :parentlink="'hosting'"
             :spId="item.spId"
           />
         </div>
@@ -43,7 +43,7 @@
 
 <script>
 import axios from "axios";
-import ItemCard from "../../../../../components/ItemCardPlace.vue";
+import ItemCard from "../../../../../components/ItemCardHosting.vue";
 import PageHeader from "../../../../../components/Page-header.vue";
 import {
   getData,
@@ -73,7 +73,7 @@ export default {
     }
     this.stepperTotal = eventStepperCalculator();
     this.stepperText =
-      ": Salle de conférence (ou lieu) | " +
+      ": Hotel (ou hébergement) | " +
       this.myEvent.whereIam +
       "/" +
       this.stepperTotal;
@@ -81,7 +81,7 @@ export default {
 
     try {
       let result = await axios.get(
-        process.env.baseUrl + "/getListOfPlaces/" + this.myEvent.city
+        process.env.baseUrl + "/getListOfHosting/" + this.myEvent.city
       );
       result = result.data;
       this.myItems = result;
@@ -125,7 +125,6 @@ export default {
       this.$router.push({
         path: "/clients/events/planifier-un-evenement",
       });
-      
     },
   },
   data() {
@@ -133,7 +132,7 @@ export default {
       title: "Planifier mon evenement ",
       restaurants: [],
       filtredRestaurants: [],
-      shownInIndicator: "livraison-de-repas",
+      shownInIndicator: "event-hosting",
       cities: [],
       nextPage: null,
       myEvent: null,
