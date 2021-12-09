@@ -434,33 +434,33 @@
               <div class="row">
                 <div class="col-md-6">
                   <div>
-                        <ul
-                class="
-                  nav nav-tabs nav-tabs-custom
-                  mt-3
-                  mb-2
-                  ecommerce-sortby-list
-                "
-              >
-                <li class="nav-item">
-                  <a
-                    class="nav-link disabled fw-medium"
-                    href="#"
-                    tabindex="-1"
-                    aria-disabled="true"
-                    >Sort by:</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" href="#">Popularity</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Newest</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Discount</a>
-                </li>
-              </ul>
+                    <ul
+                      class="
+                        nav nav-tabs nav-tabs-custom
+                        mt-3
+                        mb-2
+                        ecommerce-sortby-list
+                      "
+                    >
+                      <li class="nav-item">
+                        <a
+                          class="nav-link disabled fw-medium"
+                          href="#"
+                          tabindex="-1"
+                          aria-disabled="true"
+                          >Sort by:</a
+                        >
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" href="#">Popularity</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Newest</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Discount</a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
 
@@ -480,8 +480,6 @@
                 </div>
               </div>
 
-         
-
               <div class="row">
                 <div
                   class="col-xl-4 col-sm-6"
@@ -493,7 +491,7 @@
                       <div class="product-ribbon badge badge-danger">
                         - {{ item.discount }} %
                       </div>
-                     
+
                       <img
                         :src="item.image"
                         alt
@@ -575,7 +573,6 @@ export default {
           text: " BinBudget Market",
           active: true,
         },
-      
       ],
       sliderPrice: 800,
       currentPage: 1,

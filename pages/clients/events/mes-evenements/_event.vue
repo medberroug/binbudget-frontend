@@ -22,6 +22,39 @@ export default {
     beautifyPrices(price) {
       price = price + "";
     },
+    async cancelMyEvent() {
+      try {
+        let newStatus = {
+          name: "cancelled",
+          comment:
+            "L'événement a été annulé par le client: " +
+            this.cancelEventComment,
+          date: new Date(),
+        };
+        let reResult = await axios.get(
+          process.env.baseUrl + "/events/" + this.myEvent.id
+        );
+        let myEventOrderDetails = reResult.data.eventOrderDetails;
+        reResult = reResult.data.status;
+        for (let i = 0; i < myEventOrderDetails.length; i++) {
+          myEventOrderDetails[i].status.push(newStatus);
+        }
+
+        reResult.push(newStatus);
+
+        let result = await axios.put(
+          process.env.baseUrl + "/editEventStatus/" + this.myEvent.id,
+          {
+            status: reResult,
+            eventOrderDetails: myEventOrderDetails,
+          }
+        );
+
+        this.$router.push("/clients/events/archive/"+this.myEvent.id);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 
   async mounted() {
@@ -59,6 +92,20 @@ export default {
             break;
         }
         for (
+          let k = 0;
+          k < this.myEvent.eventOrderDetails[i].status.length;
+          k++
+        ) {
+          if (
+            this.myEvent.eventOrderDetails[i].status[k].name == "validated" ||
+            this.myEvent.eventOrderDetails[i].status[k].name == "pending" ||
+            this.myEvent.eventOrderDetails[i].status[k].name == "closed"
+          ) {
+            this.eventCanBeCancelled = false;
+            break;
+          }
+        }
+        for (
           let j = 0;
           j < this.myEvent.eventOrderDetails[i].articles.length;
           j++
@@ -71,9 +118,20 @@ export default {
         this.subTotal =
           this.subTotal + this.myEvent.eventOrderDetails[i].subTotal;
       }
-
+      for (let k = 0; k < this.myEvent.status.length; k++) {
+        if (
+          this.myEvent.status[k].name == "validated" ||
+          this.myEvent.status[k].name == "pending" ||
+          this.myEvent.status[k].name == "closed" ||
+          this.myEvent.status[k].name == "cancelled"
+        ) {
+          this.eventCanBeCancelled = false;
+          break;
+        }
+      }
       this.tva = (this.subTotal * this.generalSettings.tva) / 100;
       this.total = this.subTotal + this.tva;
+      this.myEvent.status = this.myEvent.status.reverse();
     } catch (error) {}
   },
   data() {
@@ -84,6 +142,8 @@ export default {
       subTotal: null,
       tva: null,
       total: null,
+      cancelEventComment: null,
+      eventCanBeCancelled: true,
       cancelModalShow: false,
       isEverythingPriced: true,
       placeNoServiceController: false,
@@ -93,7 +153,6 @@ export default {
       serviceNoServiceController: false,
       baseUrl: null,
       generalSettings: null,
-
       items: [
         {
           text: "Planifier mon evenement ",
@@ -112,15 +171,29 @@ export default {
 <template>
   <div>
     <b-modal v-model="cancelModalShow" centered hide-footer>
-      <template #modal-title> Edit Percentage </template
-      ><b-form-input
-        type="number"
+      <template #modal-title> Annuler mon événement </template>
+      <p>
+        L'annulation de votre événement peut nécessiter une démarche spécifique
+        auprès des fournisseurs et de BinBudget, l'annulation de votre événement
+        à ce niveau peut ou non être effective immédiatement en fonction de
+        l'état d'avancement.
+      </p>
+      <p>
+        Notre service clientèle vous contactera bientôt pour finaliser la
+        procédure d'annulation.
+      </p>
+      <textarea
+        class="form-control"
+        rows="5"
         required
-        placeholder="Indicate seller percentage.."
+        placeholder="Pourquoi voulez-vous annuler votre événement ? "
+        v-model="cancelEventComment"
       >
-      </b-form-input>
+      </textarea>
       <center>
-        <b-button class="mt-3" block variant="primary">Submit</b-button>
+        <b-button class="mt-3" block variant="primary" @click="cancelMyEvent">
+          Soumettre</b-button
+        >
       </center></b-modal
     >
     <!-- Modals are beyond  -->
@@ -854,9 +927,16 @@ export default {
           </div>
         </div>
 
-        <ActivityEvent :status="myEvent.status.reverse()" />
-        <div>
-          <button type="button" class="btn btn-outline-danger">Danger</button>
+        <ActivityEvent :status="myEvent.status" />
+        <div class="float-end">
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            @click="cancelModalShow = !cancelModalShow"
+            v-if="eventCanBeCancelled"
+          >
+            Annuler mon événement <i class="uil-trash-alt"></i>
+          </button>
         </div>
       </div>
     </div>

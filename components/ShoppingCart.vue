@@ -7,89 +7,105 @@
     menu-class="dropdown-menu-lg p-0 dropdown-menu-end"
   >
     <template v-slot:button-content>
-      <i class="uil-shopping-cart-alt"></i>
-      <span v-if="cartCount" class="badge bg-danger rounded-pill">{{
-        cartCount
+      <i class="uil-crockery"></i>
+      <span v-if="myOrder" class="badge bg-danger rounded-pill">{{
+        myOrder.items.length
       }}</span>
     </template>
 
-    <div class="p-3">
+    <div class="p-3" v-if="myOrder">
       <div class="row align-items-center">
         <div class="col">
-          <h5 class="m-0 font-size-16">
-            Cart Items
-          </h5>
+          <h5 class="m-0 font-size-16">Articles du panier</h5>
         </div>
-        <div class="col-auto" v-if="cartCount > 1">
-          <button @click.prevent="clear" class="small p-0 text-danger btn">
-            Remove all items
+        <div class="col-auto" v-if="myOrder.items.length > 0">
+          <button @click="cancelOrder" class="small p-0 text-danger btn">
+            Vider mon panier
           </button>
         </div>
       </div>
     </div>
-    <simplebar style="max-height: 230px;" data-simplebar>
-      <template v-if="cartCount">
+    <simplebar style="max-height: 230px" data-simplebar v-if="myOrder">
+      <template v-if="myOrder.items.length > 0">
         <nuxt-link
-          :to="{ name: 'cart' }"
-          v-for="n in itemsInCart"
-          :key="n"
+          :to="
+            '/clients/' +
+            myOrder.type +
+            '/' +
+            myOrder.subType +
+            '/' +
+            myOrder.linkedToSPItem.spID +
+            '/' +
+            item.itemID
+          "
+          v-for="(item, index) in myOrder.items"
+          :key="index"
           href
           class="text-reset notification-item"
         >
           <div class="media">
             <div class="avatar-xs me-3">
-              <span class="avatar-title bg-primary rounded-circle font-size-16">
-                <i class="uil-shopping-basket"></i>
-              </span>
+              <img
+                class="rounded-circle header-profile-user"
+                :src="item.firstImage"
+                alt="Header Avatar"
+              />
             </div>
             <div class="media-body">
               <h6 class="mt-0 mb-1">
-                {{ n.product.name }}
+                {{ item.name }}
               </h6>
               <div class="font-size-12 text-muted">
-                <p class="mb-1">Quantity: {{ n.quantity }}</p>
-                <p class="mb-0">
-                  <i class="mdi mdi-clock-outline"></i>
-                  {{ $t("navbar.dropdown.notification.order.time") }}
-                </p>
+                <p class="mb-1">Quantité: {{ item.quantity }}</p>
               </div>
             </div>
           </div>
         </nuxt-link>
       </template>
-      <div class="media" v-else>
-        <div class="media-body text-center py-4">
-          No Items in cart
-        </div>
+      <div class="media" v-if="myOrder.items.length == 0">
+        <div class="media-body text-center py-4">No Items in cart</div>
       </div>
     </simplebar>
-    <div class="p-2 border-top d-grid" v-if="cartCount > 3">
-      <a
-        class="btn btn-sm btn-link font-size-14 text-center"
-        href="javascript:void(0)"
-      >
-        <i class="uil-arrow-circle-right me-1"></i>
-        View all items
-      </a>
+    <div v-if="myOrder">
+      <div class="p-2 border-top d-grid" v-if="myOrder.items.length > 0">
+        <nuxt-link to="/clients/restauration/livraison-de-repas/cart">
+         <center> <div class="btn btn-sm btn-link font-size-14 text-center">
+            <i class="uil-arrow-circle-right me-1"></i> View all items
+          </div></center>
+        </nuxt-link>
+      </div>
     </div>
   </b-dropdown>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { getData, removeData } from "../components/controllers/savingData";
 export default {
   name: "ShoppingCart",
+  async mounted() {
+    this.myOrder = getData("restauration");
+    console.log(this.myOrder);
+  },
+  data() {
+    return {
+      myOrder: null,
+    };
+  },
+
   computed: {
     ...mapGetters("products", {
       cartCount: "cartCount",
-      itemsInCart: "itemsInCart"
-    })
+      itemsInCart: "itemsInCart",
+    }),
   },
   methods: {
-    ...mapActions({
-      clear: "products/clearCart"
-    })
-  }
+    cancelOrder() {
+      removeData("restauration");
+      this.$router.push("/clients/restauration/livraison-de-repas");
+      this.$router.go();
+    },
+  },
 };
 </script>
 

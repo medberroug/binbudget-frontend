@@ -26,7 +26,7 @@ export default {
         process.env.baseUrl + "/restaurations/" + this.$route.params.id
       );
       this.restaurantDetails = result.data;
-      this.restaurantItems;
+
       for (let i = 0; i < this.restaurantDetails.items.length; i++) {
         let showInJudger = true;
         for (
@@ -53,6 +53,15 @@ export default {
               myCategories +
               this.restaurantDetails.items[i].categories[k].name +
               ", ";
+            if (
+              !this.overallCategories.includes(
+                this.restaurantDetails.items[i].categories[k].name
+              )
+            ) {
+              this.overallCategories.push(
+                this.restaurantDetails.items[i].categories[k].name
+              );
+            }
           }
           let newPrice = null;
           let myDiscount = null;
@@ -65,6 +74,10 @@ export default {
           } else {
             newPrice = this.restaurantDetails.items[i].price;
           }
+          if (this.sliderPrice < newPrice) {
+            this.sliderPrice = newPrice;
+          }
+          this.maxInScrollPrice = this.sliderPrice+50;
           let myNewItem = {
             id: this.restaurantDetails.items[i].id,
             name: this.restaurantDetails.items[i].name,
@@ -78,7 +91,9 @@ export default {
           };
 
           this.restaurantItems.push(myNewItem);
+          this.restarautnItemsFiltred.push(myNewItem);
           console.log(this.restaurantItems);
+          console.log(this.overallCategories);
         }
       }
       // console.log(this.restaurantDetails);
@@ -91,10 +106,17 @@ export default {
   data() {
     return {
       restaurantItems: [],
+      restarautnItemsFiltred: [],
       title: "Restaurant",
       restoId: this.$route.params.id,
       baseUrl: process.env.baseUrl,
       restaurantDetails: null,
+      overallCategories: [],
+      selectedCategory: "all",
+      selectedPrice: 5000,
+      selectedDiscount: 0,
+      discountChange: 0,
+      categoryChange: "all",
       details: [
         {
           text: "Restaurant",
@@ -104,21 +126,47 @@ export default {
           active: true,
         },
       ],
-      sliderPrice: 800,
+      sliderPrice: 0,
+      maxInScrollPrice: 0,
       currentPage: 1,
     };
   },
   middleware: "authentication",
   methods: {
-     
     ...mapActions({
       likeProduct: "products/likeProduct",
     }),
-    valuechange(value) {
-      this.productData = productData.filter(function (product) {
-        return product.newprice <= value.currentValue;
+    valuechange() {
+      // console.log(value.currentIndex);
+
+      let sliderPrice = this.sliderPrice;
+      let selectedCategory = this.selectedCategory;
+      let discountChange = this.discountChange;
+      this.restarautnItemsFiltred = this.restaurantItems.filter(function (
+        product
+      ) {
+        if (product.newPrice <= sliderPrice) {
+          if (!product.discount) {
+            product.discount = 0;
+          } else {
+            product.discount = parseFloat(product.discount);
+          }
+        
+          if (selectedCategory == "all") {
+            if (product.discount >= discountChange) {
+              return product;
+            }
+          } else {
+            if (product.categories.includes(selectedCategory)) {
+              if (product.discount >= discountChange) {
+                return product;
+              }
+            }
+          }
+        }
       });
     },
+
     selected(show) {
       this.changed = !this.changed;
     },
@@ -148,44 +196,36 @@ export default {
                 aria-expanded="false"
                 v-b-toggle.categories-collapse
               >
-                <i
-                  class="mdi mdi-chevron-up accor-down-icon text-primary mr-1"
-                ></i>
-                Dishes
               </a>
-              <b-collapse visible id="categories-collapse">
-                <div class="card p-2 border shadow-none">
-                  <ul class="list-unstyled categories-list mb-0">
-                    <li>
-                      <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Pasta &#38;
-                        Rissoto
-                      </a>
-                    </li>
-                    <li class="active">
-                      <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Salad
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Curry
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Soup
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> Vegetable
-                        Sides
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </b-collapse>
+
+              <ul class="list-unstyled categories-list mb-0">
+                <li :class="{ active: selectedCategory == 'all' }">
+                  <a
+                    href="#"
+                    @click="
+                      selectedCategory = 'all';
+                      valuechange();
+                    "
+                  >
+                    <i class="mdi mdi-circle-medium mr-1"></i> All Categories
+                  </a>
+                </li>
+                <li
+                  v-for="(category, index) in overallCategories"
+                  :key="index"
+                  :class="{ active: category == selectedCategory }"
+                >
+                  <a
+                    href="#"
+                    @click="
+                      selectedCategory = category;
+                      valuechange();
+                    "
+                  >
+                    <i class="mdi mdi-circle-medium mr-1"></i> {{ category }}
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
           <!-- Menu Price -->
@@ -195,166 +235,13 @@ export default {
               <vue-slide-bar
                 v-model="sliderPrice"
                 :min="0"
-                :max="1000"
+                :max="maxInScrollPrice"
                 @dragEnd="valuechange"
               />
             </div>
           </div>
           <!-- Page Seatings -->
           <div class="custom-accordion">
-            <div class="p-4 border-top">
-              <div>
-                <h5 class="font-size-14 mb-0">
-                  <a
-                    href="javascript: void(0);"
-                    class="text-dark d-block"
-                    data-toggle="collapse"
-                    v-b-toggle.filtersizes-collapse
-                  >
-                    Seatings
-                    <i class="mdi mdi-chevron-up float-end accor-down-icon"></i>
-                  </a>
-                </h5>
-
-                <b-collapse visible id="filtersizes-collapse">
-                  <div class="mt-4">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <h5 class="font-size-15 mb-0">Select Table Sizes</h5>
-                      </div>
-                      <div class="w-xs">
-                        <select class="custom-select">
-                          <option value="1">3</option>
-                          <option value="2">4</option>
-                          <option value="3">5</option>
-                          <option value="4">6</option>
-                          <option value="5" selected>7</option>
-                          <option value="6">8</option>
-                          <option value="7">9</option>
-                          <option value="8">10</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </b-collapse>
-              </div>
-            </div>
-            <!-- Page Meals -->
-            <div class="p-4 border-top">
-              <div>
-                <h5 class="font-size-14 mb-0">
-                  <a
-                    href="javascript: void(0);"
-                    class="text-dark d-block"
-                    data-toggle="collapse"
-                    v-b-toggle.filterprodductcolor-collapse
-                  >
-                    Meals
-                    <i class="mdi mdi-chevron-up float-end accor-down-icon"></i>
-                  </a>
-                </h5>
-
-                <b-collapse visible id="filterprodductcolor-collapse">
-                  <div class="mt-4">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <h5 class="font-size-15 mb-0">Select Meal Type</h5>
-                      </div>
-                      <div class="w-xs">
-                        <select class="custom-select">
-                          <option value="1">Breakfast</option>
-                          <option value="2" selected>Lunch</option>
-                          <option value="3">Brunch</option>
-                          <option value="4">Dinner</option>
-                          <option value="5">Drinks</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </b-collapse>
-              </div>
-            </div>
-            <!-- Customer Ratings -->
-            <div class="p-4 border-top">
-              <div>
-                <h5 class="font-size-14 mb-0">
-                  <a
-                    href="javascript: void(0);"
-                    class="text-dark d-block"
-                    data-toggle="collapse"
-                    v-b-toggle.filterproduct-color-collapse
-                  >
-                    Customer Rating
-                    <i class="mdi mdi-chevron-up float-end accor-down-icon"></i>
-                  </a>
-                </h5>
-
-                <b-collapse visible id="filterproduct-color-collapse">
-                  <div class="mt-4">
-                    <div class="custom-control custom-radio mt-2">
-                      <input
-                        type="radio"
-                        id="productratingRadio1"
-                        name="productratingRadio1"
-                        class="custom-control-input"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productratingRadio1"
-                      >
-                        4
-                        <i class="mdi mdi-star text-warning"></i> & Above
-                      </label>
-                    </div>
-                    <div class="custom-control custom-radio mt-2">
-                      <input
-                        type="radio"
-                        id="productratingRadio2"
-                        name="productratingRadio1"
-                        class="custom-control-input"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productratingRadio2"
-                      >
-                        3
-                        <i class="mdi mdi-star text-warning"></i> & Above
-                      </label>
-                    </div>
-                    <div class="custom-control custom-radio mt-2">
-                      <input
-                        type="radio"
-                        id="productratingRadio3"
-                        name="productratingRadio1"
-                        class="custom-control-input"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productratingRadio3"
-                      >
-                        2
-                        <i class="mdi mdi-star text-warning"></i> & Above
-                      </label>
-                    </div>
-                    <div class="custom-control custom-radio mt-2">
-                      <input
-                        type="radio"
-                        id="productratingRadio4"
-                        name="productratingRadio1"
-                        class="custom-control-input"
-                      />
-                      <label
-                        class="custom-control-label"
-                        for="productratingRadio4"
-                      >
-                        1
-                        <i class="mdi mdi-star text-warning"></i>
-                      </label>
-                    </div>
-                  </div>
-                </b-collapse>
-              </div>
-            </div>
             <!-- Discount -->
             <div class="p-4 border-top">
               <div>
@@ -378,6 +265,10 @@ export default {
                         id="productdiscountRadio1"
                         name="productdiscountRadio"
                         class="custom-control-input"
+                        @click="
+                          discountChange = 50;
+                          valuechange();
+                        "
                       />
                       <label
                         class="custom-control-label"
@@ -391,6 +282,10 @@ export default {
                         id="productdiscountRadio2"
                         name="productdiscountRadio"
                         class="custom-control-input"
+                        @click="
+                          discountChange = 40;
+                          valuechange();
+                        "
                       />
                       <label
                         class="custom-control-label"
@@ -404,6 +299,10 @@ export default {
                         id="productdiscountRadio3"
                         name="productdiscountRadio"
                         class="custom-control-input"
+                        @click="
+                          discountChange = 30;
+                          valuechange();
+                        "
                       />
                       <label
                         class="custom-control-label"
@@ -417,6 +316,10 @@ export default {
                         id="productdiscountRadio4"
                         name="productdiscountRadio"
                         class="custom-control-input"
+                        @click="
+                          discountChange = 20;
+                          valuechange();
+                        "
                       />
                       <label
                         class="custom-control-label"
@@ -430,6 +333,10 @@ export default {
                         id="productdiscountRadio5"
                         name="productdiscountRadio"
                         class="custom-control-input"
+                        @click="
+                          discountChange = 10;
+                          valuechange();
+                        "
                       />
                       <label
                         class="custom-control-label"
@@ -443,11 +350,15 @@ export default {
                         id="productdiscountRadio6"
                         name="productdiscountRadio"
                         class="custom-control-input"
+                        @click="
+                          discountChange = 0;
+                          valuechange();
+                        "
                       />
                       <label
                         class="custom-control-label"
                         for="productdiscountRadio6"
-                        >Less than 10%</label
+                        >ALL</label
                       >
                     </div>
                   </div>
@@ -486,7 +397,7 @@ export default {
           </div>
           <div class="card-body">
             <div>
-              <ul
+              <!-- <ul
                 class="
                   nav nav-tabs nav-tabs-custom
                   mt-3
@@ -512,12 +423,12 @@ export default {
                 <li class="nav-item">
                   <a class="nav-link" href="#">Discount</a>
                 </li>
-              </ul>
+              </ul> -->
 
               <div class="row">
                 <div
                   class="col-xl-4 col-sm-6"
-                  v-for="(item, index) in restaurantItems"
+                  v-for="(item, index) in restarautnItemsFiltred"
                   :key="index"
                 >
                   <div class="product-box">
@@ -575,26 +486,25 @@ export default {
                           <span class="text-muted mr-2">
                             <del>{{ item.oldPrice }}dh</del>
                           </span>
-                          <span 
-                            >{{ item.newPrice }}dh</span
-                          >
-                         
+                          <span>{{ item.newPrice }}dh</span>
                         </h5>
                       </div>
-                      <div v-if="(item.oldPrice == item.newPrice)&&(item.newPrice>0)">
+                      <div
+                        v-if="
+                          item.oldPrice == item.newPrice && item.newPrice > 0
+                        "
+                      >
                         <h5 class="mt-3 mb-0">
-                          
-                          <span 
-                            >{{ item.newPrice }}dh</span
-                          >
-                         
+                          <span>{{ item.newPrice }}dh</span>
                         </h5>
                       </div>
-                      <div v-if="(item.oldPrice == item.newPrice)&&(item.newPrice==0)">
+                      <div
+                        v-if="
+                          item.oldPrice == item.newPrice && item.newPrice == 0
+                        "
+                      >
                         <h5 class="mt-3 mb-0">
-                          
                           <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
-                         
                         </h5>
                       </div>
                     </div>
@@ -605,11 +515,11 @@ export default {
               <div class="row mt-4">
                 <div class="col-lg-12">
                   <b-pagination
-                    v-if="restaurantItems.length > 0"
+                    v-if="restarautnItemsFiltred.length > 0"
                     class="justify-content-end"
                     pills
                     v-model="currentPage"
-                    :total-rows="restaurantItems.length"
+                    :total-rows="restarautnItemsFiltred.length"
                     :per-page="6"
                     aria-controls="my-table"
                   ></b-pagination>

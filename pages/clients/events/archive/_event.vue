@@ -27,7 +27,6 @@ export default {
       price = price + "";
     },
     getSpName(id) {
-      console.log("fddddddddddddddddddddddddddd");
       console.log(this.spNames.length);
       for (let i = 0; i < this.spNames.length; i++) {
         if (this.spNames.id == id) {
@@ -109,6 +108,7 @@ export default {
 
     this.tva = (this.subTotal * this.generalSettings.tva) / 100;
     this.total = this.subTotal + this.tva;
+    this.myEvent.status = this.myEvent.status.reverse();
   },
   data() {
     return {
@@ -878,7 +878,7 @@ export default {
           </div>
         </div>
 
-        <ActivityEvent :status="myEvent.status.reverse()" />
+        <ActivityEvent :status="myEvent.status" />
       </div>
     </div>
     <!-- end row -->

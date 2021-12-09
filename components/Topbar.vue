@@ -66,8 +66,8 @@
           </form>
         </b-dropdown>
         <!-- cart -->
-         <EventCart v-if="eventIsActive" />
-        <shopping-cart />
+        <EventCart v-if="eventIsActive" />
+        <ShoppingCart v-if="restaurationIsActive" />
 
         <!-- notifications -->
         <b-dropdown
@@ -294,12 +294,12 @@
 /**
  * Topbar component
  */
-import {getData} from '../components/controllers/savingData'
+import { getData } from "../components/controllers/savingData";
 export default {
-  
   data() {
     return {
-eventIsActive:false,
+      eventIsActive: false,
+      restaurationIsActive: false,
       languages: [
         {
           flag: require("~/assets/images/flags/us.jpg"),
@@ -334,14 +334,17 @@ eventIsActive:false,
     };
   },
   mounted() {
-    if(getData('event')){
-      this.eventIsActive=true
+    if (getData("event")) {
+      this.eventIsActive = true;
     }
+    if (getData("restauration")) {
+      this.restaurationIsActive = true;
+    }
+
     this.value = this.languages.find((x) => x.language === this.$i18n.locale);
     this.text = this.value.title;
     this.flag = this.value.flag;
-    console.log('dddddddddddddddddddddddd');
-
+    console.log("dddddddddddddddddddddddd");
   },
   methods: {
     /**

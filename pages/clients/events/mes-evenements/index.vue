@@ -46,7 +46,7 @@
       <b-table
         table-class="table table-centered datatable table-card-list"
         thead-tr-class="bg-transparent"
-        :items="myEvents.reverse()"
+        :items="myEvents"
         :fields="fields"
         responsive="sm"
         :per-page="perPage"
@@ -321,7 +321,7 @@ export default {
         }
       }
       //   console.log(result);
-      this.myEvents = activeEvents;
+      this.myEvents = activeEvents.reverse();
       this.totalRows = this.myEvents.length;
        this.loader=false
     } catch (error) {}

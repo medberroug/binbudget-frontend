@@ -1,7 +1,13 @@
 <template>
   <div>
     <PageHeader :title="title" :details="details" />
-
+    <div>
+      <nuxt-link :to="'/clients/restauration/livraison-de-repas/' + supplierID"
+        ><button type="button" class="btn btn-primary btn-sm mt-3">
+          <i class="mdi mdi-arrow-left me-1"></i> Retourner vers le fournisseur
+        </button></nuxt-link
+      >
+    </div>
     <div class="row mt-3">
       <div class="col-lg-12" v-if="myItem">
         <div class="card">
@@ -113,7 +119,7 @@
                           ></i>
                           Order option
                         </h5>
-                        <div class="mt-3">
+                        <div class="mt-3" v-if="!anotherSupplier">
                           <div class="col" v-if="!itemAlreadyAdded">
                             <div
                               class="
@@ -173,12 +179,17 @@
                             </div>
                           </div>
                           <div v-else>
-                            <h6 class="text-success">
+                            <h6 class="text-success" v-if="!anotherSupplier">
                               <i class="fas fa-check mx-3"></i> Already added to
                               cart
                             </h6>
                           </div>
                         </div>
+                        <b-alert show variant="warning" v-if="anotherSupplier"
+                          >Vous ne pouvez pas ajouter un article d'un autre
+                          fournisseur à cette commande, vous devez créer une
+                          autre commande.
+                        </b-alert>
                       </div>
                     </div>
                   </div>
@@ -380,10 +391,11 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
+import {
+  persistData,
+  getData,
+} from "../../../../../components/controllers/savingData";
 
-/**
- * Product-detail component
- */
 export default {
   head() {
     return {
@@ -417,16 +429,29 @@ export default {
         myItemDiscount = 0;
       }
       this.itemForOrder = {
-        firstImage: this.myItem.firstImage.url,
-        id: this.myItem.id,
+        firstImage: process.env.baseUrl + this.myItem.firstImage.url,
+        itemID: this.myItem.id,
         name: this.myItem.name,
         price: myItemPrice,
         quantity: 0,
         comment: null,
-        disocount: myItemDiscount,
+        discount: myItemDiscount,
       };
       console.log("item");
       console.log(this.itemForOrder);
+      this.supplierID = this.$route.params.id;
+      if (getData("restauration")) {
+        let myOrder = getData("restauration");
+        console.log(this.$route.params.id != myOrder.linkedToSPItem.spID);
+        if (this.$route.params.id != myOrder.linkedToSPItem.spID) {
+          this.anotherSupplier = true;
+        }
+        for (let i = 0; i < myOrder.items.length; i++) {
+          if (myOrder.items[i].itemID == this.$route.params.item) {
+            this.itemAlreadyAdded = true;
+          }
+        }
+      }
     } catch (error) {}
   },
   data() {
@@ -439,7 +464,9 @@ export default {
       itemForOrder: null,
       myItem: null,
       restaurant: null,
+      supplierID: null,
       baseUrl: process.env.baseUrl,
+      anotherSupplier: false,
       title: "Dish detail",
       details: [
         {
@@ -472,7 +499,14 @@ export default {
     },
 
     //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
-
+    async makeToast() {
+      this.$bvToast.toast("Toast body content", {
+        title: "fref",
+        variant: "danger",
+        solid: true,
+      });
+      await setTimeout("", 5000);
+    },
     calculateQuantity(operation) {
       if (operation == "add") {
         this.itemForOrder.quantity = this.itemForOrder.quantity + 1;
@@ -483,9 +517,57 @@ export default {
       }
     },
 
-    addItemtoCart() {
+    async addItemtoCart() {
+      let tvaRestauration = 0;
+      try {
+        let result = await axios.get(
+          process.env.baseUrl + "/generalsettingsdefaults"
+        );
+        tvaRestauration = result.data.tvaRestauration;
+      } catch (error) {}
       console.log(this.itemForOrder);
-      this.itemAlreadyAdded = true;
+      if (!getData("restauration")) {
+        let order = {
+          type: "restauration",
+          subType: "livraison-de-repas",
+          items: [this.itemForOrder],
+          subTotal: this.itemForOrder.price * this.itemForOrder.quantity,
+          tax: 0,
+          total: 0,
+          withDelivery: {
+            city: null,
+            state: null,
+            street: null,
+            country: null,
+            fullName: null,
+            phone: null,
+          },
+          linkedToSPItem: { type: "restauration", spID: this.$route.params.id },
+          status: {
+            name: "created",
+            comment: "Articles ajoutés au panier",
+            date: new Date(),
+          },
+          deliveryPrice: 15,
+        };
+
+        persistData("restauration", order);
+        this.$router.go();
+        this.itemAlreadyAdded = true;
+      } else {
+        let myOrder = getData("restauration");
+        if (this.$route.params.id == myOrder.linkedToSPItem.spID) {
+          myOrder.items.push(this.itemForOrder);
+          myOrder.subTotal =
+            myOrder.subTotal +
+            this.itemForOrder.price * this.itemForOrder.quantity;
+          persistData("restauration", myOrder);
+          this.$router.go();
+          this.itemAlreadyAdded = true;
+        } else {
+          this.makeToast();
+        }
+      }
     },
   },
 };
