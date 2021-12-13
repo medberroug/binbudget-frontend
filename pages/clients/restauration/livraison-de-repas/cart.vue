@@ -94,6 +94,7 @@ export default {
         let tvaRestauration = await axios.get(
           process.env.baseUrl + "/generalsettingsdefaults"
         );
+
         this.tvaRestauration = tvaRestauration.data.tvaRestauration;
         this.myOrder.subTotal =
           this.myOrder.subTotal + this.myOrder.deliveryPrice;
@@ -111,6 +112,7 @@ export default {
       myOrder: null,
       isEverythingPriced: true,
       tvaRestauration: 0,
+      items:null,
     };
   },
   middleware: "authentication",
@@ -204,6 +206,14 @@ export default {
                         >
                         <span class="mx-2">Quantité: {{ item.quantity }}</span>
                         <b-button
+                         v-if="item.quantity < 10"
+                          @click.prevent="myValueChanged('add', item.itemID)"
+                          variant="outline-primary"
+                          >+</b-button
+                        >
+                        <b-button
+                        v-else
+                         disabled
                           @click.prevent="myValueChanged('add', item.itemID)"
                           variant="outline-primary"
                           >+</b-button
@@ -272,7 +282,7 @@ export default {
                       </td>
                     </tr>
                     <tr>
-                      <td>Estimated Tax :</td>
+                      <td>Estimated Tax :({{ tvaRestauration }}%)</td>
                       <td class="text-right">
                         {{
                           Intl.NumberFormat("ar-MA", {

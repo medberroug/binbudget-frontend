@@ -1,4 +1,6 @@
 <script>
+import axios from "axios";
+
 import {
   getData,
   removeData,
@@ -13,17 +15,80 @@ export default {
     };
   },
   methods: {
-    addOrder() {
-      console.log(this.myOrder);
+    async addOrder() {
+      this.checkValues = false;
+      this.myOrder.withDelivery.country = "Morocco";
+      if (!this.myOrder.withDelivery.fullName) {
+        this.checkValues = true;
+      }
+      if (!this.myOrder.withDelivery.city) {
+        this.checkValues = true;
+      }
+      if (!this.myOrder.withDelivery.phone) {
+        this.checkValues = true;
+      }
+      if (!this.myOrder.withDelivery.street) {
+        this.checkValues = true;
+      }
+
+      if (!this.myOrder.when) {
+        this.checkValues = true;
+      }
+      if (!this.checkValues) {
+        if (!this.paimentMode) {
+          this.paimentMode = "invoice";
+        }
+        this.myOrder.paimentMode = {
+          type: this.paimentMode,
+        };
+        if (this.isOrderSurDevis) {
+          this.myOrder.status.push({
+            name: "pendingQuote",
+            comment: "Votre commande est en attente d'un devis du fournisseur",
+            date: new Date(),
+          });
+        } else {
+          this.myOrder.status.push({
+            name: "pendingValidation",
+            comment:
+              "Votre commande est en attente de validation de la part du fournisseur",
+            date: new Date(),
+          });
+        }
+        try {
+          let result = await axios.post(
+            process.env.baseUrl + "/orders",
+            this.myOrder
+          );
+          removeData("restauration");
+          this.$router.push("/clients/restauration/livraison-de-repas");
+          console.log(result);
+        } catch (error) {
+          console.log(error);
+        }
+      }
     },
   },
   mounted() {
     this.myOrder = getData("restauration");
+    for (let i = 0; i < this.myOrder.items.length; i++) {
+      if (this.myOrder.items[i].price < 0) {
+        this.isOrderSurDevis = true;
+        this.isCODPossible = false;
+      }
+    }
+    if (this.myOrder.total >= 20000) {
+      this.isCODPossible = false;
+    }
   },
   data() {
     return {
       myOrder: null,
+      isCODPossible: true,
+      isOrderSurDevis: false,
+      paimentMode: "invoice",
       title: "Commander",
+      checkValues: false,
       items: [],
     };
   },
@@ -34,8 +99,13 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
+
     <div class="row mt-4" v-if="myOrder">
       <div class="col-xl-8">
+        <b-alert show dismissible variant="danger" v-if="checkValues"
+          >Veuillez remplir tous les renseignements figurant en bordure
+          rouge</b-alert
+        >
         <div class="custom-accordion">
           <div class="card">
             <a
@@ -67,40 +137,67 @@ export default {
                 <form>
                   <div>
                     <div class="row">
-                      <div class="col-lg-4">
+                      <div class="col-lg-3">
                         <div class="form-group mb-4">
                           <label for="billing-name">Nom</label>
                           <input
                             type="text"
                             class="form-control"
+                            :class="{
+                              'border-danger':
+                                checkValues && !myOrder.withDelivery.fullName,
+                            }"
                             id="billing-name"
                             placeholder="Entrez le nom"
                             v-model="myOrder.withDelivery.fullName"
                           />
                         </div>
                       </div>
-                      <div class="col-lg-4">
+                      <div class="col-lg-3">
                         <div class="form-group mb-4">
                           <label for="billing-email-address">Ville</label>
                           <input
                             type="text"
                             class="form-control"
+                            :class="{
+                              'border-danger':
+                                checkValues && !myOrder.withDelivery.city,
+                            }"
                             id="billing-email-address"
-                            placeholder="Entrez l'email"
+                            placeholder="Ville."
                             v-model="myOrder.withDelivery.city"
                           />
                         </div>
                       </div>
-                      <div class="col-lg-4">
+                      <div class="col-lg-3">
                         <div class="form-group mb-4">
                           <label for="billing-phone">Téléphone</label>
                           <input
                             type="text"
                             class="form-control"
+                            :class="{
+                              'border-danger':
+                                checkValues && !myOrder.withDelivery.phone,
+                            }"
                             id="billing-phone"
                             placeholder="Entrez le numéro de téléphone."
                             v-model="myOrder.withDelivery.phone"
                           />
+                        </div>
+                      </div>
+                      <div class="col-lg-3">
+                        <div class="form-group mb-4">
+                          <label for="billing-phone">Prévu à</label>
+
+                          <b-form-input
+                            id="date-time"
+                            v-model="myOrder.when"
+                            :class="{
+                              'border-danger': checkValues && !myOrder.when,
+                            }"
+                            value=""
+                            type="datetime-local"
+                          ></b-form-input>
                         </div>
                       </div>
                     </div>
@@ -109,6 +206,10 @@ export default {
                       <label for="billing-address">Address</label>
                       <textarea
                         class="form-control"
+                        :class="{
+                          'border-danger':
+                            checkValues && !myOrder.withDelivery.street,
+                        }"
                         id="billing-address"
                         rows="3"
                         placeholder="Entrez l'adresse complète"
@@ -162,6 +263,8 @@ export default {
                             name="pay-method"
                             id="pay-methodoption1"
                             class="card-radio-input"
+                            @change="paimentMode = 'invoice'"
+                            checked
                           />
 
                           <span class="card-radio text-center text-truncate">
@@ -173,16 +276,15 @@ export default {
                     </div>
 
                     <div class="col-lg-3 col-sm-6">
-                      <div>
+                      <div v-if="isCODPossible && !isOrderSurDevis">
                         <label class="card-radio-label">
                           <input
                             type="radio"
                             name="pay-method"
                             id="pay-methodoption3"
                             class="card-radio-input"
-                            checked
+                            @change="paimentMode = 'cod'"
                           />
-
                           <span class="card-radio text-center text-truncate">
                             <i class="uil uil-money-bill d-block h2 mb-3"></i>
                             <span>Paiement à la livraison</span>

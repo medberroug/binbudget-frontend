@@ -28,7 +28,7 @@ export default {
       this.restaurantDetails = result.data;
 
       for (let i = 0; i < this.restaurantDetails.items.length; i++) {
-        let showInJudger = true;
+        let showInJudger = false;
         for (
           let j = 0;
           j < this.restaurantDetails.items[i].shownIn.length;
@@ -481,7 +481,7 @@ export default {
                         {{ item.categories }}
                       </p>
 
-                      <div v-if="item.oldPrice != item.newPrice">
+                      <div v-if="item.oldPrice != item.newPrice && item.newPrice > 0">
                         <h5 class="mt-3 mb-0">
                           <span class="text-muted mr-2">
                             <del>{{ item.oldPrice }}dh</del>
@@ -500,7 +500,7 @@ export default {
                       </div>
                       <div
                         v-if="
-                          item.oldPrice == item.newPrice && item.newPrice == 0
+                           item.newPrice == 0
                         "
                       >
                         <h5 class="mt-3 mb-0">

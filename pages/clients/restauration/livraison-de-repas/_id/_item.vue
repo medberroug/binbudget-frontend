@@ -121,6 +121,7 @@
                         </h5>
                         <div class="mt-3" v-if="!anotherSupplier">
                           <div class="col" v-if="!itemAlreadyAdded">
+                                
                             <div
                               class="
                                 d-flex
@@ -129,6 +130,7 @@
                                 my-4
                               "
                             >
+                       
                               <div class="d-flex align-items-center">
                                 <b-button
                                   v-if="itemForOrder.quantity > 0"
@@ -149,6 +151,15 @@
                                 <b-button
                                   @click.prevent="calculateQuantity('add')"
                                   variant="outline-primary"
+                                  
+                                   v-if="itemForOrder.quantity < 10"
+                                  >+</b-button
+                                >
+                                  <b-button
+                                  @click.prevent="calculateQuantity('add')"
+                                  variant="outline-primary"
+                                  disabled
+                                     v-else
                                   >+</b-button
                                 >
                               </div>
@@ -177,7 +188,9 @@
                                 </div>
                               </div>
                             </div>
+                             <b-alert show dismissible variant="primary" v-if="itemForOrder.quantity==10">Vous ne pouvez pas ajouter plus de 10 éléments dans ce type d'articles.</b-alert>
                           </div>
+                           
                           <div v-else>
                             <h6 class="text-success" v-if="!anotherSupplier">
                               <i class="fas fa-check mx-3"></i> Already added to
@@ -499,14 +512,7 @@ export default {
     },
 
     //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
-    async makeToast() {
-      this.$bvToast.toast("Toast body content", {
-        title: "fref",
-        variant: "danger",
-        solid: true,
-      });
-      await setTimeout("", 5000);
-    },
+   
     calculateQuantity(operation) {
       if (operation == "add") {
         this.itemForOrder.quantity = this.itemForOrder.quantity + 1;
@@ -543,11 +549,11 @@ export default {
             phone: null,
           },
           linkedToSPItem: { type: "restauration", spID: this.$route.params.id },
-          status: {
+          status: [{
             name: "created",
             comment: "Articles ajoutés au panier",
             date: new Date(),
-          },
+          }],
           deliveryPrice: 15,
         };
 
@@ -565,7 +571,7 @@ export default {
           this.$router.go();
           this.itemAlreadyAdded = true;
         } else {
-          this.makeToast();
+       
         }
       }
     },

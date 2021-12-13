@@ -305,9 +305,7 @@ export default {
       }
       return array;
     },
-    colours() {
-      this.shuffleArray(this.colours);
-    },
+   
   },
 };
 </script>

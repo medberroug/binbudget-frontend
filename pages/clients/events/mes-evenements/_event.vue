@@ -24,6 +24,9 @@ export default {
     },
     async cancelMyEvent() {
       try {
+        if(!this.cancelEventComment){
+          this.cancelEventComment="Aucun commentaire"
+        }
         let newStatus = {
           name: "cancelled",
           comment:
