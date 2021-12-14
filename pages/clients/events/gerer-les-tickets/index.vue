@@ -1,8 +1,9 @@
 <template>
   <div>
     <center>
-      Le système de gestion des tickets est toujours en cours de développement
-      et de test.
+      <h3 class="m-5">En cours</h3>
+    <p class="m-5">  Le système de gestion des tickets est toujours en cours de développement
+      et de test.</p>
     </center>
   </div>
 </template>
