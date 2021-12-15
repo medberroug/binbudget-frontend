@@ -863,7 +863,7 @@ export default {
             <div class="card-header bg-transparent py-3 px-4">
               <h5 class="font-size-16 mb-0">
                 Order Summary
-                <span class="float-end text-muted"></span>
+                <span class="float-end text-muted">{{myEvent.id}}</span>
               </h5>
             </div>
             <div class="card-body p-4" v-if="isEverythingPriced">

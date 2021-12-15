@@ -1,4 +1,4 @@
-export const menuItems = [
+var menuItems = [
   {
     id: 1,
     label: "menu",
@@ -35,11 +35,7 @@ export const menuItems = [
         label: "Menu conventionné",
         link: "/clients/restauration/menu-conventionne"
       },
-      {
-        id: 8,
-        label: "Restauration collectif",
-        link: "/clients/restauration/restauration-collectif"
-      },
+      
       {
         id: 9,
         label: "Réservation de restaurant",
@@ -54,22 +50,22 @@ export const menuItems = [
     link: "/clients/events",
     subItems: [
       {
-        id: 11,
+        id: 24,
         label: "Planifier un événement",
         link: "/clients/events/planifier-un-evenement"
       },
       {
-        id: 12,
+        id: 25,
         label: "Gérer les tickets",
         link: "/clients/events/gerer-les-tickets",
       },
       {
-        id: 13,
+        id: 26,
         label: "Mes événements",
         link: "/clients/events/mes-evenements",
       },
       {
-        id: 23,
+        id: 27,
         label: "Événements archivés",
         link: "/clients/events/archive",
       }
@@ -111,6 +107,29 @@ export const menuItems = [
     icon: "uil-calender",
     link: "/clients/orders"
   },
+  
+  {
+    id: 8,
+    label: "Restauration collectif",
+    icon: "uil-users-alt",
+    subItems: [
+      {
+        id: 28,
+        label: "Statistiques",
+        link: "/clients/restauration-collectif/statistiques"
+      },
+      {
+        id: 29,
+        label: "Mes employés",
+        link: "/clients/restauration-collectif/mes-employes"
+      },
+      {
+        id: 30,
+        label: "Paramètres",
+        link: "/clients/restauration-collectif/parametres"
+      }
+    ]
+  },
   {
     id: 20,
     label: "Invoices and Billing",
@@ -129,3 +148,11 @@ export const menuItems = [
     link: "/clients/settings"
   }
 ];
+
+
+
+
+
+export {menuItems} 
+
+import axios from 'axios'

@@ -68,10 +68,12 @@
     </simplebar>
     <div v-if="myOrder">
       <div class="p-2 border-top d-grid" v-if="myOrder.items.length > 0">
-        <nuxt-link to="/clients/restauration/livraison-de-repas/cart">
-         <center> <div class="btn btn-sm btn-link font-size-14 text-center">
-            <i class="uil-arrow-circle-right me-1"></i> View all items
-          </div></center>
+        <nuxt-link :to="'/clients/restauration/' + myOrder.subType + '/cart'">
+          <center>
+            <div class="btn btn-sm btn-link font-size-14 text-center">
+              <i class="uil-arrow-circle-right me-1"></i> View all items
+            </div>
+          </center>
         </nuxt-link>
       </div>
     </div>
@@ -85,11 +87,12 @@ export default {
   name: "ShoppingCart",
   async mounted() {
     this.myOrder = getData("restauration");
-    console.log(this.myOrder);
+    this.whereToGo = this.myOrder.subType;
   },
   data() {
     return {
       myOrder: null,
+      whereToGo: null,
     };
   },
 
@@ -102,7 +105,7 @@ export default {
   methods: {
     cancelOrder() {
       removeData("restauration");
-      this.$router.push("/clients/restauration/livraison-de-repas");
+      this.$router.push("/clients/restauration/" + this.whereToGo);
       this.$router.go();
     },
   },
