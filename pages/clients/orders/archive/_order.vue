@@ -1,6 +1,6 @@
 <script>
 import axios from "axios";
-
+import { format, parseISO } from "date-fns";
 import {
   getData,
   removeData,
@@ -15,6 +15,11 @@ export default {
     };
   },
   methods: {
+  
+    formatMyDate(date) {
+      // return date
+      return format(parseISO(date), "dd/MM/yyyy, HH:MM");
+    },
     async addOrder() {
       this.checkValues = false;
       this.myOrder.withDelivery.country = "Morocco";
@@ -69,8 +74,17 @@ export default {
       }
     },
   },
-  mounted() {
-    this.myOrder = getData("restauration");
+  async mounted() {
+    try {
+      let result = await axios.get(
+        process.env.baseUrl + "/orders/" + this.$route.params.order
+      );
+      //   result.data.when=formatMyDate( result.data.when)
+
+      this.myOrder = result.data;
+      this.myOrder.when = this.formatMyDate(this.myOrder.when);
+      this.myOrder.status = this.myOrder.status.reverse();
+    } catch (error) {}
     for (let i = 0; i < this.myOrder.items.length; i++) {
       if (this.myOrder.items[i].price < 0) {
         this.isOrderSurDevis = true;
@@ -86,9 +100,11 @@ export default {
       myOrder: null,
       isCODPossible: true,
       isOrderSurDevis: false,
+      cancelOrderComment: null,
       paimentMode: "invoice",
       title: "Commander",
       checkValues: false,
+
       items: [],
     };
   },
@@ -99,8 +115,16 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-
-    <div class="row mt-4" v-if="myOrder">
+   <div class="col-sm-12 col-md-2 mt-4">
+      <div>
+        <nuxt-link to="/clients/orders/archive"
+          ><button type="button" class="btn btn-primary btn-sm mb-3">
+            <i class="mdi mdi-arrow-left me-1"></i> liste des commandes
+          </button></nuxt-link
+        >
+      </div>
+    </div>
+    <div class="row mt-1" v-if="myOrder">
       <div class="col-xl-8">
         <b-alert show dismissible variant="danger" v-if="checkValues"
           >Veuillez remplir tous les renseignements figurant en bordure
@@ -122,7 +146,7 @@ export default {
                   <div class="media-body overflow-hidden">
                     <h5 class="font-size-16 mb-1">Informations de livraison</h5>
                     <p class="text-muted text-truncate mb-0">
-                      Insérez ici vos informations de livraison
+                      Vos informations de livraison
                     </p>
                   </div>
                   <i
@@ -143,10 +167,7 @@ export default {
                           <input
                             type="text"
                             class="form-control"
-                            :class="{
-                              'border-danger':
-                                checkValues && !myOrder.withDelivery.fullName,
-                            }"
+                            disabled
                             id="billing-name"
                             placeholder="Entrez le nom"
                             v-model="myOrder.withDelivery.fullName"
@@ -159,10 +180,7 @@ export default {
                           <input
                             type="text"
                             class="form-control"
-                            :class="{
-                              'border-danger':
-                                checkValues && !myOrder.withDelivery.city,
-                            }"
+                            disabled
                             id="billing-email-address"
                             placeholder="Ville."
                             v-model="myOrder.withDelivery.city"
@@ -175,10 +193,7 @@ export default {
                           <input
                             type="text"
                             class="form-control"
-                            :class="{
-                              'border-danger':
-                                checkValues && !myOrder.withDelivery.phone,
-                            }"
+                            disabled
                             id="billing-phone"
                             placeholder="Entrez le numéro de téléphone."
                             v-model="myOrder.withDelivery.phone"
@@ -189,15 +204,14 @@ export default {
                         <div class="form-group mb-4">
                           <label for="billing-phone">Prévu à</label>
 
-                          <b-form-input
-                            id="date-time"
+                          <input
+                            type="text"
+                            class="form-control"
+                            disabled
+                            id="billing-phone"
+                            placeholder="Entrez le numéro de téléphone."
                             v-model="myOrder.when"
-                            :class="{
-                              'border-danger': checkValues && !myOrder.when,
-                            }"
-                            value=""
-                            type="datetime-local"
-                          ></b-form-input>
+                          />
                         </div>
                       </div>
                     </div>
@@ -206,10 +220,7 @@ export default {
                       <label for="billing-address">Address</label>
                       <textarea
                         class="form-control"
-                        :class="{
-                          'border-danger':
-                            checkValues && !myOrder.withDelivery.street,
-                        }"
+                        disabled
                         id="billing-address"
                         rows="3"
                         placeholder="Entrez l'adresse complète"
@@ -239,7 +250,7 @@ export default {
                   <div class="media-body overflow-hidden">
                     <h5 class="font-size-16 mb-1">Modalités de paiement</h5>
                     <p class="text-muted text-truncate mb-0">
-                      Choisissez ici les renseignements concernant le paiement.
+                      Les renseignements concernant le paiement.
                     </p>
                   </div>
                   <i
@@ -249,22 +260,23 @@ export default {
               </div>
             </a>
 
-            <b-collapse id="checkout-paymentinfo-collapse">
+            <b-collapse id="checkout-paymentinfo-collapse" visible>
               <div class="p-4 border-top">
                 <div>
                   <h5 class="font-size-14 mb-3">Mode de paiement :</h5>
 
                   <div class="row">
-                    <div class="col-lg-3 col-sm-6">
+                    <div
+                      class="col-lg-3 col-sm-6"
+                      v-if="myOrder.paimentMode.type == 'invoice'"
+                    >
                       <div data-toggle="collapse">
                         <label class="card-radio-label">
                           <input
                             type="radio"
-                            
                             name="pay-method"
                             id="pay-methodoption1"
                             class="card-radio-input"
-                            @change="paimentMode = 'invoice'"
                             checked
                           />
 
@@ -276,7 +288,10 @@ export default {
                       </div>
                     </div>
 
-                    <div class="col-lg-3 col-sm-6">
+                    <div
+                      class="col-lg-3 col-sm-6"
+                      v-if="myOrder.paimentMode.type == 'cod'"
+                    >
                       <div v-if="isCODPossible && !isOrderSurDevis">
                         <label class="card-radio-label">
                           <input
@@ -284,7 +299,6 @@ export default {
                             name="pay-method"
                             id="pay-methodoption3"
                             class="card-radio-input"
-                            @change="paimentMode = 'cod'"
                           />
                           <span class="card-radio text-center text-truncate">
                             <i class="uil uil-money-bill d-block h2 mb-3"></i>
@@ -419,15 +433,16 @@ export default {
           </div>
         </div>
         <div class="row mt-4">
+          <ActivityEvent :status="myOrder.status" />
           <!-- end col -->
-          <div class="col-sm-12">
-            <div class="text-sm-right mt-2 mt-sm-0">
-              <center>
-                <span @click="addOrder" class="btn btn-success">
-                  Commander <i class="uil uil-shopping-cart-alt mr-1"></i>
-                </span>
-              </center>
-            </div>
+          <div
+            class="col-sm-12"
+            v-if="
+              myOrder.status[0].name != 'pending' &&
+              myOrder.status[0].name != 'validated'
+            "
+          >
+         
           </div>
           <!-- end col -->
         </div>

@@ -177,7 +177,7 @@ export default {
       <template #modal-title> Annuler mon événement </template>
       <p>
         L'annulation de votre événement peut nécessiter une démarche spécifique
-        auprès des fournisseurs et de BinBudget, l'annulation de votre événement
+        auprès des fournisseurs et de BinBudget, l'annulation
         à ce niveau peut ou non être effective immédiatement en fonction de
         l'état d'avancement.
       </p>

@@ -6,7 +6,7 @@ var menuItems = [
   },
   {
     id: 2,
-    label: "Dashboard",
+    label: "Tableau de bord",
     icon: "uil-home-alt",
     link: "/clients"
   },
@@ -35,7 +35,7 @@ var menuItems = [
         label: "Menu conventionné",
         link: "/clients/restauration/menu-conventionne"
       },
-      
+
       {
         id: 9,
         label: "Réservation de restaurant",
@@ -45,7 +45,7 @@ var menuItems = [
   },
   {
     id: 10,
-    label: "Events",
+    label: "Événements",
     icon: "uil-schedule",
     link: "/clients/events",
     subItems: [
@@ -98,16 +98,41 @@ var menuItems = [
   },
   {
     id: 18,
-    label: "My Account",
+    label: "Commandes et factures",
     isTitle: true
   },
   {
     id: 19,
-    label: "Orders",
+    label: "Commandes",
     icon: "uil-calender",
-    link: "/clients/orders"
+    link: "/clients/orders",
+    subItems: [
+      {
+        id: 32,
+        label: "Commandes actives",
+        link: "/clients/orders/active"
+      },
+      {
+        id: 33,
+        label: "Commandes archivées",
+        link: "/clients/orders/archive"
+      },
+    ]
   },
+  {
+    id: 21,
+    label: "Factures",
+    icon: "uil-invoice",
+    link: "/clients/invoices"
+  },
+
   
+  
+  {
+    id: 18,
+    label: "Paramètres",
+    isTitle: true
+  },
   {
     id: 8,
     label: "Restauration collectif",
@@ -131,17 +156,6 @@ var menuItems = [
     ]
   },
   {
-    id: 20,
-    label: "Invoices and Billing",
-    isTitle: true
-  },
-  {
-    id: 21,
-    label: "Invoices",
-    icon: "uil-invoice",
-    link: "/clients/invoices"
-  },
-  {
     id: 22,
     label: "Settings",
     icon: "uil-setting",
@@ -153,6 +167,6 @@ var menuItems = [
 
 
 
-export {menuItems} 
+export { menuItems }
 
 import axios from 'axios'

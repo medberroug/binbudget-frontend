@@ -68,7 +68,7 @@
         <!-- cart -->
         <EventCart v-if="eventIsActive" />
         <ShoppingCart v-if="restaurationIsActive" />
-
+ <MarketCart v-if="marketIsActive" />
         <!-- notifications -->
         <b-dropdown
           variant="white"
@@ -300,6 +300,7 @@ export default {
     return {
       eventIsActive: false,
       restaurationIsActive: false,
+      marketIsActive:false,
       languages: [
         {
           flag: require("~/assets/images/flags/us.jpg"),
@@ -339,6 +340,9 @@ export default {
     }
     if (getData("restauration")) {
       this.restaurationIsActive = true;
+    }
+      if (getData("market")) {
+      this.marketIsActive = true;
     }
 
     this.value = this.languages.find((x) => x.language === this.$i18n.locale);

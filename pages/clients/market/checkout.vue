@@ -4,7 +4,7 @@ import axios from "axios";
 import {
   getData,
   removeData,
-} from "../../../../components/controllers/savingData";
+} from "../../../components/controllers/savingData";
 /**
  * Checkout component
  */
@@ -60,8 +60,8 @@ export default {
             process.env.baseUrl + "/orders",
             this.myOrder
           );
-          removeData("restauration");
-          this.$router.push("/clients/restauration/livraison-de-repas");
+          removeData("market");
+          this.$router.push("/clients/market");
           console.log(result);
         } catch (error) {
           console.log(error);
@@ -70,7 +70,7 @@ export default {
     },
   },
   mounted() {
-    this.myOrder = getData("restauration");
+    this.myOrder = getData("market");
     for (let i = 0; i < this.myOrder.items.length; i++) {
       if (this.myOrder.items[i].price < 0) {
         this.isOrderSurDevis = true;
