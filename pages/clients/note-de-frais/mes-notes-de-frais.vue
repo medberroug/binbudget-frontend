@@ -36,7 +36,7 @@
       <b-table
         table-class="table table-centered datatable table-card-list"
         thead-tr-class="bg-transparent"
-        :items="invoicelist"
+        :items="mesNDFS"
         :fields="fields"
         responsive="sm"
         :per-page="perPage"
@@ -56,34 +56,85 @@
           </div>
         </template>
         <template v-slot:cell(id)="data">
-          <a href="javascript: void(0);" class="text-dark fw-bold">
-            {{ data.item.id }}
-          </a>
+          <nuxt-link
+            class="text-dark fw-bold"
+            :to="'/clients/note-de-frais/' + data.item.id"
+          >
+            {{data.item.id}}
+          </nuxt-link>
         </template>
 
         <template v-slot:cell(status)="data">
           <div
-            class="badge badge-pill bg-soft-success font-size-12"
-            :class="{ 'bg-soft-warning': data.item.status === 'En cours' }"
+            class="badge badge-pill font-size-12"
+            :class="{
+              'bg-soft-primary':
+                data.item.status[data.item.status.length - 1].name ===
+                'created',
+
+              'bg-soft-danger':
+                data.item.status[data.item.status.length - 1].name === 'denied',
+              'bg-soft-success':
+                data.item.status[data.item.status.length - 1].name ===
+                'accepted',
+              'bg-soft-secondary':
+                data.item.status[data.item.status.length - 1].name === 'closed',
+            }"
           >
-            {{ data.item.status }}
+            <span
+              v-if="
+                data.item.status[data.item.status.length - 1].name === 'created'
+              "
+              >Créé</span
+            >
+            <span
+              v-if="
+                data.item.status[data.item.status.length - 1].name === 'denied'
+              "
+              >Refusé</span
+            >
+            <span
+              v-if="
+                data.item.status[data.item.status.length - 1].name ===
+                'accepted'
+              "
+              >Accepté</span
+            >
+            <span
+              v-if="
+                data.item.status[data.item.status.length - 1].name === 'closed'
+              "
+              >Fermé</span
+            >
           </div>
         </template>
 
         <template v-slot:cell(name)="data">
-          <a href="#" class="text-body">{{ data.item.name }}</a>
+          <a href="#" class="text-body"
+            >{{ data.item.firstName }} {{ data.item.lastName }}</a
+          >
         </template>
-        <template v-slot:cell(download)>
+        <template v-slot:cell(amount)="data">
+          <a href="#" class="text-body">
+            {{
+              Intl.NumberFormat("ar-MA", {
+                style: "currency",
+                currency: "MAD",
+              }).format(data.item.amount)
+            }}
+          </a>
+        </template>
+        <template v-slot:cell(category)="data">
           <div>
-            <button class="btn btn-light btn-sm w-xs">
-              Pdf
-              <i class="uil uil-download-alt ms-2"></i>
-            </button>
+            {{
+              data.item.category.charAt(0).toUpperCase() +
+              data.item.category.slice(1)
+            }}
           </div>
         </template>
-        <template v-slot:cell(action)>
+        <template v-slot:cell(action)="data">
           <ul class="list-inline mb-0">
-            <li class="list-inline-item">
+            <!-- <li class="list-inline-item">
               <a
                 href="javascript:void(0);"
                 class="px-2 text-primary"
@@ -92,16 +143,14 @@
               >
                 <i class="uil uil-pen font-size-18"></i>
               </a>
-            </li>
+            </li> -->
             <li class="list-inline-item">
-              <a
-                href="javascript:void(0);"
-                class="px-2 text-danger"
-                v-b-tooltip.hover
-                title="Delete"
+              <nuxt-link
+                class="px-2 text-primary"
+                :to="'/clients/note-de-frais/' + data.item.id"
               >
-                <i class="uil uil-trash-alt font-size-18"></i>
-              </a>
+                <i class="uil uil-eye font-size-18"></i>
+              </nuxt-link>
             </li>
           </ul>
         </template>
@@ -141,6 +190,7 @@
 /**
  * Invoice-list component
  */
+import axios from "axios";
 export default {
   head() {
     return {
@@ -159,92 +209,7 @@ export default {
           active: true,
         },
       ],
-      invoicelist: [
-        {
-          id: "#MN0131",
-          date: "10 Jul, 2020",
-          name: "Connie Franco",
-          amount: "$141",
-          status: "Payé",
-        },
-        {
-          id: "#MN0130",
-          date: "09 Jul, 2020",
-          name: "Paul Reynolds",
-          amount: "$153",
-          status: "Payé",
-        },
-        {
-          id: "#MN0129",
-          date: "09 Jul, 2020",
-          name: "Ronald Patterson",
-          amount: "$220",
-          status: "En cours",
-        },
-        {
-          id: "#MN0128",
-          date: "08 Jul, 2020",
-          name: "Adella Perez",
-          amount: "$175",
-          status: "Payé",
-        },
-        {
-          id: "#MN0127",
-          date: "07 Jul, 2020",
-          name: "Theresa Mayers",
-          amount: "$160",
-          status: "Payé",
-        },
-        {
-          id: "#MN0126",
-          date: "06 Jul, 2020",
-          name: "Michael Wallace",
-          amount: "$150",
-          status: "Payé",
-        },
-        {
-          id: "#MN0125",
-          date: "05 Jul, 2020",
-          name: "Oliver Gonzales",
-          amount: "$165",
-          status: "En cours",
-        },
-        {
-          id: "#MN0124",
-          date: "05 Jul, 2020",
-          name: "David Burke",
-          amount: "$170",
-          status: "Payé",
-        },
-        {
-          id: "#MN0123",
-          date: "04 Jul, 2020",
-          name: "Willie Verner",
-          amount: "$140",
-          status: "En cours",
-        },
-        {
-          id: "#MN0122",
-          date: "03 Jul, 2020",
-          name: "Felix Perry",
-          amount: "$155",
-          status: "Payé",
-        },
-        {
-          id: "#MN0121",
-          date: "02 Jul, 2020",
-          name: "Virgil Kelley",
-          amount: "$165",
-          status: "Payé",
-        },
-        {
-          id: "#MN0120",
-          date: "02 Jul, 2020",
-          name: "Matthew Lawler",
-          amount: "$170",
-          status: "En cours",
-        },
-      ],
+
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
@@ -253,11 +218,11 @@ export default {
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
+      mesNDFS: [],
       fields: [
         {
           key: "id",
           label: "ID",
-          sortable: true,
         },
         {
           key: "date",
@@ -266,7 +231,6 @@ export default {
         {
           key: "name",
           label: "Nom du bénéficiaire ",
-          sortable: true,
         },
         {
           key: "amount",
@@ -274,15 +238,18 @@ export default {
           sortable: true,
         },
         {
+          key: "category",
+          label: "Catégorie",
+        },
+        {
           key: "status",
           label: "Status",
           sortable: true,
         },
         {
-          key: "download",
-          label: "Note de frais (PDF)",
+          key: "action",
+          label: "action",
         },
-        "action",
       ],
     };
   },
@@ -291,12 +258,18 @@ export default {
      * Total no. of records
      */
     rows() {
-      return this.invoicelist.length;
+      return this.mesNDFS.length;
     },
   },
-  mounted() {
+  async mounted() {
     // Set the initial number of items
-    this.totalRows = this.items.length;
+    this.totalRows = this.mesNDFS.length;
+
+    try {
+      let result = await axios.get(process.env.baseUrl + "/ndfs");
+      this.mesNDFS = result.data;
+      this.mesNDFS = this.mesNDFS.reverse();
+    } catch (error) {}
   },
   methods: {
     /**

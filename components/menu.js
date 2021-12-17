@@ -129,7 +129,7 @@ var menuItems = [
   
   
   {
-    id: 18,
+    id: 180,
     label: "Paramètres",
     isTitle: true
   },
