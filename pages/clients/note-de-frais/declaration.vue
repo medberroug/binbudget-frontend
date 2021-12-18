@@ -35,6 +35,8 @@ export default {
 
     async sendNDF() {
       this.ndfDetails.category;
+      this.somethingMissing = false;
+      this.amountIsNotGood = false;
       if (!this.ndfDetails.firstName) {
         this.somethingMissing = true;
       }
@@ -63,10 +65,7 @@ export default {
                 this.categories[i].maxAmount ||
               parseFloat(this.ndfDetails.amount) < this.categories[i].minAmount
             ) {
-              console.log(
-                parseFloat(this.ndfDetails.amount) >
-                  this.categories[i].maxAmount
-              );
+             
               this.maxAmount = this.categories[i].maxAmount;
               this.minAmount = this.categories[i].minAmount;
               this.amountIsNotGood = true;
@@ -85,7 +84,7 @@ export default {
           // this.fileMissing = true;
 
           formData.append("files", this.file);
-
+          console.log("I'm here");
           try {
             let myImage = await axios
               .post(process.env.baseUrl + "/upload", formData)
@@ -101,7 +100,7 @@ export default {
               process.env.baseUrl + "/ndfs",
               this.ndfDetails
             );
-            this.$router.push("/clients/note-de-frais/"+result.data.id);
+            this.$router.push("/clients/note-de-frais/" + result.data.id);
           } catch (error) {}
         }
       }

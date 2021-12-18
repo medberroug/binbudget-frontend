@@ -104,7 +104,7 @@
               v-if="
                 data.item.status[data.item.status.length - 1].name === 'closed'
               "
-              >Fermé</span
+              >Cloturé</span
             >
           </div>
         </template>
