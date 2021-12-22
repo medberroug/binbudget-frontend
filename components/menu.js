@@ -1,4 +1,4 @@
-var menuItems = [
+var menuItemsForClient = [
   {
     id: 1,
     label: "menu",
@@ -126,8 +126,8 @@ var menuItems = [
     link: "/clients/invoices"
   },
 
-  
-  
+
+
   {
     id: 180,
     label: "Paramètres",
@@ -164,6 +164,94 @@ var menuItems = [
 ];
 
 
+var menuItemsForSupplier = [
+  {
+    id: 90,
+    label: "menu",
+    isTitle: true
+  },
+  {
+    id: 91,
+    label: "Tableau de bord",
+    icon: "uil-home-alt",
+    link: "/supplier"
+  },
+  {
+    id: 92,
+    label: "Mes commandes",
+    isTitle: true
+  },
+  {
+    id: 93,
+    label: "Commandes en cours",
+    icon: "uil-shopping-basket",
+    link: "/supplier/orders/active"
+  },
+  {
+    id: 94,
+    label: "Commandes archivées",
+    icon: "uil-archive",
+    link: "/supplier/orders/archived"
+  },
+  {
+    id: 95,
+    label: "Offres et services",
+    isTitle: true
+  },
+  {
+    id: 96,
+    label: "Produits et services",
+    icon: "uil-tag-alt",
+    link: "/supplier/myproducts"
+  },
+
+  {
+    id: 97,
+    label: "Factures",
+    isTitle: true
+  },
+  {
+    id: 98,
+    label: "Mes factures de vente",
+    icon: "uil-invoice",
+    link: "/supplier/invoices/selling"
+  },
+  {
+    id: 99,
+    label: "Mes factures d'achat",
+    icon: "uil-money-withdrawal",
+    link: "/supplier/invoices/buying"
+  },
+  {
+    id: 1001,
+    label: "Paramètres",
+    isTitle: true
+  },
+
+  {
+    id: 250,
+    label: "Settings",
+    icon: "uil-setting",
+    link: "/clients/settings"
+  }
+];
+import { getData, persistData } from "../components/controllers/savingData"
+
+console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+// persistData("account", "supplier")
+console.log(getData('account'));
+console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+let menuItems = null
+let accountType = getData('account')
+
+
+if (accountType == "supplier") {
+  menuItems = menuItemsForSupplier
+}
+if (accountType == "client" || !accountType) {
+  menuItems = menuItemsForClient
+}
 
 
 

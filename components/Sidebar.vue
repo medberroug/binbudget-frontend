@@ -4,6 +4,7 @@ import MetisMenu from "metismenujs/dist/metismenujs";
 import { mapState } from "vuex";
 
 import { menuItems } from "./menu";
+import { getData, persistData } from "../components/controllers/savingData";
 
 /**
  * Sidebar component
@@ -11,18 +12,19 @@ import { menuItems } from "./menu";
 export default {
   data() {
     return {
-      menuItems: menuItems
+      menuItems: menuItems,
+      myAccountType:null,
     };
   },
   props: {
     type: {
       type: String,
-      required: true
+      required: true,
     },
     width: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: mapState(["layout"]),
   watch: {
@@ -64,7 +66,7 @@ export default {
               break;
           }
         }
-      }
+      },
     },
     width: {
       immediate: true,
@@ -83,11 +85,18 @@ export default {
               break;
           }
         }
-      }
-    }
+      },
+    },
   },
-  mounted: function() {
+  mounted: function () {
     // eslint-disable-next-line no-unused-vars
+    let myAccountType = getData("account");
+    console.log(myAccountType);
+    if (myAccountType == null) {
+      persistData("account", "client");
+      myAccountType="client"
+    }
+this.myAccountType=myAccountType
     var menuRef = new MetisMenu("#side-menu");
     this._activateMenuDropdown();
 
@@ -176,8 +185,8 @@ export default {
           }
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -185,13 +194,13 @@ export default {
   <!-- ========== Left Sidebar Start ========== -->
   <div class="vertical-menu">
     <!-- LOGO -->
-    <div class="navbar-brand-box">
+    <div class="navbar-brand-box" v-if="myAccountType=='client'">
       <nuxt-link to="/" class="logo logo-dark">
         <span class="logo-sm">
           <img src="~/assets/images/logo-sm.png" alt height="22" />
         </span>
-        <span class="logo-lg">
-          <img src="~/assets/images/logo.png" alt height="20" />
+        <span class="logo-lg mt-2">
+          <img src="~/assets/images/logoClient.png" alt height="20" />
         </span>
       </nuxt-link>
 
@@ -199,8 +208,27 @@ export default {
         <span class="logo-sm">
           <img src="~/assets/images/logo-sm.png" alt height="22" />
         </span>
-        <span class="logo-lg">
-          <img src="~/assets/images/logo.png" alt height="35" />
+        <span class="logo-lg mt-2">
+          <img src="~/assets/images/logoClient.png" alt height="50" />
+        </span>
+      </nuxt-link>
+    </div>
+    <div class="navbar-brand-box" v-if="myAccountType=='supplier'">
+      <nuxt-link to="/" class="logo logo-dark">
+        <span class="logo-sm">
+          <img src="~/assets/images/logo-sm.png" alt height="22" />
+        </span>
+        <span class="logo-lg mt-2">
+          <img src="~/assets/images/logoPartner.png" alt height="20" />
+        </span>
+      </nuxt-link>
+
+      <nuxt-link to="/" class="logo logo-light">
+        <span class="logo-sm">
+          <img src="~/assets/images/logo-sm.png" alt height="22" />
+        </span>
+        <span class="logo-lg mt-2">
+          <img src="~/assets/images/logoPartner.png" alt height="50" />
         </span>
       </nuxt-link>
     </div>
@@ -229,15 +257,13 @@ export default {
                 class="is-parent"
                 :class="{
                   'has-arrow': !item.badge,
-                  'has-dropdown': item.badge
+                  'has-dropdown': item.badge,
                 }"
               >
                 <i :class="`${item.icon}`" v-if="item.icon"></i>
                 <span>{{ item.label }}</span>
                 <span
-                  :class="
-                    `badge badge-pill badge-${item.badge.variant} float-end`
-                  "
+                  :class="`badge badge-pill badge-${item.badge.variant} float-end`"
                   v-if="item.badge"
                   >{{ item.badge.text }}</span
                 >
@@ -251,9 +277,7 @@ export default {
                 <i :class="`${item.icon}`" v-if="item.icon"></i>
                 <span>{{ item.label }}</span>
                 <span
-                  :class="
-                    `badge badge-pill badge-${item.badge.variant} float-end`
-                  "
+                  :class="`badge badge-pill badge-${item.badge.variant} float-end`"
                   v-if="item.badge"
                   >{{ item.badge.text }}</span
                 >
