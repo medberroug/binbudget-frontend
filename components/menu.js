@@ -75,7 +75,7 @@ var menuItemsForClient = [
     id: 14,
     label: "Note De Frais",
     icon: "uil-moneybag",
-    link: "/clients/note-de-frais",
+    
 
     subItems: [
       {
@@ -202,7 +202,19 @@ var menuItemsForSupplier = [
     id: 96,
     label: "Produits et services",
     icon: "uil-tag-alt",
-    link: "/supplier/myproducts"
+    link: "/supplier/myproducts",
+    subItems: [
+      {
+        id: 1213515,
+        label: "Articles",
+        link: "/supplier/myproducts"
+      },
+      {
+        id: 13266,
+        label: "Catégories",
+        link: "/supplier/myproducts/categories",
+      }
+    ]
   },
 
   {
@@ -248,10 +260,15 @@ let accountType = getData('account')
 
 if (accountType == "supplier") {
   menuItems = menuItemsForSupplier
+  persistData("accountinfo", {
+    id:"6165a1dedb4fc0357013de8f",
+    type:"restaurations"
+  })
 }
 if (accountType == "client" || !accountType) {
   menuItems = menuItemsForClient
 }
+
 
 
 

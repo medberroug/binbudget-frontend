@@ -77,7 +77,7 @@ export default {
           if (this.sliderPrice < newPrice) {
             this.sliderPrice = newPrice;
           }
-          this.maxInScrollPrice = this.sliderPrice+50;
+          this.maxInScrollPrice = this.sliderPrice + 50;
           let myNewItem = {
             id: this.restaurantDetails.items[i].id,
             name: this.restaurantDetails.items[i].name,
@@ -89,11 +89,10 @@ export default {
             categories: myCategories,
             liked: false,
           };
-
-          this.restaurantItems.push(myNewItem);
-          this.restarautnItemsFiltred.push(myNewItem);
-          console.log(this.restaurantItems);
-          console.log(this.overallCategories);
+          if (this.restaurantDetails.items[i].status) {
+            this.restaurantItems.push(myNewItem);
+            this.restarautnItemsFiltred.push(myNewItem);
+          }
         }
       }
       // console.log(this.restaurantDetails);
@@ -151,7 +150,7 @@ export default {
           } else {
             product.discount = parseFloat(product.discount);
           }
-        
+
           if (selectedCategory == "all") {
             if (product.discount >= discountChange) {
               return product;
@@ -481,7 +480,11 @@ export default {
                         {{ item.categories }}
                       </p>
 
-                      <div v-if="item.oldPrice != item.newPrice && item.newPrice > 0">
+                      <div
+                        v-if="
+                          item.oldPrice != item.newPrice && item.newPrice > 0
+                        "
+                      >
                         <h5 class="mt-3 mb-0">
                           <span class="text-muted mr-2">
                             <del>{{ item.oldPrice }}dh</del>
@@ -498,11 +501,7 @@ export default {
                           <span>{{ item.newPrice }}dh</span>
                         </h5>
                       </div>
-                      <div
-                        v-if="
-                           item.newPrice == 0
-                        "
-                      >
+                      <div v-if="item.newPrice == 0">
                         <h5 class="mt-3 mb-0">
                           <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
                         </h5>

@@ -89,11 +89,11 @@ export default {
             categories: myCategories,
             liked: false,
           };
-
-          this.restaurantItems.push(myNewItem);
-          this.restarautnItemsFiltred.push(myNewItem);
-          console.log(this.restaurantItems);
-          console.log(this.overallCategories);
+ if (this.restaurantDetails.items[i].status) {
+            this.restaurantItems.push(myNewItem);
+            this.restarautnItemsFiltred.push(myNewItem);
+          }
+       
         }
       }
       // console.log(this.restaurantDetails);
