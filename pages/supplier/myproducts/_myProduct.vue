@@ -45,9 +45,14 @@
         >
           <i class="uil uil-pricetag-alt me-1"></i>Réduction et prix
         </button>
+
+         <nuxt-link :to="'/supplier/myproducts/edit/'+myItem.id"
+        >
         <button type="button" class="btn btn-primary btn-sm mt-3">
           <i class="uil uil-edit-alt me-1"></i>Modifier
         </button>
+        </nuxt-link
+      >
         <button
           type="button"
           class="btn btn-danger btn-sm mt-3"

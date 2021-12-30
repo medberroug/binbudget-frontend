@@ -3,14 +3,32 @@
 <template>
   <div>
     <PageHeader :title="title" :details="items" />
+    <b-modal v-model="addCategoryModal" centered hide-footer v-if="myItems">
+      <template #modal-title> Ajouter une nouvelle catégorie </template>
 
+      <label for="input-live">Nom de la catégorie:</label>
+      <b-form-input v-model="myNewCategory" type="text"></b-form-input>
+
+      <center>
+        <b-button
+          class="mt-3"
+          block
+          variant="primary"
+          @click="addCategoryController"
+        >
+          Ajouter</b-button
+        >
+      </center></b-modal
+    >
     <div class="row mt-3 align-items-center" v-if="myItems.length > 0">
       <div class="col-sm-12 col-md-2">
-        <nuxt-link :to="'/supplier/myproducts/addProduct'"
-          ><button type="button" class="btn btn-primary btn-sm mt-3">
-            <i class="mdi mdi-plus me-1"></i>Ajouter un produit
-          </button></nuxt-link
+        <button
+          type="button"
+          class="btn btn-primary btn-sm mt-3"
+          @click="addCategoryModal = !addCategoryModal"
         >
+          <i class="mdi mdi-plus me-1"></i>Ajouter une catégorie
+        </button>
       </div>
 
       <!-- Search -->
@@ -32,7 +50,7 @@
     <!-- Table -->
     <center v-if="myItems.length == 0">
       <h5 class="text-muted m-5">
-        Vous n'avez pas ajouté de produits ou de services pour le moment.
+        Vous n'avez pas ajouté de categories pour le moment.
       </h5>
     </center>
     <div class="table-responsive mb-0" v-if="myItems.length > 0">
@@ -50,86 +68,6 @@
         :filter-included-fields="filterOn"
         @filtered="onFiltered"
       >
-        <template v-slot:cell(status)="data">
-          <div
-            class="badge badge-pill font-size-12 m-1"
-            :class="{
-              'bg-info': data.item.status === true,
-              'bg-danger': data.item.status === false,
-            }"
-          >
-            <span v-if="data.item.status == true"> Active</span>
-            <span v-if="data.item.status == false"> Désactivé</span>
-          </div>
-        </template>
-
-        <template v-slot:cell(price)="data">
-          <div class="font-size-16" v-if="!data.item.disocunt">
-            <span class="font-size-12 text-secondary"
-              >(-{{ percentageTaking }}%)</span
-            >
-            {{
-              Intl.NumberFormat("ar-MA", {
-                style: "currency",
-                currency: "MAD",
-              }).format(data.item.price)
-            }}
-            <span class="font-size-12 text-secondary">
-              / {{ data.item.unit }}</span
-            >
-          </div>
-          <div class="font-size-16" v-if="data.item.disocunt">
-            <span class="font-size-12 text-secondary"
-              >(-{{ percentageTaking }}%)</span
-            >
-            {{
-              Intl.NumberFormat("ar-MA", {
-                style: "currency",
-                currency: "MAD",
-              }).format(
-                data.item.price * (1 - data.item.disocunt.percentage / 100)
-              )
-            }}
-            <span class="font-size-12 text-secondary">
-              / {{ data.item.unit }}</span
-            >
-          </div>
-        </template>
-        <template v-slot:cell(disocunt)="data">
-          <div class="font-size-16" v-if="data.item.disocunt">
-            -{{ data.item.disocunt.percentage }}%
-          </div>
-          <div class="font-size-16" v-if="!data.item.disocunt">--</div>
-        </template>
-        <template v-slot:cell(categories)="data">
-          <span
-            class="font-size-16 m-1"
-            v-for="(category, index) in data.item.categories"
-            :key="index"
-          >
-            {{ category.name }}
-          </span>
-        </template>
-        <template v-slot:cell(shownIn)="data">
-          <div
-            v-for="(where, index) in data.item.shownIn"
-            :key="index"
-            class="badge badge-pill font-size-4 m-1 bg-info"
-          >
-            <span v-if="where.serviceName == 'livraison-de-repas'">
-              Livraison de repas</span
-            >
-            <span v-if="where.serviceName == 'menu-conventionne'">
-              Menu conventionné</span
-            >
-            <span v-if="where.serviceName == 'repas-emporte'">
-              Repas emporté</span
-            >
-            <span v-if="where.serviceName == 'reservation-de-restaurant'">
-              Réservation de restaurant</span
-            >
-          </div>
-        </template>
         <template v-slot:cell(name)="data">
           <div class="row font-size-16 nowrap">
             <!-- <div class="col"> <img
@@ -142,18 +80,32 @@
           </div>
         </template>
 
+        <template v-slot:cell(number)="data">
+          <div class="row font-size-16 nowrap">
+            <!-- <div class="col"> <img
+              :src="baseUrl + data.item.firstImage.url"
+              alt="product-img"
+              title="product-img"
+              class="avatar-md"
+            /></div> -->
+            <div class="col" v-if="counter[data.item.name]">
+              {{ counter[data.item.name] }}
+            </div>
+            <div class="col" v-else>0</div>
+          </div>
+        </template>
+
         <template v-slot:cell(id)="data">
           <ul class="list-inline mb-0">
             <li class="list-inline-item">
               <a
                 href="javascript:void(0);"
-                class="px-2 text-primary"
+                class="px-2 text-danger"
                 v-b-tooltip.hover
-                title="Consulter"
+                title="Supprimer"
+                @click="deleteCategory(data.item.name)"
               >
-                <nuxt-link :to="'/supplier/myproducts/' + data.item.id">
-                  <i class="uil uil-eye font-size-18"></i>
-                </nuxt-link>
+                <i class="uil uil-trash font-size-18 text-danger"></i>
               </a>
             </li>
             <!-- <li class="list-inline-item">
@@ -206,7 +158,7 @@
  */
 import axios from "axios";
 import { format, parseISO } from "date-fns";
-import { getData } from "../../../components/controllers/savingData";
+import { getData } from "../../../../components/controllers/savingData";
 export default {
   head() {
     return {
@@ -215,10 +167,10 @@ export default {
   },
   data() {
     return {
-      title: "Mes articles et services",
+      title: "Mes catégories",
       items: [
         {
-          text: "Mes articles et services",
+          text: "Mes catégories",
           active: true,
         },
       ],
@@ -226,42 +178,28 @@ export default {
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
+      addCategoryModal: false,
       pageOptions: [10, 25, 50, 100],
       filter: null,
+      myNewCategory: null,
       filterOn: [],
       percentageTaking: 0,
       sortBy: "age",
       sortDesc: false,
       myItems: [],
+      counter: null,
+      mySP: null,
       fields: [
         {
           key: "name",
-          label: "Label ",
+          label: "Label",
           sortable: true,
         },
         {
-          key: "shownIn",
-          label: "Catégorie de service",
+          key: "number",
+          label: "Nombre de produits",
         },
 
-        {
-          key: "categories",
-          label: "Catégories",
-        },
-        {
-          key: "price",
-          label: "Prix (HT)",
-          sortable: true,
-        },
-        {
-          key: "disocunt",
-          label: "Réduction",
-        },
-        {
-          key: "status",
-          label: "Statut",
-          sortable: true,
-        },
         {
           key: "id",
           label: "Action",
@@ -283,23 +221,25 @@ export default {
     try {
       let myAccount = getData("accountinfo");
       console.log(myAccount);
-      let myItems = await axios.get(
+      this.mySP = await axios.get(
         process.env.baseUrl + "/" + myAccount.type + "/" + myAccount.id
       );
+      let myItems = this.mySP;
+      this.mySP = this.mySP.data;
       this.percentageTaking = myItems.data.percentageTaking;
       console.log(myItems.data.items[0]);
-      this.myItems = myItems.data.items;
-      let result = await axios.get(process.env.baseUrl + "/orders");
-      result = result.data;
-      //   for (let i = 0; i < result.length; i++) {
-      //     if (
-      //       result[i].status[result[i].status.length - 1].name != "cancelled" &&
-      //       result[i].status[result[i].status.length - 1].name != "closed"
-      //     ) {
-      //       this.myItems.push(result[i]);
-      //     }
-      //   }
-      //   this.myItems = this.myItems.reverse();
+      this.myItems = myItems.data.category;
+      let myCategoryCalculator = [];
+      for (let i = 0; i < this.mySP.items.length; i++) {
+        myCategoryCalculator.push(this.mySP.items[i].categories[0].name);
+      }
+      const counts = {};
+      const sampleArray = myCategoryCalculator;
+      sampleArray.forEach(function (x) {
+        counts[x] = (counts[x] || 0) + 1;
+      });
+
+      this.counter = counts;
     } catch (error) {
       console.log(error);
     }
@@ -309,6 +249,39 @@ export default {
     /**
      * Search the table data with search input
      */
+    async addCategoryController() {
+      this.myItems.push({
+        name: this.myNewCategory,
+      });
+      // this.mySP.items.push(this.myProduct);
+      let result = await axios.put(
+        process.env.baseUrl + "/restaurations/" + this.mySP.id,
+        {
+          category: this.myItems,
+        }
+      );
+      this.addCategoryModal = false;
+      this.myNewCategory = null;
+      // this.$router.push("/supplier/myproducts/" + this.myProduct.id);
+    },
+
+    async deleteCategory(category) {
+      let myNewCategories = [];
+      for (let i = 0; i < this.myItems.length; i++) {
+        if (this.myItems[i].name != category) {
+          myNewCategories.push(this.myItems[i]);
+        }
+      }
+      this.myItems = myNewCategories;
+      // this.mySP.items.push(this.myProduct);
+      let result = await axios.put(
+        process.env.baseUrl + "/restaurations/" + this.mySP.id,
+        {
+          category: myNewCategories,
+        }
+      );
+      // this.$router.push("/supplier/myproducts/" + this.myProduct.id);
+    },
     formatMyDate(date) {
       // return date
       return format(parseISO(date), "dd/MM/yyyy, HH:MM");

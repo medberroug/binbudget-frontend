@@ -206,7 +206,7 @@ var menuItemsForSupplier = [
     subItems: [
       {
         id: 1213515,
-        label: "Articles",
+        label: "Produits",
         link: "/supplier/myproducts"
       },
       {
