@@ -6,7 +6,7 @@
 
     <div class="row mt-3 align-items-center" v-if="myItems.length > 0">
         
-      <div class="col-sm-12 col-md-2"><nuxt-link :to="'/supplier/myproducts'"
+      <div class="col-sm-12 col-md-2"><nuxt-link :to="'/supplier/myproducts/addProduct'"
         ><button type="button" class="btn btn-primary btn-sm mt-3">
           <i class="mdi mdi-plus me-1"></i>Ajouter un produit
         </button></nuxt-link
