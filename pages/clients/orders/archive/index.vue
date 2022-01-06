@@ -244,6 +244,7 @@
  */
 import axios from "axios";
 import { format, parseISO } from "date-fns";
+import {getData} from "../../../../components/controllers/savingData"
 export default {
   head() {
     return {
@@ -317,7 +318,7 @@ export default {
   async mounted() {
     // Set the initial number of items
     try {
-      let result = await axios.get(process.env.baseUrl + "/orders");
+      let result = await axios.get(process.env.baseUrl + "/orders?byClient="+getData("clientinfo").id);
      
       result = result.data;
        console.log(result.length);

@@ -223,6 +223,7 @@
  */
 import axios from "axios";
 import { format, parseISO } from "date-fns";
+import {getData} from "../../../../components/controllers/savingData"
 export default {
   head() {
     return {
@@ -298,7 +299,7 @@ export default {
     this.baseUrl = process.env.baseUrl;
 
     try {
-      let result = await axios.get(this.baseUrl + "/events");
+      let result = await axios.get(this.baseUrl + "/events?byClient="+getData("clientinfo").id);
       result = result.data;
       // this.myEvents = result;
       let archivedEvents = [];

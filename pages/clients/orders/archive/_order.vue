@@ -94,6 +94,7 @@ export default {
     if (this.myOrder.total >= 20000) {
       this.isCODPossible = false;
     }
+
   },
   data() {
     return {

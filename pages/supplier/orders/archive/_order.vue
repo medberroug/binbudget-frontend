@@ -15,6 +15,36 @@ export default {
     };
   },
   methods: {
+    async updateStatus(value) {
+      let myComment = "Aucun commentaire";
+      if (value == "pendingValidation")
+        myComment = "Votre commande a été validée par le fournisseur";
+      try {
+        let newStatus = {
+          name: value,
+          comment: myComment,
+          date: new Date(),
+        };
+        let reResult = await axios.get(
+          process.env.baseUrl + "/orders/" + this.myOrder.id
+        );
+
+        reResult = reResult.data.status;
+
+        reResult.push(newStatus);
+
+        let result = await axios.put(
+          process.env.baseUrl + "/cancelMyOrder/" + this.myOrder.id,
+          {
+            status: reResult,
+          }
+        );
+
+        this.$router.go();
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async cancelOrder() {
       this.cancelModalShow = true;
       try {
@@ -24,7 +54,7 @@ export default {
         let newStatus = {
           name: "cancelled",
           comment:
-            "La commande a été annulé par le client: " +
+            "La commande a été annulé par le fournisseur: " +
             this.cancelOrderComment,
           date: new Date(),
         };
@@ -43,7 +73,7 @@ export default {
           }
         );
 
-        this.$router.push("/clients/orders/archive/" + this.myOrder.id);
+        this.$router.push("/supplier/orders/archive/" + this.myOrder.id);
       } catch (error) {
         console.log(error);
       }
@@ -115,7 +145,7 @@ export default {
 
       this.myOrder = result.data;
       this.myOrder.when = this.formatMyDate(this.myOrder.when);
-      this.myOrder.status = this.myOrder.status.reverse();
+      
     } catch (error) {}
     for (let i = 0; i < this.myOrder.items.length; i++) {
       if (this.myOrder.items[i].price < 0) {
@@ -126,7 +156,7 @@ export default {
     if (this.myOrder.total >= 20000) {
       this.isCODPossible = false;
     }
-    this.myOrder.status.reverse()
+  this.myOrder.status = this.myOrder.status.reverse();
   },
   data() {
     return {
@@ -149,11 +179,11 @@ export default {
   <div>
     <PageHeader :title="title" :items="items" />
     <b-modal v-model="cancelModalShow" centered hide-footer>
-      <template #modal-title> Annuler ma commande </template>
+      <template #modal-title> Refuser la commande </template>
       <p>
-        L'annulation de votre commande peut nécessiter une démarche spécifique
-        auprès des fournisseurs et de BinBudget, l'annulation à ce niveau peut
-        ou non être effective immédiatement en fonction de l'état d'avancement.
+        Veuillez indiquer ci-dessous la raison pour laquelle vous refusez cette
+        commande. N'oubliez pas que le refus de plusieurs commandes mettra votre
+        compte en suspens.
       </p>
       <p>
         Notre service clientèle vous contactera bientôt pour finaliser la
@@ -163,7 +193,7 @@ export default {
         class="form-control"
         rows="5"
         required
-        placeholder="Pourquoi voulez-vous annuler votre commande ? "
+        placeholder="Pourquoi voulez-vous refuser cette commande ? "
         v-model="cancelOrderComment"
       >
       </textarea>
@@ -173,13 +203,18 @@ export default {
         >
       </center></b-modal
     >
-    <div class="col-sm-12 col-md-2 mt-4">
-      <div>
-        <nuxt-link to="/clients/orders/active"
-          ><button type="button" class="btn btn-primary btn-sm mb-3">
-            <i class="mdi mdi-arrow-left me-1"></i> liste des commandes
-          </button></nuxt-link
-        >
+    <div class="mt-3" v-if="myOrder">
+      <div class="row">
+        <div class="col">
+          <nuxt-link to="/supplier/orders/archive"
+            ><button type="button" class="btn btn-primary btn-sm mb-3">
+              <i class="mdi mdi-arrow-left me-1"></i> liste des commandes
+            </button></nuxt-link
+          >
+        </div>
+        <div class="col">
+          
+        </div>
       </div>
     </div>
 
@@ -494,22 +529,7 @@ export default {
         <div class="row mt-4">
           <ActivityEvent :status="myOrder.status" />
           <!-- end col -->
-          <div
-            class="col-sm-12"
-            v-if="
-              myOrder.status[0].name != 'pending' &&
-              myOrder.status[0].name != 'validated'
-            "
-          >
-            <div class="text-sm-right mt-2 mt-sm-0 float-end">
-              <span
-                @click="cancelModalShow = !cancelModalShow"
-                class="btn btn-sm btn-outline-danger"
-              >
-                Annuler la commande <i class="uil uil-trash mr-1"></i>
-              </span>
-            </div>
-          </div>
+         
           <!-- end col -->
         </div>
       </div>

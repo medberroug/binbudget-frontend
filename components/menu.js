@@ -191,7 +191,7 @@ var menuItemsForSupplier = [
     id: 94,
     label: "Commandes archivées",
     icon: "uil-archive",
-    link: "/supplier/orders/archived"
+    link: "/supplier/orders/archive"
   },
   {
     id: 95,
@@ -255,7 +255,7 @@ console.log(getData('account'));
 console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
 let menuItems = null
-let accountType = getData('account')
+let accountType = getData('account')  
 
 
 if (accountType == "supplier") {
@@ -267,6 +267,10 @@ if (accountType == "supplier") {
 }
 if (accountType == "client" || !accountType) {
   menuItems = menuItemsForClient
+  persistData("clientinfo", {
+    id:"61d6ef9da87fba4628e55138",
+    user:"61d6e544ef059514d8f21485"
+  })
 }
 
 

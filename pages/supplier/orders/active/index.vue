@@ -4,19 +4,11 @@
   <div>
     <PageHeader :title="title" :details="items" />
 
-    <div class="row mt-3">
-      <div class="col-sm-12 col-md-2">
-        <div>
-          <nuxt-link to="/clients/events/planifier-un-evenement"
-            ><button type="button" class="btn btn-primary btn-sm mb-3">
-              <i class="mdi mdi-plus me-1"></i> Planifier un evenement
-            </button></nuxt-link
-          >
-        </div>
-      </div>
+    <div class="row mt-3" v-if="myOrders.length > 0">
+      <div class="col-sm-12 col-md-2"></div>
 
       <!-- Search -->
-      <div class="col-sm-12 col-md-10" v-if="myEvents.length > 0">
+      <div class="col-sm-12 col-md-10">
         <div id="tickets-table_filter" class="dataTables_filter text-md-end">
           <label class="d-inline-flex align-items-center">
             Recherchez:
@@ -32,21 +24,16 @@
       <!-- End search -->
     </div>
     <!-- Table -->
-    <div v-if="loader">
-      <center>
-        <div class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
-      </center>
-    </div>
-    <div v-if="myEvents.length == 0 && !loader" >
-      <center>Vous n'avez pas encore créé d'événements.</center>
-    </div>
-    <div class="table-responsive mb-0" v-if="myEvents.length > 0">
+    <center v-if="myOrders.length == 0">
+      <h5 class="text-muted m-5">
+        Vous n'avez pas de commande active pour le moment
+      </h5>
+    </center>
+    <div class="table-responsive mb-0" v-if="myOrders.length > 0">
       <b-table
         table-class="table table-centered datatable table-card-list"
         thead-tr-class="bg-transparent"
-        :items="myEvents"
+        :items="myOrders"
         :fields="fields"
         responsive="sm"
         :per-page="perPage"
@@ -57,14 +44,6 @@
         :filter-included-fields="filterOn"
         @filtered="onFiltered"
       >
-        <template v-slot:cell(endDate)="data">
-          <span class="text-black">{{ formatMyDate(data.item.endDate) }}</span>
-        </template>
-        <template v-slot:cell(startDate)="data">
-          <span class="text-black">{{
-            formatMyDate(data.item.startDate)
-          }}</span>
-        </template>
         <template v-slot:cell(status)="data">
           <div
             class="badge badge-pill font-size-12"
@@ -155,8 +134,50 @@
           </div>
         </template>
 
-        <template v-slot:cell(name)="data">
-          <h6 href="#" class="text-body">{{ data.item.name }}</h6>
+        <template v-slot:cell(paimentMode)="data">
+          <div class="font-size-12">
+            <span v-if="data.item.paimentMode.type == 'invoice'">
+              <i class="uil uil-postcard d-block h6 "> - Sur facture</i>
+            </span>
+            <span v-if="data.item.paimentMode.type == 'cod'">
+              <i class="uil uil-money-bill d-block h6 ">
+                - Paiement à la livraison</i
+              ></span
+            >
+          </div>
+        </template>
+
+        <template v-slot:cell(withDelivery)="data">
+          <div class="mx-4">
+            <i
+              class="uil-check font-size-24 text-success"
+              v-if="data.item.withDelivery != null"
+            ></i>
+            <i class="uil-multiply font-size-24 text-secondary" v-else></i>
+          </div>
+        </template>
+
+        <template v-slot:cell(total)="data">
+          <div class="font-size-16">
+            {{
+              Intl.NumberFormat("ar-MA", {
+                style: "currency",
+                currency: "MAD",
+              }).format(data.item.total)
+            }}
+          </div>
+        </template>
+         <template v-slot:cell(type)="data">
+          <div class="font-size-16">
+         <h6 v-if="data.item.type=='restauration'">Restauration</h6>
+         <h6 v-if="data.item.type=='market'">Market</h6>
+          </div>
+        </template>
+
+        <template v-slot:cell(when)="data">
+          <a href="#" class="text-body">{{
+            formatMyDate(data.item.createdAt)
+          }}</a>
         </template>
 
         <template v-slot:cell(id)="data">
@@ -168,9 +189,7 @@
                 v-b-tooltip.hover
                 title="Consulter"
               >
-                <nuxt-link
-                  :to="'/clients/events/mes-evenements/' + data.item.id"
-                >
+                <nuxt-link :to="'/supplier/orders/active/' + data.item.id">
                   <i class="uil uil-eye font-size-18"></i>
                 </nuxt-link>
               </a>
@@ -189,7 +208,7 @@
         </template>
       </b-table>
     </div>
-    <div class="row" v-if="myEvents.length > 0">
+    <div class="row" v-if="myOrders.length > 0">
       <div class="col-sm-12 col-lg-4">
         <div id="tickets-table_length" class="dataTables_length">
           <label class="d-inline-flex align-items-center">
@@ -234,55 +253,56 @@ export default {
   },
   data() {
     return {
-      title: "Mes événements ",
-      loader:false,
+      title: "Commandes actives",
       items: [
         {
-          text: "Mes événements ",
+          text: "Commandes",
+        },
+        {
+          text: "Commandes actives",
+          active: true,
         },
       ],
 
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
-      baseUrl: null,
       pageOptions: [10, 25, 50, 100],
       filter: null,
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
-      myEvents: [],
+      myOrders: [],
       fields: [
         {
-          key: "name",
-          label: "Nom de l'événement",
-        },
-        ,
-        {
-          key: "startDate",
-          label: "Date de début",
-        },
-        ,
-        {
-          key: "endDate",
-          label: "Date de fin",
-        },
-        ,
-        {
-          key: "city",
-          label: "Ville",
+          key: "when",
+          label: "Commandé le",
+          sortable: true,
         },
         {
-          key: "numberOfAttendees",
-          label: "Nombre de participants",
+          key: "type",
+        },
+        {
+          key: "withDelivery",
+          label: "Avec livraison",
+        },
+        {
+          key: "total",
+          label: "Montant (TTC)",
+          sortable: true,
+        },
+        {
+          key: "paimentMode",
+          label: "Mode paiment",
         },
         {
           key: "status",
-          label: "Statut",
+          label: "Status",
+          sortable: true,
         },
         {
           key: "id",
-          label: "action",
+          label: "Action",
         },
       ],
     };
@@ -292,40 +312,32 @@ export default {
      * Total no. of records
      */
     rows() {
-      return this.myEvents.length;
+      return this.myOrders.length;
     },
   },
-
   async mounted() {
     // Set the initial number of items
-    this.loader=true
-    this.baseUrl = process.env.baseUrl;
-
     try {
-      let result = await axios.get(this.baseUrl + "/events?byClient="+getData("clientinfo").id);
+      let myAccount = getData("accountinfo");
+      let result = await axios.get(process.env.baseUrl + "/orders");
       result = result.data;
-      let activeEvents = [];
       for (let i = 0; i < result.length; i++) {
-        let itsArchived = false;
-        for (let j = 0; j < result[i].status.length; j++) {
-          if (
-            result[i].status[j].name == "closed" ||
-            result[i].status[j].name == "cancelled"
-          ) {
-            itsArchived = true;
-
-            break;
-          }
-        }
-        if (!itsArchived) {
-          activeEvents.push(result[i]);
+     
+        if (
+          result[i].status[result[i].status.length - 1].name != "cancelled" &&
+          result[i].status[result[i].status.length - 1].name != "closed" &&
+          result[i].linkedToSPItem.spID==myAccount.id
+        ) {
+           
+          this.myOrders.push(result[i]);
         }
       }
-      //   console.log(result);
-      this.myEvents = activeEvents.reverse();
-      this.totalRows = this.myEvents.length;
-       this.loader=false
-    } catch (error) {}
+      this.myOrders = this.myOrders.reverse();
+
+    } catch (error) {
+        console.log(error);
+    }
+    this.totalRows = this.myOrders.length;
   },
   methods: {
     /**
@@ -333,7 +345,7 @@ export default {
      */
     formatMyDate(date) {
       // return date
-      return format(parseISO(date), "dd/MM/yyyy");
+      return format(parseISO(date), "dd/MM/yyyy, HH:MM");
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering

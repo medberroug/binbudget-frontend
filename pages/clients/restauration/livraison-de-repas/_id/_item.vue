@@ -536,6 +536,7 @@ export default {
         let order = {
           type: "restauration",
           subType: "livraison-de-repas",
+          byClient:getData('clientinfo').id,
           items: [this.itemForOrder],
           subTotal: this.itemForOrder.price * this.itemForOrder.quantity,
           tax: 0,

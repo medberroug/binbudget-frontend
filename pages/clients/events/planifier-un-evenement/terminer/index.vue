@@ -37,7 +37,9 @@ export default {
     },
     async createEvent() {
       this.eventCreatorLoader = true;
+      this.myEvent.byClient=getData('clientinfo').id
       if (!this.isEverythingPriced) {
+        
         this.myEvent.status = [
           {
             name: "created",

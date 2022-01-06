@@ -524,6 +524,7 @@ export default {
         let order = {
           type: "market",
           subType: "market",
+          byClient:getData('clientinfo').id,
           items: [this.itemForOrder],
           subTotal: parseFloat((this.itemForOrder.price * this.itemForOrder.quantity).toFixed(2)),
           tax: 0,

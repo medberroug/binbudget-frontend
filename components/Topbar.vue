@@ -66,9 +66,12 @@
           </form>
         </b-dropdown>
         <!-- cart -->
+        <!-- <div class="text-black d-flex flex align-items-center">
+          <p>Restauration</p>
+        </div> -->
         <EventCart v-if="eventIsActive" />
         <ShoppingCart v-if="restaurationIsActive" />
- <MarketCart v-if="marketIsActive" />
+        <MarketCart v-if="marketIsActive" />
         <!-- notifications -->
         <b-dropdown
           variant="white"
@@ -300,7 +303,7 @@ export default {
     return {
       eventIsActive: false,
       restaurationIsActive: false,
-      marketIsActive:false,
+      marketIsActive: false,
       languages: [
         {
           flag: require("~/assets/images/flags/us.jpg"),
@@ -341,7 +344,7 @@ export default {
     if (getData("restauration")) {
       this.restaurationIsActive = true;
     }
-      if (getData("market")) {
+    if (getData("market")) {
       this.marketIsActive = true;
     }
 
@@ -415,4 +418,5 @@ export default {
 </script>
 
 <style >
+
 </style>
