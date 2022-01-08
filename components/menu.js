@@ -224,13 +224,13 @@ var menuItemsForSupplier = [
   },
   {
     id: 98,
-    label: "Mes factures de vente",
+    label: "Factures de vente",
     icon: "uil-invoice",
     link: "/supplier/invoices/selling"
   },
   {
     id: 99,
-    label: "Mes factures d'achat",
+    label: "Factures d'achat",
     icon: "uil-money-withdrawal",
     link: "/supplier/invoices/buying"
   },

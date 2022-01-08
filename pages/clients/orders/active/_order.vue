@@ -126,7 +126,7 @@ export default {
     if (this.myOrder.total >= 20000) {
       this.isCODPossible = false;
     }
-    this.myOrder.status.reverse()
+    // this.myOrder.status.reverse()
   },
   data() {
     return {
