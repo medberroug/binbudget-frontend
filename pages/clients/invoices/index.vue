@@ -89,7 +89,7 @@
                 'pseudoPaid'
               "
             >
-              Partiellement payé
+              Partiellement payé (%{{getMyPaimentsPercentage(data.item)}})
             </span>
             <span
               v-if="
@@ -126,10 +126,19 @@
 
         <template v-slot:cell(invoiceNumber)="data">
           <div class="font-size-12">
-            <span v-if="data.item.invoiceNumber">
+            <span 
+              v-if="
+                data.item.status[data.item.status.length - 1].name !=
+                  'created' &&
+                data.item.status[data.item.status.length - 1].name !=
+                  'cancelled'
+              "
+            >
               <h5>{{ data.item.invoiceNumber }}</h5>
             </span>
-            <span v-else><p class="text-muted"> Pas encore renseigné</p></span>
+            <!-- <span v-else><p class="text-muted"> Pas encore renseigné </p></span> -->
+
+            <span v-else class="badge badge-pill font-size-10 bg-secondary"> Pas encore renseigné </span>
           </div>
         </template>
 
@@ -153,7 +162,6 @@
             }}
           </div>
         </template>
-      
 
         <template v-slot:cell(createdAt)="data">
           <a href="#" class="text-body">{{
@@ -323,6 +331,13 @@ export default {
     /**
      * Search the table data with search input
      */
+    getMyPaimentsPercentage(invoice){
+      let totalPaid=0
+      for(let i=0; i<invoice.payments.length;i++){
+        totalPaid=totalPaid+invoice.payments[i].amount
+      }
+      return ((totalPaid/invoice.total)*100).toFixed(0)
+    },
     formatMyDate(date) {
       // return date
       return format(parseISO(date), "dd/MM/yyyy, HH:MM");
