@@ -459,6 +459,7 @@ export default {
       this.itemForOrder.name = this.placeData.name;
       this.itemForOrder.itemId = this.placeData.id;
       this.itemForOrder.price = this.placeData.price;
+       this.itemForOrder.firstImage= process.env.baseUrl+this.placeData.firstImage.url
       if (this.placeData.disocunt) {
         this.itemForOrder.discount = this.placeData.disocunt.percentage;
       } else {

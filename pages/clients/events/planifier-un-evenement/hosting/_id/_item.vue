@@ -464,13 +464,13 @@ console.log(this.$route.params.id);
         myItemDiscount = 0;
       }
       this.itemForOrder = {
-        firstImage: this.myItem.firstImage.url,
+        firstImage: process.env.baseUrl+this.myItem.firstImage.url,
         itemId: this.myItem.id,
         name: this.myItem.name,
         price: myItemPrice,
         quantity: 0,
         comment: null,
-        disocount: myItemDiscount,
+        discount: myItemDiscount,
         unit: this.myItem.unit,
       };
       console.log("item");

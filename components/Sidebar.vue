@@ -213,7 +213,7 @@ this.myAccountType=myAccountType
         </span>
       </nuxt-link>
     </div>
-    <div class="navbar-brand-box" v-if="myAccountType=='supplier'">
+    <div class="navbar-brand-box" v-if="myAccountType=='supplier' || myAccountType=='event'">
       <nuxt-link to="/" class="logo logo-dark">
         <span class="logo-sm">
           <img src="~/assets/images/logo-sm.png" alt height="22" />

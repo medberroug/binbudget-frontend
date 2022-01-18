@@ -22,10 +22,79 @@ export default {
     beautifyPrices(price) {
       price = price + "";
     },
+    async updateStatus(value, spId, eventId, eodId) {
+      let myAccount = getData("accountinfo");
+      let myComment = "Aucun commentaire";
+      if (value == "pendingValidation")
+        myComment = "Votre commande a été validée par le fournisseur";
+      try {
+        if (value == "validate") {
+          let result = await axios.put(
+            process.env.baseUrl +
+              "/updateEventOrderDetail/" +
+              spId +
+              "/" +
+              eventId +
+              "/" +
+              eodId,
+            {
+              action: "validate",
+            }
+          );
+          console.log(result.data);
+          let result2 = await axios.put(
+            process.env.baseUrl + "/events/" + result.data.id,
+            result.data
+          );
+        }
+         if (value == "cancel") {
+          let result = await axios.put(
+            process.env.baseUrl +
+              "/updateEventOrderDetail/" +
+              spId +
+              "/" +
+              eventId +
+              "/" +
+              eodId,
+            {
+              action: "cancel",
+            }
+          );
+          console.log(result.data);
+          let result2 = await axios.put(
+            process.env.baseUrl + "/events/" + result.data.id,
+            result.data
+          );
+        }
+        if (value == "close") {
+          let result = await axios.put(
+            process.env.baseUrl +
+              "/updateEventOrderDetail/" +
+              spId +
+              "/" +
+              eventId +
+              "/" +
+              eodId,
+            {
+              action: "close",
+            }
+          );
+          console.log(result.data);
+          let result2 = await axios.put(
+            process.env.baseUrl + "/events/" + result.data.id,
+            result.data
+          );
+        }
+
+        this.$router.go();
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async cancelMyEvent() {
       try {
-        if(!this.cancelEventComment){
-          this.cancelEventComment="Aucun commentaire"
+        if (!this.cancelEventComment) {
+          this.cancelEventComment = "Aucun commentaire";
         }
         let newStatus = {
           name: "cancelled",
@@ -53,7 +122,7 @@ export default {
           }
         );
 
-        this.$router.push("/clients/events/archive/"+this.myEvent.id);
+        this.$router.push("/clients/events/archive/" + this.myEvent.id);
       } catch (error) {
         console.log(error);
       }
@@ -177,9 +246,8 @@ export default {
       <template #modal-title> Annuler mon événement </template>
       <p>
         L'annulation de votre événement peut nécessiter une démarche spécifique
-        auprès des fournisseurs et de BinBudget, l'annulation
-        à ce niveau peut ou non être effective immédiatement en fonction de
-        l'état d'avancement.
+        auprès des fournisseurs et de BinBudget, l'annulation à ce niveau peut
+        ou non être effective immédiatement en fonction de l'état d'avancement.
       </p>
       <p>
         Notre service clientèle vous contactera bientôt pour finaliser la
@@ -277,6 +345,22 @@ export default {
                     Annulé</span
                   >
                 </span>
+                <button
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  @click="updateStatus('validate', sp.eventServiceProvider, myEvent.id, sp.id)"
+                  v-if="sp.status[sp.status.length - 1].name == 'quoteSent'"
+                >
+                  Accepter la proposition <i class="uil-check"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm mx-2"
+                  @click="updateStatus('cancel', sp.eventServiceProvider, myEvent.id, sp.id)"
+                  v-if="sp.status[sp.status.length - 1].name == 'quoteSent'"
+                >
+                  Annuler  <i class="uil-trash"></i>
+                </button>
               </h5>
               <div v-for="(article, index2) in sp.articles" :key="index2">
                 <div class="card border shadow-none">
@@ -863,7 +947,7 @@ export default {
             <div class="card-header bg-transparent py-3 px-4">
               <h5 class="font-size-16 mb-0">
                 Order Summary
-                <span class="float-end text-muted">{{myEvent.id}}</span>
+                <span class="float-end text-muted">{{ myEvent.id }}</span>
               </h5>
             </div>
             <div class="card-body p-4" v-if="isEverythingPriced">

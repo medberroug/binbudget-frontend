@@ -37,9 +37,8 @@ export default {
     },
     async createEvent() {
       this.eventCreatorLoader = true;
-      this.myEvent.byClient=getData('clientinfo').id
+      this.myEvent.byClient = getData("clientinfo").id;
       if (!this.isEverythingPriced) {
-        
         this.myEvent.status = [
           {
             name: "created",
@@ -68,7 +67,8 @@ export default {
           },
         ];
       }
-
+      console.log("MY EVENT LOG");
+      console.log(this.myEvent);
       let result = await axios.post(
         process.env.baseUrl + "/events",
         this.myEvent
@@ -81,6 +81,8 @@ export default {
 
   async mounted() {
     this.myEvent = getData("event");
+    (this.myEvent.byClient = getData("clientinfo").id),
+      persistData("event", this.myEvent);
     this.nextPage = eventNextStep(false);
     this.stepperTotal = eventStepperCalculator();
     this.stepperText =

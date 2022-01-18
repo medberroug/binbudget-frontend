@@ -1,9 +1,76 @@
 <template>
   <div>
-    <PageHeader :title="title" :details="details" />
-    <b-button @click="routerGo(-1)" class="mt-3" variant="primary">
-      <i class="uil-arrow-left"> </i> Page précédente</b-button
+    <b-modal v-model="discountAndPriceModal" centered hide-footer v-if="myItem">
+      <template #modal-title> Modifier le prix et la remise </template>
+
+      <label for="input-live">Prix (dh HT):</label>
+      <b-form-input v-model="myItem.price" type="number"></b-form-input>
+      <label
+        for="input-live"
+        class="mt-4"
+        v-if="discountVariable < 100 && discountVariable > 0"
+        >Remise ( {{ discountVariable }}% entre 0 et 100)
+      </label>
+      <label for="input-live" class="mt-4" v-if="discountVariable >= 100"
+        >Remise (Article gratuit)
+      </label>
+      <label for="input-live" class="mt-4" v-if="discountVariable <= 0"
+        >Remise (Pas de remise)
+      </label>
+      <b-form-input v-model="discountVariable" type="number"></b-form-input>
+      <center>
+        <b-button
+          class="mt-3"
+          block
+          variant="primary"
+          @click="discountAndPriceController"
+        >
+          Soumettre</b-button
+        >
+      </center></b-modal
     >
+
+    <PageHeader :title="title" :details="details" />
+    <div v-if="myItem">
+      <nuxt-link :to="'/supplier/myproducts'"
+        ><button type="button" class="btn btn-primary btn-sm mt-3">
+          <i class="mdi mdi-arrow-left me-1"></i>Mes articles
+        </button></nuxt-link
+      >
+      <div class="float-end">
+        <button
+          type="button"
+          class="btn btn-info btn-sm mt-3"
+          @click="discountAndPriceModal = !discountAndPriceModal"
+        >
+          <i class="uil uil-pricetag-alt me-1"></i>Réduction et prix
+        </button>
+
+         <nuxt-link :to="'/supplier/myproducts/edit/'+myItem.id"
+        >
+        <button type="button" class="btn btn-primary btn-sm mt-3">
+          <i class="uil uil-edit-alt me-1"></i>Modifier
+        </button>
+        </nuxt-link
+      >
+        <button
+          type="button"
+          class="btn btn-danger btn-sm mt-3"
+          v-if="myItem.status"
+          @click="statusController"
+        >
+          <i class="uil uil-bolt-slash me-1"></i>Désactiver
+        </button>
+        <button
+          type="button"
+          class="btn btn-success btn-sm mt-3"
+          v-if="!myItem.status"
+          @click="statusController"
+        >
+          <i class="uil uil-bolt me-1"></i>Activer
+        </button>
+      </div>
+    </div>
     <div class="row mt-3">
       <div class="col-lg-12" v-if="myItem">
         <div class="card">
@@ -40,6 +107,14 @@
                     }}</a>
                   </h5>
                   <h4 class="font-size-20 mb-3">{{ myItem.name }}</h4>
+                  <h6 class="text-muted">
+                    Categorie:
+                    <span
+                      v-for="(category, index) in myItem.categories"
+                      :key="index"
+                      >{{ category.name }},</span
+                    >
+                  </h6>
                   <!-- <div class="text-muted">
                     <span class="badge bg-success font-size-14 me-1"
                       ><i class="mdi mdi-star"></i> 4.2</span
@@ -61,7 +136,10 @@
                           myItem.price -
                           (myItem.price * myItem.disocunt.percentage) / 100
                         }}
-                        dh / {{ myItem.unit }}
+                        dh
+                        <span class="font-size-12 text-secondary">
+                          / {{ myItem.unit }}</span
+                        >
                         <span class="text-danger font-size-14 ml-2"
                           >- {{ myItem.disocunt.percentage }} % Off</span
                         >
@@ -74,13 +152,13 @@
                   <h5 class="mb-4 pt-2" v-else>
                     <div v-if="myItem.price > 0">
                       {{ myItem.price }}
-                      dh / {{ myItem.unit }}
+                      dh
+                      <span class="font-size-12 text-secondary">
+                        / {{ myItem.unit }}</span
+                      >
                     </div>
-                    <div v-if="myItem.price == 0">
+                    <div v-else>
                       <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
-                    </div>
-                    <div v-if="myItem.price < 0">
-                      <h5 class="mb-4 pt-2 text-primary">Sur devis</h5>
                     </div>
                   </h5>
                   <p class="text-muted mb-4">
@@ -116,72 +194,31 @@
                               me-2
                             "
                           ></i>
-                          Order option
+                          Catégorie de service
                         </h5>
-                        <div class="mt-3">
-                          <div class="col" v-if="!itemAlreadyAdded">
-                            <div
-                              class="
-                                d-flex
-                                justify-content-start
-                                align-items-start
-                                my-4
-                              "
-                            >
-                              <div class="d-flex align-items-center">
-                                <b-button
-                                  v-if="itemForOrder.quantity > 0"
-                                  @click.prevent="calculateQuantity('sub')"
-                                  variant="outline-primary"
-                                  >-</b-button
-                                >
-                                <b-button
-                                  v-else
-                                  @click.prevent="calculateQuantity('sub')"
-                                  disabled
-                                  variant="outline-primary"
-                                  >-</b-button
-                                >
-                                <span class="mx-2"
-                                  >Quantity: {{ itemForOrder.quantity }}</span
-                                >
-                                <b-button
-                                  @click.prevent="calculateQuantity('add')"
-                                  variant="outline-primary"
-                                  >+</b-button
-                                >
-                              </div>
-                            </div>
-                            <div class="col-12 col-md-12">
-                              <div class="form-inline">
-                                <div
-                                  class="input-group mb-3"
-                                  v-if="itemForOrder.quantity > 0"
-                                >
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    v-model="itemForOrder.comment"
-                                    placeholder="Enter the details for special order..."
-                                  />
-                                  <div class="input-group-append">
-                                    <button
-                                      @click="addItemtoCart"
-                                      class="btn btn-light mx-2"
-                                      type="button"
-                                    >
-                                      Add to cart
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div v-else>
-                            <h6 class="text-success">
-                              <i class="fas fa-check mx-3"></i>Added to cart
-                            </h6>
-                          </div>
+                        <div
+                          v-for="(where, index) in myItem.shownIn"
+                          :key="index"
+                          class="badge badge-pill font-size-14 m-1 bg-info"
+                        >
+                          <span
+                            v-if="where.serviceName == 'livraison-de-repas'"
+                          >
+                            Livraison de repas</span
+                          >
+                          <span v-if="where.serviceName == 'menu-conventionne'">
+                            Menu conventionné</span
+                          >
+                          <span v-if="where.serviceName == 'repas-emporte'">
+                            Repas emporté</span
+                          >
+                          <span
+                            v-if="
+                              where.serviceName == 'reservation-de-restaurant'
+                            "
+                          >
+                            Réservation de restaurant</span
+                          >
                         </div>
                       </div>
                     </div>
@@ -382,17 +419,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 import {
-  getData,
-  eventStepperCalculator,
-  removeData,
-  eventNextStep,
   persistData,
-} from "../../../../../../components/controllers/savingData";
-/**
- * Product-detail component
- */
+  getData,
+} from "../../../components/controllers/savingData";
+
 export default {
   head() {
     return {
@@ -402,55 +435,15 @@ export default {
 
   async mounted() {
     try {
-      this.myEvent = getData("event");
-      console.log(this.$route.params.id);
-      this.nextPage = eventNextStep(false);
-      this.stepperTotal = eventStepperCalculator();
-      this.stepperText =
-        ": Services de restauration | " +
-        this.myEvent.whereIam +
-        "/" +
-        this.stepperTotal;
-      this.title = this.title + this.stepperText;
+      let myServiceProvider = getData("accountinfo");
+      this.myServiceProvider = myServiceProvider.id;
       let result = await axios.get(
-        process.env.baseUrl + "/Eventserviceproviders/" + this.$route.params.id
+        process.env.baseUrl + "/restaurations/" + this.myServiceProvider
       );
       this.restaurant = result.data;
       let allItems = result.data.items;
-      if (this.myEvent.eventOrderDetails) {
-        console.log("this.myEvent.eventOrderDetails");
-        for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
-          console.log(
-            " for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++)"
-          );
-          if (
-            this.myEvent.eventOrderDetails[i].eventServiceProvider ==
-            this.$route.params.id
-          ) {
-            console.log(
-              "this.myEvent.eventOrderDetails[i].eventServiceProvider == this.$route.params.id"
-            );
-            console.log(this.myEvent.eventOrderDetails[i].articles.length);
-            for (
-              let j = 0;
-              j < this.myEvent.eventOrderDetails[i].articles.length;
-              j++
-            ) {
-              console.log("Articles ");
-              if (
-                this.myEvent.eventOrderDetails[i].articles[j].itemId ==
-                this.$route.params.id
-              ) {
-                console.log("YES TRUUUE");
-                this.itemAlreadyAdded = true;
-                break;
-              }
-            }
-          }
-        }
-      }
       for (let i = 0; i < allItems.length; i++) {
-        if (allItems[i].id == this.$route.params.item) {
+        if (allItems[i].id == this.$route.params.myProduct) {
           this.myItem = allItems[i];
         }
       }
@@ -463,22 +456,36 @@ export default {
           this.myItem.price -
           (this.myItem.price * this.myItem.disocunt.percentage) / 100;
         myItemDiscount = this.myItem.disocunt.percentage;
+        this.discountVariable = this.myItem.disocunt.percentage;
       } else {
         myItemPrice = this.myItem.price;
         myItemDiscount = 0;
+        this.discountVariable = 0;
       }
       this.itemForOrder = {
         firstImage: process.env.baseUrl + this.myItem.firstImage.url,
-        itemId: this.myItem.id,
+        itemID: this.myItem.id,
         name: this.myItem.name,
         price: myItemPrice,
         quantity: 0,
         comment: null,
         discount: myItemDiscount,
-        unit: this.myItem.unit,
       };
       console.log("item");
       console.log(this.itemForOrder);
+      this.supplierID = this.myServiceProvider;
+      if (getData("restauration")) {
+        let myOrder = getData("restauration");
+        console.log(this.myServiceProvider != myOrder.linkedToSPItem.spID);
+        if (this.myServiceProvider != myOrder.linkedToSPItem.spID) {
+          this.anotherSupplier = true;
+        }
+        for (let i = 0; i < myOrder.items.length; i++) {
+          if (myOrder.items[i].itemID == this.$route.params.myProduct) {
+            this.itemAlreadyAdded = true;
+          }
+        }
+      }
     } catch (error) {}
   },
   data() {
@@ -491,18 +498,16 @@ export default {
       itemForOrder: null,
       myItem: null,
       restaurant: null,
-      myEvent: null,
-      myItems: null,
-      stepperTotal: null,
-      stepperText: null,
+      supplierID: null,
+      discountVariable: 0,
       baseUrl: process.env.baseUrl,
-      title: "Planifier mon evenement ",
+      anotherSupplier: false,
+      myServiceProvider: null,
+      title: "Dish detail",
+      discountAndPriceModal: false,
       details: [
         {
-          text: "Planifier mon evenement",
-        },
-        {
-          text: "Services de restauration",
+          text: "Dishes",
         },
         {
           text: "Dish-detail",
@@ -512,156 +517,151 @@ export default {
     };
   },
   middleware: "authentication",
-  computed: {},
+  computed: {
+    ...mapGetters("products", {
+      isItemInCart: "isProductInCart",
+      getThisProductInCart: "fetchOneProduct",
+    }),
+  },
   methods: {
-    routerGo(pages) {
-      this.$router.go(pages);
+    ...mapActions("products", {
+      addItemToCart: "addToCart",
+      updateProductQuantity: "updateCartQuantity",
+    }),
+    addToCart() {
+      this.addItemToCart({ product: this.dummyThing, quantity: 1 });
+    },
+    updateQuantity(type) {
+      this.updateProductQuantity(type);
+    },
+
+    //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
+    async discountAndPriceController() {
+      try {
+        console.log(this.myItem);
+        for (let i = 0; i < this.restaurant.items.length; i++) {
+          if (this.restaurant.items[i].id == this.myItem.id) {
+            if (this.discountVariable > 100) {
+              this.restaurant.items[i].disocunt = null;
+              this.restaurant.items[i].price = 0;
+            }
+            if (this.discountVariable <= 0) {
+              this.restaurant.items[i].disocunt = null;
+            }
+            if (this.discountVariable < 100 && this.discountVariable > 0) {
+              this.restaurant.items[i].disocunt = {
+                percentage: this.discountVariable,
+              };
+            }
+            if (this.myItem.price < 0) {
+              this.restaurant.items[i].price = 0;
+            }
+          }
+        }
+        console.log(this.restaurant);
+
+        let result = await axios.put(
+          process.env.baseUrl + "/restaurations/" + this.restaurant.id,
+          {
+            items: this.restaurant.items,
+          }
+        );
+
+        this.$router.go();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async statusController() {
+      try {
+        if (this.myItem.status) {
+          this.myItem.status = false;
+        } else {
+          this.myItem.status = true;
+        }
+        for (let i = 0; i < this.restaurant.items.length; i++) {
+          if (this.restaurant.items[i].id == this.myItem.id) {
+            this.restaurant.items[i].status = this.myItem.status;
+          }
+        }
+
+        let result = await axios.put(
+          process.env.baseUrl + "/restaurations/" + this.restaurant.id,
+          {
+            items: this.restaurant.items,
+          }
+        );
+
+        this.$router.go();
+      } catch (error) {
+        console.log(error);
+      }
     },
     calculateQuantity(operation) {
       if (operation == "add") {
         this.itemForOrder.quantity = this.itemForOrder.quantity + 1;
-        if (this.itemForOrder.price > 0) {
-          this.itemForOrder.subTotal =
-            this.itemForOrder.quantity * this.itemForOrder.price;
-        } else if (this.itemForOrder.pric < 0) {
-          this.itemForOrder.subTotal = -1;
-        } else {
-          this.itemForOrder.subTotal = 0;
-        }
       } else {
         if (this.itemForOrder.quantity > 0) {
           this.itemForOrder.quantity = this.itemForOrder.quantity - 1;
-          if (this.itemForOrder.price > 0) {
-            this.itemForOrder.subTotal =
-              this.itemForOrder.quantity * this.itemForOrder.price;
-          } else {
-            this.itemForOrder.subTotal = -1;
-          }
         }
       }
     },
 
-    //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
-
-    addItemtoCart() {
+    async addItemtoCart() {
+      let tvaRestauration = 0;
+      try {
+        let result = await axios.get(
+          process.env.baseUrl + "/generalsettingsdefaults"
+        );
+        tvaRestauration = result.data.tvaRestauration;
+      } catch (error) {}
       console.log(this.itemForOrder);
-      let myEvent = getData("event");
-      console.log(myEvent);
-      if (myEvent.eventOrderDetails) {
-        let foundSP = false;
-        for (let i = 0; i < myEvent.eventOrderDetails.length; i++) {
-          if (
-            myEvent.eventOrderDetails[i].eventServiceProvider ==
-            this.$route.params.id
-          ) {
-            foundSP = true;
-            myEvent.eventOrderDetails[i].articles.push(this.itemForOrder);
-
-            if (this.itemForOrder.subTotal > 0) {
-              myEvent.eventOrderDetails[i].subTotal =
-                myEvent.eventOrderDetails[i].subTotal +
-                this.itemForOrder.subTotal;
-            } else {
-              myEvent.eventOrderDetails[i].status.push({
-                name: "pendingValidation",
-                comment:
-                  "En attendant la révision finale et la validation du fournisseur. ",
-                date: new Date(),
-              });
-            }
-          }
-        }
-        if (!foundSP) {
-          let toInseretSubTotal = 0;
-          let myNextStatus = [
-            {
-              name: "created",
-              comment: "La commande a été créée par le client",
-              date: new Date(),
-            },
-            {
-              name: "pendingQuote",
-              comment:
-                "En attendant la révision finale et la validation du fournisseur. ",
-              date: new Date(),
-            },
-          ];
-          if (this.itemForOrder.subTotal > 0) {
-            toInseretSubTotal = this.itemForOrder.subTotal;
-            myNextStatus = [
-              {
-                name: "created",
-                comment: "La commande a été créée par le client",
-                date: new Date(),
-              },
-              {
-                name: "pendingValidation",
-                comment: "Article ajouté, en attente du devis du fournisseur",
-                date: new Date(),
-              },
-            ];
-          }
-
-          let newEventOrderDetails = {
-            eventServiceProvider: this.$route.params.id,
-            eventServiceProviderName: this.restaurant.knownName,
-            articles: [this.itemForOrder],
-            subTotal: toInseretSubTotal,
-            discount: null,
-            status: myNextStatus,
-            type: "restauration",
-          };
-
-          myEvent.eventOrderDetails.push(newEventOrderDetails);
-        }
-        persistData("event", myEvent);
-      } else {
-        let toInseretSubTotal = 0;
-        let myNextStatus = [
-          {
-            name: "created",
-            comment: "La commande a été créée par le client",
-            date: new Date(),
-          },
-          {
-            name: "pendingValidation",
-            comment:
-              "En attendant la révision finale et la validation du fournisseur. ",
-            date: new Date(),
-          },
-        ];
-        if (this.itemForOrder.subTotal > 0) {
-          toInseretSubTotal = this.itemForOrder.subTotal;
-        } else {
-          myNextStatus = [
-            {
-              name: "created",
-              comment: "La commande a été créée par le client",
-              date: new Date(),
-            },
-            {
-              name: "pendingQuote",
-              comment: "Article ajouté, en attente du devis du fournisseur",
-              date: new Date(),
-            },
-          ];
-        }
-        let newEventOrderDetails = {
-          eventServiceProvider: this.$route.params.id,
-          eventServiceProviderName: this.restaurant.knownName,
-          articles: [this.itemForOrder],
-          subTotal: toInseretSubTotal,
-          discount: null,
-          status: myNextStatus,
+      if (!getData("restauration")) {
+        let order = {
           type: "restauration",
+          subType: "livraison-de-repas",
+          items: [this.itemForOrder],
+          subTotal: this.itemForOrder.price * this.itemForOrder.quantity,
+          tax: 0,
+          total: 0,
+          withDelivery: {
+            city: null,
+            state: null,
+            street: null,
+            country: null,
+            fullName: null,
+            phone: null,
+          },
+          linkedToSPItem: {
+            type: "restauration",
+            spID: this.myServiceProvider,
+          },
+          status: [
+            {
+              name: "created",
+              comment: "Articles ajoutés au panier",
+              date: new Date(),
+            },
+          ],
+          deliveryPrice: 15,
         };
-        myEvent.eventOrderDetails = [newEventOrderDetails];
+
+        persistData("restauration", order);
+        this.$router.go();
+        this.itemAlreadyAdded = true;
+      } else {
+        let myOrder = getData("restauration");
+        if (this.myServiceProvider == myOrder.linkedToSPItem.spID) {
+          myOrder.items.push(this.itemForOrder);
+          myOrder.subTotal =
+            myOrder.subTotal +
+            this.itemForOrder.price * this.itemForOrder.quantity;
+          persistData("restauration", myOrder);
+          this.$router.go();
+          this.itemAlreadyAdded = true;
+        } else {
+        }
       }
-      this.itemAlreadyAdded = true;
-      // console.log(myEvent);
-      persistData("event", myEvent);
-      this.$router.go();
-      console.log(getData("event"));
     },
   },
 };

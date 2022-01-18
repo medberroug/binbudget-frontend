@@ -2,8 +2,9 @@
 import Multiselect from "vue-multiselect";
 
 import "vue-multiselect/dist/vue-multiselect.min.css";
+
 import axios from "axios";
-import { getData } from "../../../components/controllers/savingData";
+import { getData } from "../../../../components/controllers/savingData";
 /**
  * Add-product component
  */
@@ -17,6 +18,13 @@ export default {
     };
   },
   methods: {
+    AddformData() {
+      let myNewRef = "ref" + this.fields.length;
+      this.fields.push({
+        file: null,
+        ref: myNewRef,
+      });
+    },
     async handleFileUpload() {
       let formData = new FormData();
       formData.append("files", this.$refs.file.files[0]);
@@ -42,9 +50,11 @@ export default {
       let mySpecs = this.myProduct.specification.split(/\r?\n/);
       this.myProduct.specification = [];
       for (let i = 0; i < mySpecs.length; i++) {
-        this.myProduct.specification.push({
-          specText: mySpecs[i],
-        });
+        if (mySpecs[i].length > 0) {
+          this.myProduct.specification.push({
+            specText: mySpecs[i],
+          });
+        }
       }
       let shownIn = this.myProduct.shownIn;
       this.myProduct.shownIn = [];
@@ -54,9 +64,8 @@ export default {
         });
       }
       this.myProduct.status = true;
-      this.myProduct.categories = [{ name: this.myProduct.categories }];
-      console.log(this.myProduct);
-      console.log(this.myProduct);
+      // this.myProduct.categories = [{ name: this.myProduct.categories }];
+
       let myImages = [];
       for (let i = 0; i < this.fields.length; i++) {
         myImages.push({
@@ -67,18 +76,22 @@ export default {
       this.myProduct.firstImage = {
         id: myImages[0].id,
       };
-      this.mySP.items.push(this.myProduct);
+      for (let i = 0; i < this.mySP.items.length; i++) {
+        if (this.mySP.items[i].id == this.myProduct.id) {
+          console.log(this.mySP.items[i]);
+          console.log(this.myProduct);
+          this.mySP.items[i] = this.myProduct;
+        }
+      }
+
+      // this.mySP.items.push(this.myProduct);
       let result = await axios.put(
         process.env.baseUrl + "/restaurations/" + this.mySP.id,
         {
           items: this.mySP.items,
         }
       );
-
-      this.$router.push(
-        "/supplier/myproducts/" +
-          result.data.items[result.data.items.length - 1].id
-      );
+      this.$router.push("/supplier/myproducts/" + this.myProduct.id);
     },
   },
   async mounted() {
@@ -90,21 +103,45 @@ export default {
       this.mySP = result.data;
       this.categories = result.data.category;
 
+      for (let i = 0; i < result.data.items.length; i++) {
+        if (result.data.items[i].id == this.$route.params.editMyProduct) {
+          this.myProduct = result.data.items[i];
+        }
+      }
+      console.log(this.myProduct);
       for (let i = 0; i < result.data.whatServicesHeCanOffer.length; i++) {
         this.myShowIn.push(result.data.whatServicesHeCanOffer[i].serviceName);
       }
+      let myNewShownIn = [];
+      for (let i = 0; i < this.myProduct.shownIn.length; i++) {
+        myNewShownIn.push(this.myProduct.shownIn[i].serviceName);
+      }
+      let mySpec = "";
+      for (let i = 0; i < this.myProduct.specification.length; i++) {
+        mySpec = mySpec + this.myProduct.specification[i].specText + "\n";
+      }
+      for (let i = 0; i < this.myProduct.images.length; i++) {
+        this.fields.push({
+          id: this.myProduct.images[i].id,
+          name: this.myProduct.images[i].name,
+          url: process.env.baseUrl + this.myProduct.images[i].url,
+        });
+      }
+
+      this.myProduct.specification = mySpec;
+      this.myProduct.shownIn = myNewShownIn;
       console.log(result);
     } catch (error) {}
   },
   data() {
     return {
-      title: "Ajouter un produit",
+      title: "Modifier un produit",
       items: [
         {
           text: "Mes articles et services",
         },
         {
-          text: "Ajouter un produit",
+          text: "Modifier un produit",
           active: true,
         },
       ],
@@ -116,16 +153,7 @@ export default {
       file: "",
       fileMissing: false,
       formData: new FormData(),
-      myProduct: {
-        status: null,
-        unit: null,
-        price: null,
-        name: null,
-        description: null,
-        categories: null,
-        specification: null,
-        shownIn: null,
-      },
+      myProduct: null,
       options: [
         "High Quality",
         "Leather",
@@ -142,7 +170,7 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-    <div class="row mt-3">
+    <div class="row mt-3" v-if="myProduct">
       <div class="col-lg-12">
         <div id="addproduct-accordion" class="custom-accordion">
           <div class="card">
@@ -232,7 +260,7 @@ export default {
                         <label class="control-label">Catégorie</label>
                         <select
                           class="form-control select2"
-                          v-model="myProduct.categories"
+                          v-model="myProduct.categories[0].name"
                         >
                           <option
                             :value="category.name"
@@ -361,7 +389,7 @@ export default {
                     class="btn-lg mt-4"
                     @click="addProduct"
                   >
-                    Soumettre
+                    Modifier
                     <i class="uil uil-upload ml-6"></i>
                   </b-button>
                 </div>

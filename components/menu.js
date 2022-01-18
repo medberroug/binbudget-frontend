@@ -247,9 +247,92 @@ var menuItemsForSupplier = [
     link: "/clients/settings"
   }
 ];
+var menuItemsForEvent = [
+  {
+    id: 90,
+    label: "menu",
+    isTitle: true
+  },
+  {
+    id: 91,
+    label: "Tableau de bord",
+    icon: "uil-home-alt",
+    link: "/supplierevent"
+  },
+  {
+    id: 92,
+    label: "Mes commandes",
+    isTitle: true
+  },
+  {
+    id: 93,
+    label: "Commandes en cours",
+    icon: "uil-shopping-basket",
+    link: "/supplierevent/orders/active"
+  },
+  {
+    id: 94,
+    label: "Commandes archivées",
+    icon: "uil-archive",
+    link: "/supplierevent/orders/archive"
+  },
+  {
+    id: 95,
+    label: "Offres et services",
+    isTitle: true
+  },
+  {
+    id: 96,
+    label: "Produits et services",
+    icon: "uil-tag-alt",
+    link: "/supplierevent/myproducts",
+    subItems: [
+      {
+        id: 1213515,
+        label: "Produits",
+        link: "/supplierevent/myproducts"
+      },
+      {
+        id: 13266,
+        label: "Catégories",
+        link: "/supplierevent/myproducts/categories",
+      }
+    ]
+  },
+
+  {
+    id: 97,
+    label: "Factures",
+    isTitle: true
+  },
+  {
+    id: 98,
+    label: "Factures de vente",
+    icon: "uil-invoice",
+    link: "/supplierevent/invoices/selling"
+  },
+  {
+    id: 99,
+    label: "Factures d'achat",
+    icon: "uil-money-withdrawal",
+    link: "/supplierevent/invoices/buying"
+  },
+  {
+    id: 1001,
+    label: "Paramètres",
+    isTitle: true
+  },
+
+  {
+    id: 250,
+    label: "Settings",
+    icon: "uil-setting",
+    link: "/clients/settings"
+  }
+];
 import { getData, persistData } from "../components/controllers/savingData"
 
-console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+console.log("XXXXXXXXXXXXXXXXXXACCOUNTXXXXXXXXXXXXXXX");
 // persistData("account", "supplier")
 console.log(getData('account'));
 console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -257,12 +340,19 @@ console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 let menuItems = null
 let accountType = getData('account')  
 
-
+console.log(accountType == "event");
 if (accountType == "supplier") {
   menuItems = menuItemsForSupplier
   persistData("accountinfo", {
     id:"6165a1dedb4fc0357013de8f",
     type:"restaurations"
+  })
+}
+if (accountType == "event") {
+  menuItems = menuItemsForEvent
+  persistData("accountinfo", {
+    id:"6196730106b47e37eca51d28",
+    type:"event"
   })
 }
 if (accountType == "client" || !accountType) {

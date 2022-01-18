@@ -137,10 +137,10 @@
         <template v-slot:cell(paimentMode)="data">
           <div class="font-size-12">
             <span v-if="data.item.paimentMode.type == 'invoice'">
-              <i class="uil uil-postcard d-block h6 "> - Sur facture</i>
+              <i class="uil uil-postcard d-block h6"> - Sur facture</i>
             </span>
             <span v-if="data.item.paimentMode.type == 'cod'">
-              <i class="uil uil-money-bill d-block h6 ">
+              <i class="uil uil-money-bill d-block h6">
                 - Paiement à la livraison</i
               ></span
             >
@@ -167,10 +167,10 @@
             }}
           </div>
         </template>
-         <template v-slot:cell(type)="data">
+        <template v-slot:cell(type)="data">
           <div class="font-size-16">
-         <h6 v-if="data.item.type=='restauration'">Restauration</h6>
-         <h6 v-if="data.item.type=='market'">Market</h6>
+            <h6 v-if="data.item.type == 'restauration'">Restauration</h6>
+            <h6 v-if="data.item.type == 'market'">Market</h6>
           </div>
         </template>
 
@@ -244,7 +244,7 @@
  */
 import axios from "axios";
 import { format, parseISO } from "date-fns";
-import {getData} from "../../../../components/controllers/savingData"
+import { getData } from "../../../../components/controllers/savingData";
 export default {
   head() {
     return {
@@ -319,23 +319,36 @@ export default {
     // Set the initial number of items
     try {
       let myAccount = getData("accountinfo");
-      let result = await axios.get(process.env.baseUrl + "/orders");
-      result = result.data;
+      console.log("XXXXXXXXXXXXXXXXXX ");
+      let result;
+      if (myAccount.type == "restaurations") {
+        result = await axios.get(process.env.baseUrl + "/orders");
+        result = result.data;
+      } else if (myAccount.type == "event") {
+        result = await axios.get(process.env.baseUrl + "/getEventOrder");
+        result = result.data;
+      }
+      let result2 = await axios.get(process.env.baseUrl + "/getEventOrder/6196730106b47e37eca51d28");
+      result2 = result2.data;
+      console.log(result2);
+
       for (let i = 0; i < result.length; i++) {
-     
         if (
           result[i].status[result[i].status.length - 1].name != "cancelled" &&
           result[i].status[result[i].status.length - 1].name != "closed" &&
-          result[i].linkedToSPItem.spID==myAccount.id
+          result[i].linkedToSPItem.spID == myAccount.id
         ) {
-           
           this.myOrders.push(result[i]);
+         
+
+          // ----
+          
         }
       }
+      console.log(this.myOrders);
       this.myOrders = this.myOrders.reverse();
-
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
     this.totalRows = this.myOrders.length;
   },

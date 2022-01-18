@@ -12,6 +12,7 @@ export default {
   },
   async mounted() {
     try {
+      this.baseUrl = process.env.baseUrl;
       let result = await axios.get(
         process.env.baseUrl + "/invoices/" + this.$route.params.invoice
       );
@@ -21,9 +22,69 @@ export default {
       );
       this.resultForPaymentsMethods =
         resultForPaymentsMethods.data.paimentMethodsInstructions;
+      this.myInvoice.status.reverse();
+      // paymentsList
+
+      for (let i = 0; i < this.myInvoice.payments.length; i++) {
+        let paymentItem = {
+          date: this.myInvoice.payments[i].date,
+          amount: this.myInvoice.payments[i].amount,
+          method: this.myInvoice.payments[i].method,
+          status: "validated",
+        };
+        this.paymentsList.push(paymentItem);
+        this.paymentAmount =
+          this.paymentAmount + this.myInvoice.payments[i].amount;
+      }
+      let paymentPendings = await axios.get(
+        process.env.baseUrl + "/paymentpendings?invoiceId=" + this.myInvoice.id
+      );
+
+      paymentPendings = paymentPendings.data;
+
+      for (let i = 0; i < paymentPendings.length; i++) {
+        let paymentItem = {
+          date: paymentPendings[i].date,
+          amount: paymentPendings[i].amount,
+          method: paymentPendings[i].method,
+          status:
+            paymentPendings[i].status[paymentPendings[i].status.length - 1]
+              .name,
+        };
+        if (
+          paymentPendings[i].status[paymentPendings[i].status.length - 1]
+            .name == "created"
+        ) {
+          this.paymentAmount = this.paymentAmount + paymentPendings[i].amount;
+          this.paymentsList.push(paymentItem);
+        } else if (
+          paymentPendings[i].status[paymentPendings[i].status.length - 1]
+            .name == "cancelled"
+        ) {
+          this.paymentsList.push(paymentItem);
+        }
+      }
+      console.log("RRRRRRRRRRRRRRRRRR");
+      console.log(this.paymentAmount);
     } catch (error) {}
   },
   methods: {
+    async handleFileUpload() {
+      let formData = new FormData();
+      formData.append("files", this.$refs.file.files[0]);
+      let myImage = await axios
+        .post(process.env.baseUrl + "/upload", formData)
+        .catch((err) => {
+          this.fileMissing = true;
+        });
+      myImage = myImage.data[0];
+
+      this.newPayment.image.push({
+        id: myImage.id,
+        name: myImage.name,
+        url: process.env.baseUrl + myImage.url,
+      });
+    },
     formatMyDate(date) {
       // return date
       return format(parseISO(date), "yyyy-MM-dd");
@@ -35,18 +96,49 @@ export default {
         }
       }
     },
-    paymentNextStep() {},
+    async payMyInvoice() {
+      this.newPayment.invoiceId = this.myInvoice.id;
+      console.log(this.newPayment);
+      let result = await axios.post(
+        process.env.baseUrl + "/paymentpendings",
+        this.newPayment
+      );
+      this.payModal = false;
+      this.newPaymentStep = 1;
+      this.$router.go();
+    },
+    async checkPromoCode() {
+      try {
+        let result = await axios.get(
+          process.env.baseUrl +
+            "/verifyPromoCode/" +
+            this.promoCode.number +
+            "/" +
+            this.promoCode.code +
+            "/" +
+            this.newPayment.amount +
+            "/" +
+            this.myInvoice.id
+        );
+        console.log(result.data);
+        if (!result.data[0]) {
+          this.promoCodeIssue = result.data[1];
+        }
+      } catch (error) {}
+    },
     async editInvoice(action) {
       if (action == "validate") {
-        this.myInvoice.status.push({
+        let myNEwStatus=this.myInvoice.status
+        myNEwStatus.push({
           name: "validated",
           comment: "La facture a été validée par le client",
-          date: new Date(),
+          date: new Date().toISOString(),
         });
+       
         let result = await axios.put(
           process.env.baseUrl + "/invoices/" + this.myInvoice.id,
           {
-            status: this.myInvoice.status,
+            status: myNEwStatus,
           }
         );
       }
@@ -70,10 +162,19 @@ export default {
       payModal: false,
       newPaymentStep: 1,
       resultForPaymentsMethods: null,
+      promoCodeIssue: null,
+      myNewStatus: null,
+      baseUrl: null,
+      promoCode: {
+        number: null,
+        code: null,
+      },
+      paymentsList: [],
+      paymentAmount: 0,
       newPayment: {
         amount: null,
         date: new Date(),
-        image: null,
+        image: [],
         method: null,
         invoiceId: null,
         status: [
@@ -99,7 +200,6 @@ export default {
       v-if="myInvoice && resultForPaymentsMethods"
     >
       <template #modal-title> Payer ma facture </template>
-      <b-alert>dddddddd</b-alert>
       <div v-if="newPaymentStep == 1">
         <p>
           Vous initiez un paiement pour la facture numéro
@@ -135,18 +235,70 @@ export default {
 
         <b-form-input v-model="newPayment.amount" type="number"></b-form-input>
       </div>
+
+      <div v-if="newPaymentStep == 3">
+        <p>
+          Téléchargez une preuve de paiement valide, qui peut être un scan du
+          chèque, un document de transaction bancaire ou tout autre document
+          similaire.
+        </p>
+        <div class="mt-4">
+          <center>
+            <input
+              type="file"
+              id="file"
+              ref="file"
+              v-on:change="handleFileUpload()"
+            />
+          </center>
+        </div>
+      </div>
       <div v-if="newPaymentStep == 2">
+        <b-alert variant="danger" show v-if="promoCodeIssue">{{
+          promoCodeIssue
+        }}</b-alert>
         <p>{{ getMyInstructions(newPayment.method) }}</p>
+        <div class="row" v-if="newPayment.method == 'promoCode'">
+          <div class="col-8">
+            <label for="input-live" class="mt-3">Numéro de paiement </label>
+
+            <b-form-input v-model="promoCode.number" type="text"></b-form-input>
+          </div>
+          <div class="col-4">
+            <label for="input-live" class="mt-3">Code secret </label>
+
+            <b-form-input v-model="promoCode.code" type="text"></b-form-input>
+          </div>
+        </div>
       </div>
       <center>
+        <b-button
+          class="mt-5"
+          block
+          variant="primary"
+          v-if="newPaymentStep == 3"
+          @click="payMyInvoice"
+        >
+          Soumettre</b-button
+        >
         <b-button
           class="mt-3"
           block
           variant="primary"
-          v-if="newPaymentStep == 3"
+          v-if="newPaymentStep == 2 && newPayment.method != 'promoCode'"
+          @click="newPaymentStep = newPaymentStep + 1"
         >
-          Soumettre</b-button
+          Étape suivante<i class="mdi mdi-arrow-right me-1"></i
+        ></b-button>
+        <b-button
+          class="mt-3"
+          block
+          variant="primary"
+          v-if="newPaymentStep == 2 && newPayment.method == 'promoCode'"
+          @click="checkPromoCode()"
         >
+          Vérifier le code promo<i class="uil uil-cloud-computing m-1"></i
+        ></b-button>
         <b-button
           class="mt-3"
           block
@@ -175,7 +327,7 @@ export default {
         <button
           type="button"
           class="btn btn-success btn-sm float-end mx-1"
-          v-if="myInvoice.status[myInvoice.status.length - 1].name == 'created'"
+          v-if="myInvoice.status[0].name == 'created'"
           @click="editInvoice('validate')"
         >
           Valider <i class="mdi mdi-check me-1"></i>
@@ -185,10 +337,12 @@ export default {
           @click="payModal = !payModal"
           class="btn btn-success btn-sm float-end mx-1"
           v-if="
-            myInvoice.status[myInvoice.status.length - 1].name != 'closed' &&
-            myInvoice.status[myInvoice.status.length - 1].name != 'payed' &&
-            myInvoice.status[myInvoice.status.length - 1].name != 'created' &&
-            myInvoice.status[myInvoice.status.length - 1].name != 'cancelled'
+            myInvoice.status[0].name != 'closed' &&
+            myInvoice.status[0].name != 'payed' &&
+            myInvoice.status[0].name != 'created' &&
+            myInvoice.status[0].name != 'cancelled'
+            && 
+            paymentAmount<myInvoice.total
           "
         >
           Payer <i class="uil uil-bill me-1"></i>
@@ -196,7 +350,7 @@ export default {
         <button
           type="button"
           class="btn btn-primary btn-sm float-end mx-1"
-          v-if="myInvoice.status[myInvoice.status.length - 1].name == 'created'"
+          v-if="myInvoice.status[0].name == 'created'"
         >
           Séparé <i class="uil uil-arrows-h-alt me-1"></i>
         </button>
@@ -204,21 +358,19 @@ export default {
     </div>
 
     <div class="row mt-4" v-if="myInvoice">
-      <div class="col-lg-12">
+      <div class="col-lg-8">
         <div class="card shadow-none">
-          <div class="card-body">
+          <div class="card-body p-6">
             <div class="invoice-title">
               <h4
-                class="float-end font-size-20"
+                class="float-end font-size-24"
                 v-if="
-                  myInvoice.status[myInvoice.status.length - 1].name !=
-                    'created' &&
-                  myInvoice.status[myInvoice.status.length - 1].name !=
-                    'cancelled'
+                  myInvoice.status[0].name != 'created' &&
+                  myInvoice.status[0].name != 'cancelled'
                 "
               >
-                <p>Facture de vente</p>
-                N° {{ myInvoice.invoiceNumber }}
+                <p class="float-end text-black">Facture de vente</p>
+                <p>{{ myInvoice.invoiceNumber }}</p>
                 <!-- <span class="badge badge-success font-size-12 ml-2">Paid</span> -->
               </h4>
               <div class="mb-4">
@@ -260,81 +412,34 @@ export default {
                     class="badge badge-pill font-size-12"
                     :class="{
                       'bg-info':
-                        myInvoice.status[myInvoice.status.length - 1].name ===
-                          'created' ||
-                        myInvoice.status[myInvoice.status.length - 1].name ===
-                          'validated',
-                      'bg-warning':
-                        myInvoice.status[myInvoice.status.length - 1].name ===
-                        'pseudoPaid',
-                      'bg-success':
-                        myInvoice.status[myInvoice.status.length - 1].name ===
-                        'payed',
+                        myInvoice.status[0].name === 'created' ||
+                        myInvoice.status[0].name === 'validated',
+                      'bg-warning': myInvoice.status[0].name === 'pseudoPaid',
+                      'bg-success': myInvoice.status[0].name === 'payed',
                       'bg-secondary':
-                        myInvoice.status[myInvoice.status.length - 1].name ===
-                          'cancelled' ||
-                        myInvoice.status[myInvoice.status.length - 1].name ===
-                          'closed',
-                      'bg-danger':
-                        myInvoice.status[myInvoice.status.length - 1].name ===
-                        'overDueDate',
+                        myInvoice.status[0].name === 'cancelled' ||
+                        myInvoice.status[0].name === 'closed',
+                      'bg-danger': myInvoice.status[0].name === 'overDueDate',
                     }"
                   >
-                    <span
-                      v-if="
-                        myInvoice.status[myInvoice.status.length - 1].name ==
-                        'created'
-                      "
-                    >
+                    <span v-if="myInvoice.status[0].name == 'created'">
                       Créé</span
                     >
 
-                    <span
-                      v-if="
-                        myInvoice.status[myInvoice.status.length - 1].name ==
-                        'overDueDate'
-                      "
-                    >
+                    <span v-if="myInvoice.status[0].name == 'overDueDate'">
                       Expiration du délai</span
                     >
-                    <span
-                      v-if="
-                        myInvoice.status[myInvoice.status.length - 1].name ==
-                        'pseudoPaid'
-                      "
-                    >
+                    <span v-if="myInvoice.status[0].name == 'pseudoPaid'">
                       Partiellement payé
                     </span>
-                    <span
-                      v-if="
-                        myInvoice.status[myInvoice.status.length - 1].name ==
-                        'validated'
-                      "
-                    >
+                    <span v-if="myInvoice.status[0].name == 'validated'">
                       Validé</span
                     >
-                    <span
-                      v-if="
-                        myInvoice.status[myInvoice.status.length - 1].name ==
-                        'paid'
-                      "
-                    >
-                      Payé</span
-                    >
-                    <span
-                      v-if="
-                        myInvoice.status[myInvoice.status.length - 1].name ==
-                        'closed'
-                      "
-                    >
+                    <span v-if="myInvoice.status[0].name == 'paid'"> Payé</span>
+                    <span v-if="myInvoice.status[0].name == 'closed'">
                       Clôturé</span
                     >
-                    <span
-                      v-if="
-                        myInvoice.status[myInvoice.status.length - 1].name ==
-                        'cancelled'
-                      "
-                    >
+                    <span v-if="myInvoice.status[0].name == 'cancelled'">
                       Annulé</span
                     >
                   </div>
@@ -344,10 +449,8 @@ export default {
                 <div class="text-muted text-sm-right">
                   <div
                     v-if="
-                      myInvoice.status[myInvoice.status.length - 1].name !=
-                        'created' &&
-                      myInvoice.status[myInvoice.status.length - 1].name !=
-                        'cancelled'
+                      myInvoice.status[0].name != 'created' &&
+                      myInvoice.status[0].name != 'cancelled'
                     "
                   >
                     <h5 class="font-size-16 mb-1">N° de facture:</h5>
@@ -475,6 +578,40 @@ export default {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="col-lg-4 classname" v-if="paymentsList && myInvoice">
+        <ActivityInvoice :status="myInvoice.status" />
+        <PaymentActivity
+          v-if="paymentsList.length > 0"
+          :payments="paymentsList"
+        />
+        <div class="card shadow-none">
+          <div class="card-body">
+            <div class="float-end"></div>
+            <h4 class="card-title mb-4">Version cachetée ( Scannée )</h4>
+            <center>
+              <span
+                class="badge font-size-12 bg-soft-secondary"
+                v-if="!myInvoice.stampedVersionPath"
+                >Pas encore disponible
+              </span>
+              <div v-if="myInvoice.stampedVersionPath">
+                <a
+                  :href="baseUrl + myInvoice.stampedVersionPath.url"
+                  target="_blank"
+                  ><button type="button" class="btn btn-outline-primary mb-3">
+                    Télécharger
+                    <i class="mdi mdi-download me-1"></i></button
+                ></a>
+              </div>
+            </center>
+            <div data-simplebar style="max-height: 336px">
+              <!-- enbd table-responsive-->
+            </div>
+            <!-- data-sidebar-->
+          </div>
+          <!-- end card-body-->
         </div>
       </div>
     </div>
