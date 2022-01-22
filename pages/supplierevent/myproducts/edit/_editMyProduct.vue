@@ -86,19 +86,19 @@ export default {
 
       // this.mySP.items.push(this.myProduct);
       let result = await axios.put(
-        process.env.baseUrl + "/restaurations/" + this.mySP.id,
+        process.env.baseUrl + "/eventserviceproviders/" + this.mySP.id,
         {
           items: this.mySP.items,
         }
       );
-      this.$router.push("/supplier/myproducts/" + this.myProduct.id);
+      this.$router.push("/supplierevent/myproducts/" + this.myProduct.id);
     },
   },
   async mounted() {
     let mySP = getData("accountinfo");
     try {
       let result = await axios.get(
-        process.env.baseUrl + "/restaurations/" + mySP.id
+        process.env.baseUrl + "/eventserviceproviders/" + mySP.id
       );
       this.mySP = result.data;
       this.categories = result.data.category;

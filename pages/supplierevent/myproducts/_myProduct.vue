@@ -32,7 +32,7 @@
 
     <PageHeader :title="title" :details="details" />
     <div v-if="myItem">
-      <nuxt-link :to="'/supplier/myproducts'"
+      <nuxt-link :to="'/supplierevent/myproducts'"
         ><button type="button" class="btn btn-primary btn-sm mt-3">
           <i class="mdi mdi-arrow-left me-1"></i>Mes articles
         </button></nuxt-link
@@ -46,13 +46,11 @@
           <i class="uil uil-pricetag-alt me-1"></i>Réduction et prix
         </button>
 
-         <nuxt-link :to="'/supplier/myproducts/edit/'+myItem.id"
-        >
-        <button type="button" class="btn btn-primary btn-sm mt-3">
-          <i class="uil uil-edit-alt me-1"></i>Modifier
-        </button>
-        </nuxt-link
-      >
+        <nuxt-link :to="'/supplierevent/myproducts/edit/' + myItem.id">
+          <button type="button" class="btn btn-primary btn-sm mt-3">
+            <i class="uil uil-edit-alt me-1"></i>Modifier
+          </button>
+        </nuxt-link>
         <button
           type="button"
           class="btn btn-danger btn-sm mt-3"
@@ -157,8 +155,11 @@
                         / {{ myItem.unit }}</span
                       >
                     </div>
-                    <div v-else>
+                    <div v-if="myItem.price == 0">
                       <h5 class="mb-4 pt-2 text-success">Gratuit</h5>
+                    </div>
+                    <div v-if="myItem.price < 0">
+                      <h5 class="mb-4 pt-2 text-primary">Sur devis</h5>
                     </div>
                   </h5>
                   <p class="text-muted mb-4">
@@ -201,23 +202,19 @@
                           :key="index"
                           class="badge badge-pill font-size-14 m-1 bg-info"
                         >
-                          <span
-                            v-if="where.serviceName == 'livraison-de-repas'"
-                          >
-                            Livraison de repas</span
-                          >
-                          <span v-if="where.serviceName == 'menu-conventionne'">
-                            Menu conventionné</span
-                          >
-                          <span v-if="where.serviceName == 'repas-emporte'">
-                            Repas emporté</span
+                          <span v-if="where.serviceName == 'event-salle'">
+                            Salle de conférence (ou lieu)</span
                           >
                           <span
-                            v-if="
-                              where.serviceName == 'reservation-de-restaurant'
-                            "
+                            v-if="where.serviceName == 'event-restauration'"
                           >
-                            Réservation de restaurant</span
+                            Services de restauration</span
+                          >
+                          <span v-if="where.serviceName == 'event-hosting'">
+                            Hotel (ou hébergement)</span
+                          >
+                          <span v-if="where.serviceName == 'event-service'">
+                            Autre services</span
                           >
                         </div>
                       </div>
@@ -438,7 +435,7 @@ export default {
       let myServiceProvider = getData("accountinfo");
       this.myServiceProvider = myServiceProvider.id;
       let result = await axios.get(
-        process.env.baseUrl + "/restaurations/" + this.myServiceProvider
+        process.env.baseUrl + "/eventserviceproviders/" + this.myServiceProvider
       );
       this.restaurant = result.data;
       let allItems = result.data.items;
@@ -540,28 +537,33 @@ export default {
       try {
         console.log(this.myItem);
         for (let i = 0; i < this.restaurant.items.length; i++) {
-          if (this.restaurant.items[i].id == this.myItem.id) {
-            if (this.discountVariable > 100) {
-              this.restaurant.items[i].disocunt = null;
-              this.restaurant.items[i].price = 0;
-            }
-            if (this.discountVariable <= 0) {
-              this.restaurant.items[i].disocunt = null;
-            }
-            if (this.discountVariable < 100 && this.discountVariable > 0) {
-              this.restaurant.items[i].disocunt = {
-                percentage: this.discountVariable,
-              };
-            }
-            if (this.myItem.price < 0) {
-              this.restaurant.items[i].price = 0;
+          if (this.myItem.price <= -1) {
+            this.restaurant.items[i].price = -1;
+            this.restaurant.items[i].disocunt = null;
+          } else {
+            if (this.restaurant.items[i].id == this.myItem.id) {
+              if (this.discountVariable > 100) {
+                this.restaurant.items[i].disocunt = null;
+                this.restaurant.items[i].price = 0;
+              }
+              if (this.discountVariable <= 0) {
+                this.restaurant.items[i].disocunt = null;
+              }
+              if (this.discountVariable < 100 && this.discountVariable > 0) {
+                this.restaurant.items[i].disocunt = {
+                  percentage: this.discountVariable,
+                };
+              }
+              if (this.myItem.price <= -1) {
+                this.restaurant.items[i].price = -1;
+              }
             }
           }
         }
         console.log(this.restaurant);
 
         let result = await axios.put(
-          process.env.baseUrl + "/restaurations/" + this.restaurant.id,
+          process.env.baseUrl + "/eventserviceproviders/" + this.restaurant.id,
           {
             items: this.restaurant.items,
           }
@@ -586,7 +588,7 @@ export default {
         }
 
         let result = await axios.put(
-          process.env.baseUrl + "/restaurations/" + this.restaurant.id,
+          process.env.baseUrl + "/eventserviceproviders/" + this.restaurant.id,
           {
             items: this.restaurant.items,
           }

@@ -222,7 +222,7 @@ export default {
       let myAccount = getData("accountinfo");
       console.log(myAccount);
       this.mySP = await axios.get(
-        process.env.baseUrl + "/" + myAccount.type + "/" + myAccount.id
+        process.env.baseUrl + "/" + "eventserviceproviders" + "/" + myAccount.id
       );
       let myItems = this.mySP;
       this.mySP = this.mySP.data;
@@ -255,7 +255,7 @@ export default {
       });
       // this.mySP.items.push(this.myProduct);
       let result = await axios.put(
-        process.env.baseUrl + "/restaurations/" + this.mySP.id,
+        process.env.baseUrl + "/eventserviceproviders/" + this.mySP.id,
         {
           category: this.myItems,
         }
@@ -275,7 +275,7 @@ export default {
       this.myItems = myNewCategories;
       // this.mySP.items.push(this.myProduct);
       let result = await axios.put(
-        process.env.baseUrl + "/restaurations/" + this.mySP.id,
+        process.env.baseUrl + "/eventserviceproviders/" + this.mySP.id,
         {
           category: myNewCategories,
         }

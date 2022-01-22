@@ -6,7 +6,7 @@
 
     <div class="row mt-3 align-items-center" v-if="myItems.length > 0">
       <div class="col-sm-12 col-md-2">
-        <nuxt-link :to="'/supplier/myproducts/addProduct'"
+        <nuxt-link :to="'/supplierevent/myproducts/addProduct'"
           ><button type="button" class="btn btn-primary btn-sm mt-3">
             <i class="mdi mdi-plus me-1"></i>Ajouter un produit
           </button></nuxt-link
@@ -64,7 +64,13 @@
         </template>
 
         <template v-slot:cell(price)="data">
-          <div class="font-size-16" v-if="!data.item.disocunt">
+          <div v-if="data.item.price < 0">
+            <h5 class="text-primary">Sur devis</h5>
+          </div>
+          <div
+            class="font-size-16"
+            v-if="data.item.price >= 0 && !data.item.disocunt"
+          >
             <span class="font-size-12 text-secondary"
               >(-{{ percentageTaking }}%)</span
             >
@@ -116,17 +122,17 @@
             :key="index"
             class="badge badge-pill font-size-4 m-1 bg-info"
           >
-            <span v-if="where.serviceName == 'livraison-de-repas'">
-              Livraison de repas</span
+            <span v-if="where.serviceName == 'event-salle'">
+              Salle de conférence (ou lieu)</span
             >
-            <span v-if="where.serviceName == 'menu-conventionne'">
-              Menu conventionné</span
+            <span v-if="where.serviceName == 'event-restauration'">
+              Services de restauration</span
             >
-            <span v-if="where.serviceName == 'repas-emporte'">
-              Repas emporté</span
+            <span v-if="where.serviceName == 'event-hosting'">
+              Hotel (ou hébergement)</span
             >
-            <span v-if="where.serviceName == 'reservation-de-restaurant'">
-              Réservation de restaurant</span
+            <span v-if="where.serviceName == 'event-service'">
+              Autre services</span
             >
           </div>
         </template>
@@ -151,7 +157,7 @@
                 v-b-tooltip.hover
                 title="Consulter"
               >
-                <nuxt-link :to="'/supplier/myproducts/' + data.item.id">
+                <nuxt-link :to="'/supplierevent/myproducts/' + data.item.id">
                   <i class="uil uil-eye font-size-18"></i>
                 </nuxt-link>
               </a>
@@ -284,7 +290,7 @@ export default {
       let myAccount = getData("accountinfo");
       console.log(myAccount);
       let myItems = await axios.get(
-        process.env.baseUrl + "/" + myAccount.type + "/" + myAccount.id
+        process.env.baseUrl + "/" + "eventserviceproviders" + "/" + myAccount.id
       );
       this.percentageTaking = myItems.data.percentageTaking;
       console.log(myItems.data.items[0]);

@@ -123,25 +123,18 @@ export default {
         console.log(result.data);
         if (!result.data[0]) {
           this.promoCodeIssue = result.data[1];
-        } else {
-          console.log("PSUEOD PAID");
-          let result2 = await axios.put(
-            process.env.baseUrl + "/invoices/" + this.myInvoice.id,
-            result.data[1]
-          );console.log(result2.data);
-          this.$router.go();
         }
       } catch (error) {}
     },
     async editInvoice(action) {
       if (action == "validate") {
-        let myNEwStatus = this.myInvoice.status;
+        let myNEwStatus=this.myInvoice.status
         myNEwStatus.push({
           name: "validated",
           comment: "La facture a été validée par le client",
           date: new Date().toISOString(),
         });
-
+       
         let result = await axios.put(
           process.env.baseUrl + "/invoices/" + this.myInvoice.id,
           {
@@ -326,7 +319,7 @@ export default {
 
     <div class="col-sm-12 col-md-12 mt-4" v-if="myInvoice">
       <div class="classname">
-        <nuxt-link to="/clients/invoices"
+        <nuxt-link to="/supplierevent/invoices/selling"
           ><button type="button" class="btn btn-primary btn-sm">
             <i class="mdi mdi-arrow-left me-1"></i> liste des factures
           </button></nuxt-link
@@ -347,8 +340,9 @@ export default {
             myInvoice.status[0].name != 'closed' &&
             myInvoice.status[0].name != 'payed' &&
             myInvoice.status[0].name != 'created' &&
-            myInvoice.status[0].name != 'cancelled' &&
-            paymentAmount < myInvoice.total
+            myInvoice.status[0].name != 'cancelled'
+            && 
+            paymentAmount<myInvoice.total
           "
         >
           Payer <i class="uil uil-bill me-1"></i>
