@@ -155,7 +155,7 @@
         <template v-slot:cell(total)="data">
           <div class="font-size-16">
             {{
-              Intl.NumberFormat("ar-MA", {
+              Intl.NumberFormat("fr-MA", {
                 style: "currency",
                 currency: "MAD",
               }).format(data.item.total)
@@ -262,12 +262,9 @@ export default {
       sortBy: "age",
       sortDesc: false,
       myInvoices: [],
+      mySP:null,
       fields: [
-        {
-          key: "invoiceNumber",
-          label: "Numéro de facture",
-          sortable: true,
-        },
+        
         {
           key: "createdAt",
           label: "Date de création",
@@ -312,6 +309,7 @@ export default {
       );
       result = result.data;
       this.myInvoices = result;
+      
       // for (let i = 0; i < result.length; i++) {
 
       //   if (

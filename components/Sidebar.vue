@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       menuItems: menuItems,
-      myAccountType:null,
+      myAccountType: null,
     };
   },
   props: {
@@ -92,17 +92,17 @@ export default {
     // eslint-disable-next-line no-unused-vars
     let myAccountType = getData("account");
     console.log(myAccountType);
-    if (myAccountType == null) {
-      persistData("account", "client");
-      myAccountType="client"
-    }
-this.myAccountType=myAccountType
+   
+    this.myAccountType = myAccountType;
     var menuRef = new MetisMenu("#side-menu");
     this._activateMenuDropdown();
 
     this.$router.afterEach((routeTo, routeFrom) => {
       this._activateMenuDropdown();
     });
+    if(!this.menuItems ){
+      this.$router.go()
+    }
   },
   methods: {
     /**
@@ -194,7 +194,7 @@ this.myAccountType=myAccountType
   <!-- ========== Left Sidebar Start ========== -->
   <div class="vertical-menu">
     <!-- LOGO -->
-    <div class="navbar-brand-box" v-if="myAccountType=='client'">
+    <div class="navbar-brand-box" v-if="myAccountType == 'client'">
       <nuxt-link to="/" class="logo logo-dark">
         <span class="logo-sm">
           <img src="~/assets/images/logo-sm.png" alt height="22" />
@@ -213,7 +213,10 @@ this.myAccountType=myAccountType
         </span>
       </nuxt-link>
     </div>
-    <div class="navbar-brand-box" v-if="myAccountType=='supplier' || myAccountType=='event'">
+    <div
+      class="navbar-brand-box"
+      v-if="myAccountType == 'supplier' || myAccountType == 'event'"
+    >
       <nuxt-link to="/" class="logo logo-dark">
         <span class="logo-sm">
           <img src="~/assets/images/logo-sm.png" alt height="22" />

@@ -4,7 +4,7 @@
   <div>
     <PageHeader :title="title" :details="items" />
 
-    <div class="row mt-3" v-if="myOrders.length > 0">
+    <div class="row mt-3" v-if="myInvoices.length > 0">
       <div class="col-sm-12 col-md-2"></div>
 
       <!-- Search -->
@@ -24,16 +24,16 @@
       <!-- End search -->
     </div>
     <!-- Table -->
-    <center v-if="myOrders.length == 0">
+    <center v-if="myInvoices.length == 0">
       <h5 class="text-muted m-5">
-        Vous n'avez pas de commande active pour le moment
+        Vous n'avez pas d'ordre actif pour le moment
       </h5>
     </center>
-    <div class="table-responsive mb-0" v-if="myOrders.length > 0">
+    <div class="table-responsive mb-0" v-if="myInvoices.length > 0">
       <b-table
         table-class="table table-centered datatable table-card-list"
         thead-tr-class="bg-transparent"
-        :items="myOrders"
+        :items="myInvoices"
         :fields="fields"
         responsive="sm"
         :per-page="perPage"
@@ -52,22 +52,19 @@
                 data.item.status[data.item.status.length - 1].name ===
                   'created' ||
                 data.item.status[data.item.status.length - 1].name ===
-                  'quoteSent',
+                  'validated',
               'bg-warning':
                 data.item.status[data.item.status.length - 1].name ===
-                  'pendingQuote' ||
-                data.item.status[data.item.status.length - 1].name ===
-                  'pendingValidation',
+                'pseudoPaid',
               'bg-success':
-                data.item.status[data.item.status.length - 1].name ===
-                  'validated' ||
-                data.item.status[data.item.status.length - 1].name ===
-                  'pending',
+                data.item.status[data.item.status.length - 1].name === 'payed',
               'bg-secondary':
+                data.item.status[data.item.status.length - 1].name ===
+                  'cancelled' ||
                 data.item.status[data.item.status.length - 1].name === 'closed',
               'bg-danger':
                 data.item.status[data.item.status.length - 1].name ===
-                'cancelled',
+                'overDueDate',
             }"
           >
             <span
@@ -77,30 +74,23 @@
             >
               Créé</span
             >
+
             <span
               v-if="
                 data.item.status[data.item.status.length - 1].name ==
-                'pendingQuote'
+                'overDueDate'
               "
             >
-              En attente de devis</span
-            >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name ==
-                'pendingValidation'
-              "
-            >
-              En cours de validation</span
+              Expiration du délai</span
             >
             <span
               v-if="
                 data.item.status[data.item.status.length - 1].name ==
-                'quoteSent'
+                'pseudoPaid'
               "
             >
-              Devis envoyé</span
-            >
+              Partiellement payé (%{{getMyPaimentsPercentage(data.item)}})
+            </span>
             <span
               v-if="
                 data.item.status[data.item.status.length - 1].name ==
@@ -111,10 +101,10 @@
             >
             <span
               v-if="
-                data.item.status[data.item.status.length - 1].name == 'pending'
+                data.item.status[data.item.status.length - 1].name == 'paid'
               "
             >
-              En cours</span
+              Payé</span
             >
             <span
               v-if="
@@ -134,16 +124,21 @@
           </div>
         </template>
 
-        <template v-slot:cell(paimentMode)="data">
+        <template v-slot:cell(invoiceNumber)="data">
           <div class="font-size-12">
-            <span v-if="data.item.paimentMode.type == 'invoice'">
-              <i class="uil uil-postcard d-block h6 "> - Sur facture</i>
-            </span>
-            <span v-if="data.item.paimentMode.type == 'cod'">
-              <i class="uil uil-money-bill d-block h6 ">
-                - Paiement à la livraison</i
-              ></span
+            <span 
+              v-if="
+                data.item.status[data.item.status.length - 1].name !=
+                  'created' &&
+                data.item.status[data.item.status.length - 1].name !=
+                  'cancelled'
+              "
             >
+              <h5>{{ data.item.invoiceNumber }}</h5>
+            </span>
+            <!-- <span v-else><p class="text-muted"> Pas encore renseigné </p></span> -->
+
+            <span v-else class="badge badge-pill font-size-10 bg-secondary"> Pas encore renseigné </span>
           </div>
         </template>
 
@@ -160,21 +155,15 @@
         <template v-slot:cell(total)="data">
           <div class="font-size-16">
             {{
-              Intl.NumberFormat("ar-MA", {
+              Intl.NumberFormat("fr-MA", {
                 style: "currency",
                 currency: "MAD",
               }).format(data.item.total)
             }}
           </div>
         </template>
-         <template v-slot:cell(type)="data">
-          <div class="font-size-16">
-         <h6 v-if="data.item.type=='restauration'">Restauration</h6>
-         <h6 v-if="data.item.type=='market'">Market</h6>
-          </div>
-        </template>
 
-        <template v-slot:cell(when)="data">
+        <template v-slot:cell(createdAt)="data">
           <a href="#" class="text-body">{{
             formatMyDate(data.item.createdAt)
           }}</a>
@@ -189,7 +178,7 @@
                 v-b-tooltip.hover
                 title="Consulter"
               >
-                <nuxt-link :to="'/supplier/orders/active/' + data.item.id">
+                <nuxt-link :to="'/supplierevent/invoices/selling/' + data.item.id">
                   <i class="uil uil-eye font-size-18"></i>
                 </nuxt-link>
               </a>
@@ -208,7 +197,7 @@
         </template>
       </b-table>
     </div>
-    <div class="row" v-if="myOrders.length > 0">
+    <div class="row" v-if="myInvoices.length > 0">
       <div class="col-sm-12 col-lg-4">
         <div id="tickets-table_length" class="dataTables_length">
           <label class="d-inline-flex align-items-center">
@@ -244,7 +233,7 @@
  */
 import axios from "axios";
 import { format, parseISO } from "date-fns";
-import {getData} from "../../../../components/controllers/savingData"
+import { getData } from "../../../../components/controllers/savingData";
 export default {
   head() {
     return {
@@ -253,13 +242,13 @@ export default {
   },
   data() {
     return {
-      title: "Commandes actives",
+      title: "Factures de vente",
       items: [
         {
-          text: "Commandes",
+          text: "Factures de vente",
         },
         {
-          text: "Commandes actives",
+          text: "Factures",
           active: true,
         },
       ],
@@ -272,32 +261,28 @@ export default {
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
-      myOrders: [],
+      myInvoices: [],
+      mySP:null,
       fields: [
+        
         {
-          key: "when",
-          label: "Commandé le",
+          key: "createdAt",
+          label: "Date de création",
           sortable: true,
         },
         {
-          key: "type",
-        },
-        {
-          key: "withDelivery",
-          label: "Avec livraison",
+          key: "DueDate",
+          label: "Date d'échéance",
+          sortable: true,
         },
         {
           key: "total",
-          label: "Montant (TTC)",
+          label: "Total (en dh TTC)",
           sortable: true,
         },
         {
-          key: "paimentMode",
-          label: "Mode paiment",
-        },
-        {
           key: "status",
-          label: "Status",
+          label: "statut",
           sortable: true,
         },
         {
@@ -312,37 +297,46 @@ export default {
      * Total no. of records
      */
     rows() {
-      return this.myOrders.length;
+      return this.myInvoices.length;
     },
   },
   async mounted() {
     // Set the initial number of items
     try {
       let myAccount = getData("accountinfo");
-      let result = await axios.get(process.env.baseUrl + "/orders");
+      let result = await axios.get(
+        process.env.baseUrl + "/invoices?withTypeId=" + myAccount.id
+      );
       result = result.data;
-      for (let i = 0; i < result.length; i++) {
-     
-        if (
-          result[i].status[result[i].status.length - 1].name != "cancelled" &&
-          result[i].status[result[i].status.length - 1].name != "closed" &&
-          result[i].linkedToSPItem.spID==myAccount.id
-        ) {
-           
-          this.myOrders.push(result[i]);
-        }
-      }
-      this.myOrders = this.myOrders.reverse();
+      this.myInvoices = result;
+      
+      // for (let i = 0; i < result.length; i++) {
 
+      //   if (
+      //     result[i].status[result[i].status.length - 1].name != "cancelled" &&
+      //     result[i].status[result[i].status.length - 1].name != "closed"
+      //   ) {
+
+      //     this.myInvoices.push(result[i]);
+      //   }
+      // }
+      this.myInvoices = this.myInvoices.reverse();
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-    this.totalRows = this.myOrders.length;
+    this.totalRows = this.myInvoices.length;
   },
   methods: {
     /**
      * Search the table data with search input
      */
+    getMyPaimentsPercentage(invoice){
+      let totalPaid=0
+      for(let i=0; i<invoice.payments.length;i++){
+        totalPaid=totalPaid+invoice.payments[i].amount
+      }
+      return ((totalPaid/invoice.total)*100).toFixed(0)
+    },
     formatMyDate(date) {
       // return date
       return format(parseISO(date), "dd/MM/yyyy, HH:MM");

@@ -215,22 +215,23 @@
           right
           variant="white"
           menu-class="dropdown-menu-end"
+          v-if="accountType == 'event' || accountType == 'supplier'"
         >
           <template v-slot:button-content>
             <img
               class="rounded-circle header-profile-user"
-              src="~/assets/images/users/avatar-4.jpg"
+              :src="accountLogo"
               alt="Header Avatar"
             />
-            <span
-              class="d-none d-xl-inline-block ms-1 fw-medium font-size-15"
-              >{{ $t("navbar.dropdown.marcus.text") }}</span
-            >
+            <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15"
+              >{{ accountName }}
+              <span class="text-muted">( {{ userName }} )</span>
+            </span>
             <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
           </template>
 
           <!-- item-->
-          <a class="dropdown-item" href="#">
+          <nuxt-link to="/supplierevent/profile" class="dropdown-item"  v-if="accountType == 'event'">
             <i
               class="
                 uil uil-user-circle
@@ -240,19 +241,35 @@
                 me-1
               "
             ></i>
-            <span class="align-middle">{{
-              $t("navbar.dropdown.marcus.list.profile")
-            }}</span>
-          </a>
+            <span class="align-middle">Profile</span>
+
+          </nuxt-link>
+            <nuxt-link to="/supplier/profile" class="dropdown-item"  v-if="accountType == 'supplier'">
+            <i
+              class="
+                uil uil-user-circle
+                font-size-18
+                align-middle
+                text-muted
+                me-1
+              "
+            ></i>
+            <span class="align-middle">Profile</span>
+
+          </nuxt-link>
           <a class="dropdown-item" href="#">
             <i
-              class="uil uil-wallet font-size-18 align-middle me-1 text-muted"
+              class="
+                uil uil-users-alt
+                font-size-18
+                align-middle
+                me-1
+                text-muted
+              "
             ></i>
-            <span class="align-middle">{{
-              $t("navbar.dropdown.marcus.list.mywallet")
-            }}</span>
+            <span class="align-middle">Compte utilisateur</span>
           </a>
-          <a class="dropdown-item d-block" href="#">
+          <!-- <a class="dropdown-item d-block" href="#">
             <i
               class="uil uil-cog font-size-18 align-middle me-1 text-muted"
             ></i>
@@ -260,15 +277,15 @@
               $t("navbar.dropdown.marcus.list.settings")
             }}</span>
             <span class="badge bg-soft-success rounded-pill mt-1 ms-2">03</span>
-          </a>
-          <a class="dropdown-item" href="#">
+          </a> -->
+          <!-- <a class="dropdown-item" href="#">
             <i
               class="uil uil-lock-alt font-size-18 align-middle me-1 text-muted"
             ></i>
             <span class="align-middle">{{
               $t("navbar.dropdown.marcus.list.lockscreen")
             }}</span>
-          </a>
+          </a> -->
           <a
             class="dropdown-item"
             @click="logoutUser"
@@ -283,9 +300,7 @@
                 text-muted
               "
             ></i>
-            <span class="align-middle">{{
-              $t("navbar.dropdown.marcus.list.logout")
-            }}</span>
+            <span class="align-middle">Se déconnecter</span>
           </a>
         </b-dropdown>
       </div>
@@ -297,13 +312,17 @@
 /**
  * Topbar component
  */
-import { getData } from "../components/controllers/savingData";
+import { getData, removeData } from "../components/controllers/savingData";
 export default {
   data() {
     return {
       eventIsActive: false,
       restaurationIsActive: false,
       marketIsActive: false,
+      accountName: null,
+      accountLogo: null,
+      userName: null,
+      accountType: null,
       languages: [
         {
           flag: require("~/assets/images/flags/us.jpg"),
@@ -346,6 +365,16 @@ export default {
     }
     if (getData("market")) {
       this.marketIsActive = true;
+    }
+    if (getData("account") == "event" || getData("account") == "supplier") {
+      this.accountName = getData("accountinfo").knowenName;
+      this.accountLogo = getData("accountinfo").logo;
+      this.userName = getData("accountinfo").userName;
+      if (getData("account") == "event") {
+        this.accountType = "event";
+      } else if (getData("account") == "supplier") {
+        this.accountType = "supplier";
+      }
     }
 
     this.value = this.languages.find((x) => x.language === this.$i18n.locale);
@@ -404,10 +433,12 @@ export default {
       this.flag = flag;
     },
     logoutUser() {
-      if (process.env.auth === "firebase") {
-        this.$store.dispatch("auth/logOut");
-      } else if (process.env.auth === "fakebackend") {
-        this.$store.dispatch("authfack/logout");
+      if (getData("account") == "client") {
+        removeData("account");
+        removeData("clientinfo");
+      } else {
+        removeData("account");
+        removeData("accountinfo");
       }
       this.$router.push({
         path: "/account/login",
@@ -418,5 +449,4 @@ export default {
 </script>
 
 <style >
-
 </style>

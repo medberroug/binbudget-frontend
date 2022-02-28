@@ -334,33 +334,33 @@ import { getData, persistData } from "../components/controllers/savingData"
 
 console.log("XXXXXXXXXXXXXXXXXXACCOUNTXXXXXXXXXXXXXXX");
 // persistData("account", "supplier")
-console.log(getData('account'));
 console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-
+// window.localStorage.setItem("'account'", "supplier")
 let menuItems = null
-let accountType = getData('account')  
+let account = getData('account')  
+let myMenuType = null
 
-console.log(accountType == "event");
-if (accountType == "supplier") {
+if (account == "supplier") {
   menuItems = menuItemsForSupplier
-  persistData("accountinfo", {
-    id:"6165a1dedb4fc0357013de8f",
-    type:"restaurations"
-  })
+  // persistData("accountinfo", {
+  //   id:"6165a1dedb4fc0357013de8f",
+  //   type:"restaurations"
+  // })
+  
 }
-if (accountType == "event") {
+if (account == "event") {
   menuItems = menuItemsForEvent
-  persistData("accountinfo", {
-    id:"6196730106b47e37eca51d28",
-    type:"event"
-  })
+  // persistData("accountinfo", {
+  //   id:"6196730106b47e37eca51d28",
+  //   type:"event"
+  // })
 }
-if (accountType == "client" || !accountType) {
+if (account == "client") {
   menuItems = menuItemsForClient
-  persistData("clientinfo", {
-    id:"61d6ef9da87fba4628e55138",
-    user:"61d6e544ef059514d8f21485"
-  })
+  // persistData("clientinfo", {
+  //   id:"61d6ef9da87fba4628e55138",
+  
+  // })
 }
 
 
@@ -368,4 +368,4 @@ if (accountType == "client" || !accountType) {
 
 export { menuItems }
 
-import axios from 'axios'
+

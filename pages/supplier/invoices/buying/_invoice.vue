@@ -16,10 +16,6 @@ export default {
       let result = await axios.get(
         process.env.baseUrl + "/invoices/" + this.$route.params.invoice
       );
-      let result2 = await axios.get(
-        process.env.baseUrl + "/eventserviceproviders/" + result.data.withTypeId
-      );
-      this.mySP = result2.data;
       this.myInvoice = result.data;
       let resultForPaymentsMethods = await axios.get(
         process.env.baseUrl + "/generalsettingsdefaults"
@@ -132,13 +128,13 @@ export default {
     },
     async editInvoice(action) {
       if (action == "validate") {
-        let myNEwStatus = this.myInvoice.status;
+        let myNEwStatus=this.myInvoice.status
         myNEwStatus.push({
           name: "validated",
           comment: "La facture a été validée par le client",
           date: new Date().toISOString(),
         });
-
+       
         let result = await axios.put(
           process.env.baseUrl + "/invoices/" + this.myInvoice.id,
           {
@@ -163,7 +159,6 @@ export default {
           active: true,
         },
       ],
-      mySP: null,
       payModal: false,
       newPaymentStep: 1,
       resultForPaymentsMethods: null,
@@ -324,27 +319,47 @@ export default {
 
     <div class="col-sm-12 col-md-12 mt-4" v-if="myInvoice">
       <div class="classname">
-        <nuxt-link to="/supplierevent/invoices/selling"
+        <nuxt-link to="/supplierevent/invoices/buying"
           ><button type="button" class="btn btn-primary btn-sm">
             <i class="mdi mdi-arrow-left me-1"></i> liste des factures
           </button></nuxt-link
         >
-        <!-- <button
+        <button
           type="button"
           class="btn btn-success btn-sm float-end mx-1"
           v-if="myInvoice.status[0].name == 'created'"
           @click="editInvoice('validate')"
         >
           Valider <i class="mdi mdi-check me-1"></i>
-        </button> -->
-       
-        
+        </button>
+        <button
+          type="button"
+          @click="payModal = !payModal"
+          class="btn btn-success btn-sm float-end mx-1"
+          v-if="
+            myInvoice.status[0].name != 'closed' &&
+            myInvoice.status[0].name != 'payed' &&
+            myInvoice.status[0].name != 'created' &&
+            myInvoice.status[0].name != 'cancelled'
+            && 
+            paymentAmount<myInvoice.total
+          "
+        >
+          Payer <i class="uil uil-bill me-1"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn-sm float-end mx-1"
+          v-if="myInvoice.status[0].name == 'created'"
+        >
+          Séparé <i class="uil uil-arrows-h-alt me-1"></i>
+        </button>
       </div>
     </div>
 
     <div class="row mt-4" v-if="myInvoice">
       <div class="col-lg-8">
-        <div class="card shadow-none p-4">
+        <div class="card shadow-none">
           <div class="card-body p-6">
             <div class="invoice-title">
               <h4
@@ -360,10 +375,9 @@ export default {
               </h4>
               <div class="mb-4">
                 <img
-                  :src="baseUrl + mySP.logo.url"
+                  src="~/assets/images/logo-large.png"
                   alt="logo"
-                  height="20%"
-                  width="20%"
+                  height="50"
                 />
               </div>
               <div class="text-muted">
@@ -548,7 +562,7 @@ export default {
                 </p>
               </div>
               <div class="d-print-none mt-4">
-                <!-- <div class="float-end">
+                <div class="float-end">
                   <a
                     href="javascript:window.print()"
                     class="btn btn-success waves-effect waves-light mr-1"
@@ -560,19 +574,13 @@ export default {
                     class="btn btn-primary w-md waves-effect waves-light"
                     >Envoyé</a
                   >
-                </div> -->
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="col-lg-4 classname" v-if="paymentsList && myInvoice">
-        <b-alert variant="danger" show v-if="myInvoice.status[0].name == 'created'"
-          >Afin que cette facture soit validée, veuillez envoyer une copie
-          cachetée au siège de BinBudget (indiqué ci-dessous), aucun paiement ne
-          sera effectué si la version cachetée n'est pas validée par nos équipes
-          avant le {{ myInvoice.DueDate }}.</b-alert
-        >
         <ActivityInvoice :status="myInvoice.status" />
         <PaymentActivity
           v-if="paymentsList.length > 0"

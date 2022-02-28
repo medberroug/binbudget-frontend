@@ -17,7 +17,7 @@ export default {
         process.env.baseUrl + "/invoices/" + this.$route.params.invoice
       );
       let result2 = await axios.get(
-        process.env.baseUrl + "/eventserviceproviders/" + result.data.withTypeId
+        process.env.baseUrl + "/restaurations/" + result.data.withTypeId
       );
       this.mySP = result2.data;
       this.myInvoice = result.data;
