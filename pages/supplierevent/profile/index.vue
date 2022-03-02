@@ -32,6 +32,14 @@ export default {
       // return date
       return format(parseISO(date), "dd/MM/yyyy, HH:MM");
     },
+    checkIfServiceExists(serviceList, refService) {
+      for (let i = 0; i < serviceList.length; i++) {
+        if (serviceList[i].serviceName == refService) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
   data() {
     return {
@@ -136,14 +144,14 @@ export default {
             <hr class="my-4" />
             <div class="text-muted">
               <h5 class="font-size-16">Mon chargé de relations</h5>
-               <div class="font-size-12 mt-3">
-                    <b-alert variant="secondary" show
-                      >Contactez votre chargé de relations par téléphone
-                      uniquement si votre demande est urgente. Il est conseillé
-                      de vous en tenir à des e-mails ou à des appels
-                      téléphoniques durant les heures de travail occasionnelles.
-                    </b-alert>
-                  </div>
+              <div class="font-size-12 mt-3">
+                <b-alert variant="secondary" show
+                  >Contactez votre chargé de relations par téléphone uniquement
+                  si votre demande est urgente. Il est conseillé de vous en
+                  tenir à des e-mails ou à des appels téléphoniques durant les
+                  heures de travail occasionnelles.
+                </b-alert>
+              </div>
               <div class="table-responsive mt-4 mb-0">
                 <div>
                   <p class="mb-1">Nom :</p>
@@ -164,7 +172,6 @@ export default {
                   <h5 class="font-size-16">
                     {{ accountManager.phoneNumber }}
                   </h5>
-                
                 </div>
               </div>
             </div>
@@ -238,261 +245,116 @@ export default {
             <b-tab>
               <template v-slot:title>
                 <i class="uil uil-clipboard-notes font-size-20"></i>
-                <span class="d-none d-sm-block">Tasks</span>
+                <span class="d-none d-sm-block">Services</span>
               </template>
               <div>
-                <h5 class="font-size-16 mb-3">Active</h5>
+                <h5 class="font-size-16 mb-3">
+                  Catégorie de services: Evénementiel
+                </h5>
 
                 <div class="table-responsive">
                   <table class="table table-nowrap table-centered">
                     <tbody>
                       <tr>
-                        <td style="width: 60px">
-                          <div
-                            class="custom-control custom-checkbox text-center"
-                          >
-                            <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="tasks-activeCheck2"
-                            />
-                            <label
-                              class="custom-control-label"
-                              for="tasks-activeCheck2"
-                            ></label>
-                          </div>
-                        </td>
                         <td>
                           <a href="#" class="font-weight-bold text-dark"
-                            >Ecommerce Product Detail</a
+                            >Salle d'événements</a
                           >
                         </td>
 
-                        <td>27 May, 2020</td>
                         <td style="width: 160px">
-                          <span class="badge bg-soft-primary font-size-12"
+                          <span
+                            class="badge bg-soft-success font-size-12"
+                            v-if="
+                              checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-salle'
+                              )
+                            "
                             >Active</span
                           >
+                          <span
+                            class="badge bg-soft-secondary font-size-12"
+                            v-else
+                            >Inactif</span
+                          >
                         </td>
                       </tr>
+
                       <tr>
                         <td>
-                          <div
-                            class="custom-control custom-checkbox text-center"
-                          >
-                            <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="tasks-activeCheck1"
-                            />
-                            <label
-                              class="custom-control-label"
-                              for="tasks-activeCheck1"
-                            ></label>
-                          </div>
-                        </td>
-                        <td>
                           <a href="#" class="font-weight-bold text-dark"
-                            >Ecommerce Product</a
+                            >Hébergement</a
                           >
                         </td>
 
-                        <td>26 May, 2020</td>
-                        <td>
-                          <span class="badge bg-soft-primary font-size-12"
+                        <td style="width: 160px">
+                          <span
+                            class="badge bg-soft-success font-size-12"
+                            v-if="
+                              checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-hosting'
+                              )
+                            "
                             >Active</span
                           >
+                          <span
+                            class="badge bg-soft-secondary font-size-12"
+                            v-else
+                            >Inactif</span
+                          >
                         </td>
                       </tr>
-                    </tbody>
-                  </table>
-                </div>
 
-                <h5 class="font-size-16 my-3">Upcoming</h5>
-
-                <div class="table-responsive">
-                  <table class="table table-nowrap table-centered">
-                    <tbody>
                       <tr>
-                        <td style="width: 60px">
-                          <div
-                            class="custom-control custom-checkbox text-center"
-                          >
-                            <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="tasks-upcomingCheck3"
-                            />
-                            <label
-                              class="custom-control-label"
-                              for="tasks-upcomingCheck3"
-                            ></label>
-                          </div>
-                        </td>
                         <td>
                           <a href="#" class="font-weight-bold text-dark"
-                            >Chat app Page</a
+                            >Restauration</a
                           >
                         </td>
 
-                        <td>-</td>
                         <td style="width: 160px">
-                          <span class="badge bg-soft-secondary font-size-12"
-                            >Waiting</span
+                          <span
+                            class="badge bg-soft-success font-size-12"
+                            v-if="
+                              checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-restauration'
+                              )
+                            "
+                            >Active</span
+                          >
+                          <span
+                            class="badge bg-soft-secondary font-size-12"
+                            v-else
+                            >Inactif</span
                           >
                         </td>
                       </tr>
+
                       <tr>
                         <td>
-                          <div
-                            class="custom-control custom-checkbox text-center"
-                          >
-                            <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="tasks-upcomingCheck2"
-                            />
-                            <label
-                              class="custom-control-label"
-                              for="tasks-upcomingCheck2"
-                            ></label>
-                          </div>
-                        </td>
-                        <td>
                           <a href="#" class="font-weight-bold text-dark"
-                            >Email Pages</a
+                            >Services complémentaires</a
                           >
                         </td>
 
-                        <td>04 June, 2020</td>
-                        <td>
-                          <span class="badge bg-soft-primary font-size-12"
-                            >Approved</span
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div
-                            class="custom-control custom-checkbox text-center"
-                          >
-                            <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="tasks-upcomingCheck1"
-                            />
-                            <label
-                              class="custom-control-label"
-                              for="tasks-upcomingCheck1"
-                            ></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="#" class="font-weight-bold text-dark"
-                            >Contacts Profile Page</a
-                          >
-                        </td>
-
-                        <td>-</td>
-                        <td>
-                          <span class="badge bg-soft-secondary font-size-12"
-                            >Waiting</span
-                          >
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <h5 class="font-size-16 my-3">Complete</h5>
-
-                <div class="table-responsive">
-                  <table class="table table-nowrap table-centered">
-                    <tbody>
-                      <tr>
-                        <td style="width: 60px">
-                          <div
-                            class="custom-control custom-checkbox text-center"
-                          >
-                            <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="tasks-completeCheck3"
-                            />
-                            <label
-                              class="custom-control-label"
-                              for="tasks-completeCheck3"
-                            ></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="#" class="font-weight-bold text-dark"
-                            >UI Elements</a
-                          >
-                        </td>
-
-                        <td>27 May, 2020</td>
                         <td style="width: 160px">
-                          <span class="badge bg-soft-success font-size-12"
-                            >Complete</span
+                          <span
+                            class="badge bg-soft-success font-size-12"
+                            v-if="
+                              checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-service'
+                              )
+                            "
+                            >Active</span
                           >
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div
-                            class="custom-control custom-checkbox text-center"
-                          >
-                            <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="tasks-completeCheck2"
-                            />
-                            <label
-                              class="custom-control-label"
-                              for="tasks-completeCheck2"
-                            ></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="#" class="font-weight-bold text-dark"
-                            >Authentication Pages</a
-                          >
-                        </td>
-
-                        <td>27 May, 2020</td>
-                        <td>
-                          <span class="badge bg-soft-success font-size-12"
-                            >Complete</span
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div
-                            class="custom-control custom-checkbox text-center"
-                          >
-                            <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="tasks-completeCheck1"
-                            />
-                            <label
-                              class="custom-control-label"
-                              for="tasks-completeCheck1"
-                            ></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="#" class="font-weight-bold text-dark"
-                            >Admin Layout</a
-                          >
-                        </td>
-
-                        <td>26 May, 2020</td>
-                        <td>
-                          <span class="badge bg-soft-success font-size-12"
-                            >Complete</span
+                          <span
+                            class="badge bg-soft-secondary font-size-12"
+                            v-else
+                            >Inactif</span
                           >
                         </td>
                       </tr>
