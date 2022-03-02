@@ -174,7 +174,7 @@ var menuItemsForSupplier = [
     id: 91,
     label: "Tableau de bord",
     icon: "uil-home-alt",
-    link: "/supplier"
+    link: "/supplier/dashboard"
   },
   {
     id: 92,
@@ -257,7 +257,7 @@ var menuItemsForEvent = [
     id: 91,
     label: "Tableau de bord",
     icon: "uil-home-alt",
-    link: "/supplierevent"
+    link: "/supplierevent/dashboard"
   },
   {
     id: 92,
@@ -317,18 +317,18 @@ var menuItemsForEvent = [
     icon: "uil-money-withdrawal",
     link: "/supplierevent/invoices/buying"
   },
-  {
-    id: 1001,
-    label: "Paramètres",
-    isTitle: true
-  },
+  // {
+  //   id: 1001,
+  //   label: "Paramètres",
+  //   isTitle: true
+  // },
 
-  {
-    id: 250,
-    label: "Settings",
-    icon: "uil-setting",
-    link: "/clients/settings"
-  }
+  // {
+  //   id: 250,
+  //   label: "Settings",
+  //   icon: "uil-setting",
+  //   link: "/clients/settings"
+  // }
 ];
 import { getData, persistData } from "../components/controllers/savingData"
 

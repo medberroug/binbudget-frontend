@@ -80,9 +80,9 @@ export default {
                 <template v-slot:button-content>
                   <i class="uil uil-ellipsis-v"></i>
                 </template>
-                <a class="dropdown-item" href="#">Edit</a>
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Remove</a>
+                <a class="dropdown-item text-primary" href="#">Modifier</a>
+                <a class="dropdown-item text-danger" href="#">Désactiver le profil </a>
+                
               </b-dropdown>
               <div class="clearfix"></div>
               <div>
@@ -245,10 +245,10 @@ export default {
             <b-tab>
               <template v-slot:title>
                 <i class="uil uil-clipboard-notes font-size-20"></i>
-                <span class="d-none d-sm-block">Services</span>
+                <span class="d-none d-sm-block">Offre commerciale</span>
               </template>
               <div>
-                <h5 class="font-size-16 mb-3">
+                <h5 class="font-size-16 my-3">
                   Catégorie de services: Evénementiel
                 </h5>
 
@@ -261,7 +261,39 @@ export default {
                             >Salle d'événements</a
                           >
                         </td>
-
+                        <td>
+                          <a
+                            href="#"
+                            class="font-weight-bold text-dark"
+                            v-if="
+                              checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-hosting'
+                              )
+                            "
+                          >
+                            {{
+                              Intl.NumberFormat("fr-MA", {
+                                style: "currency",
+                                currency: "MAD",
+                              }).format(
+                                supplierData.monthlyServiceCost.eventSalle
+                              )
+                            }}
+                            / mois</a
+                          >
+                          <a
+                            href="#"
+                            class="font-weight-bold text-dark"
+                            v-if="
+                              !checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-salle'
+                              )
+                            "
+                            >-</a
+                          >
+                        </td>
                         <td style="width: 160px">
                           <span
                             class="badge bg-soft-success font-size-12"
@@ -285,6 +317,39 @@ export default {
                         <td>
                           <a href="#" class="font-weight-bold text-dark"
                             >Hébergement</a
+                          >
+                        </td>
+                        <td>
+                          <a
+                            href="#"
+                            class="font-weight-bold text-dark"
+                            v-if="
+                              checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-hosting'
+                              )
+                            "
+                          >
+                            {{
+                              Intl.NumberFormat("fr-MA", {
+                                style: "currency",
+                                currency: "MAD",
+                              }).format(
+                                supplierData.monthlyServiceCost.eventHosting
+                              )
+                            }}
+                            / mois</a
+                          >
+                          <a
+                            href="#"
+                            class="font-weight-bold text-dark"
+                            v-if="
+                              !checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-hosting'
+                              )
+                            "
+                            >-</a
                           >
                         </td>
 
@@ -313,7 +378,40 @@ export default {
                             >Restauration</a
                           >
                         </td>
-
+                        <td>
+                          <a
+                            href="#"
+                            class="font-weight-bold text-dark"
+                            v-if="
+                              checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-restauration'
+                              )
+                            "
+                          >
+                            {{
+                              Intl.NumberFormat("fr-MA", {
+                                style: "currency",
+                                currency: "MAD",
+                              }).format(
+                                supplierData.monthlyServiceCost
+                                  .eventRestauration
+                              )
+                            }}
+                            / mois</a
+                          >
+                          <a
+                            href="#"
+                            class="font-weight-bold text-dark"
+                            v-if="
+                              !checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-restauration'
+                              )
+                            "
+                            >-</a
+                          >
+                        </td>
                         <td style="width: 160px">
                           <span
                             class="badge bg-soft-success font-size-12"
@@ -339,7 +437,39 @@ export default {
                             >Services complémentaires</a
                           >
                         </td>
-
+                        <td>
+                          <a
+                            href="#"
+                            class="font-weight-bold text-dark"
+                            v-if="
+                              checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-service'
+                              )
+                            "
+                          >
+                            {{
+                              Intl.NumberFormat("fr-MA", {
+                                style: "currency",
+                                currency: "MAD",
+                              }).format(
+                                supplierData.monthlyServiceCost.eventService
+                              )
+                            }}
+                            / mois</a
+                          >
+                          <a
+                            href="#"
+                            class="font-weight-bold text-dark"
+                            v-if="
+                              !checkIfServiceExists(
+                                supplierData.whatServicesHeCanOffer,
+                                'event-service'
+                              )
+                            "
+                            >-</a
+                          >
+                        </td>
                         <td style="width: 160px">
                           <span
                             class="badge bg-soft-success font-size-12"
@@ -360,158 +490,28 @@ export default {
                       </tr>
                     </tbody>
                   </table>
+    <hr class="my-4" />
+                  <h5 class="font-size-16 mb-3 mt-5">Facturation et rentabilité</h5>
+                  <div class="table-responsive mb-0">
+                  <div class="">
+                    <p class="mb-1">Pourcentage de bénéfices :</p>
+                    <h5 class="font-size-16">
+                      {{ 100 - supplierData.percentageTaking }}%
+                    </h5>
+                  </div>
+                  <div class="mt-4">
+                    <p class="mb-1">Jours d'échéance des factures :</p>
+                    <h5 class="font-size-16">
+                      {{ supplierData.dueDatesAfter }} Jours
+                    </h5>
+                  </div>
+
+                 
+                </div>
                 </div>
               </div>
             </b-tab>
-            <b-tab>
-              <template v-slot:title>
-                <i class="uil uil-envelope-alt font-size-20"></i>
-                <span class="d-none d-sm-block">Messages</span>
-              </template>
-              <div>
-                <div data-simplebar style="max-height: 430px">
-                  <div class="media border-bottom py-4">
-                    <img
-                      class="me-2 rounded-circle avatar-xs"
-                      src="~/assets/images/users/avatar-3.jpg"
-                      alt
-                    />
-                    <div class="media-body">
-                      <h5 class="font-size-15 mt-0 mb-1">
-                        Marion Walker
-                        <small class="text-muted float-end">1 hr ago</small>
-                      </h5>
-                      <p class="text-muted">
-                        If several languages coalesce, the grammar of the
-                        resulting .
-                      </p>
-
-                      <a
-                        href="javascript: void(0);"
-                        class="text-muted font-13 d-inline-block"
-                      >
-                        <i class="mdi mdi-reply"></i> Reply
-                      </a>
-
-                      <div class="media mt-4">
-                        <img
-                          class="me-2 rounded-circle avatar-xs"
-                          src="~/assets/images/users/avatar-4.jpg"
-                          alt
-                        />
-                        <div class="media-body">
-                          <h5 class="font-size-15 mt-0 mb-1">
-                            Shanon Marvin
-                            <small class="text-muted float-end">1 hr ago</small>
-                          </h5>
-                          <p class="text-muted">
-                            It will be as simple as in fact, it will be
-                            Occidental. To it will seem like simplified .
-                          </p>
-
-                          <a
-                            href="javascript: void(0);"
-                            class="text-muted font-13 d-inline-block"
-                          >
-                            <i class="mdi mdi-reply"></i> Reply
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="media border-bottom py-4">
-                    <img
-                      class="me-2 rounded-circle avatar-xs"
-                      src="~/assets/images/users/avatar-5.jpg"
-                      alt
-                    />
-                    <div class="media-body">
-                      <h5 class="font-size-15 mt-0 mb-1">
-                        Janice Morgan
-                        <small class="text-muted float-end">2 hrs ago</small>
-                      </h5>
-                      <p class="text-muted">
-                        To achieve this, it would be necessary to have uniform
-                        pronunciation.
-                      </p>
-
-                      <a
-                        href="javascript: void(0);"
-                        class="text-muted font-13 d-inline-block"
-                      >
-                        <i class="mdi mdi-reply"></i> Reply
-                      </a>
-                    </div>
-                  </div>
-
-                  <div class="media border-bottom py-4">
-                    <img
-                      class="me-2 rounded-circle avatar-xs"
-                      src="~/assets/images/users/avatar-7.jpg"
-                      alt
-                    />
-                    <div class="media-body">
-                      <h5 class="font-size-15 mt-0 mb-1">
-                        Patrick Petty
-                        <small class="text-muted float-end">3 hrs ago</small>
-                      </h5>
-                      <p class="text-muted">
-                        Sed ut perspiciatis unde omnis iste natus error sit
-                      </p>
-
-                      <a
-                        href="javascript: void(0);"
-                        class="text-muted font-13 d-inline-block"
-                      >
-                        <i class="mdi mdi-reply"></i> Reply
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="border rounded mt-4">
-                  <form action="#">
-                    <div class="px-2 py-1 bg-light">
-                      <div class="btn-group" role="group">
-                        <button
-                          type="button"
-                          class="
-                            btn btn-sm btn-link
-                            text-dark text-decoration-none
-                          "
-                        >
-                          <i class="uil uil-link"></i>
-                        </button>
-                        <button
-                          type="button"
-                          class="
-                            btn btn-sm btn-link
-                            text-dark text-decoration-none
-                          "
-                        >
-                          <i class="uil uil-smile"></i>
-                        </button>
-                        <button
-                          type="button"
-                          class="
-                            btn btn-sm btn-link
-                            text-dark text-decoration-none
-                          "
-                        >
-                          <i class="uil uil-at"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <textarea
-                      rows="3"
-                      class="form-control border-0 resize-none"
-                      placeholder="Your Message..."
-                    ></textarea>
-                  </form>
-                </div>
-                <!-- end .border-->
-              </div>
-            </b-tab>
+        
           </b-tabs>
           <!-- Nav tabs -->
           <!-- Tab content -->

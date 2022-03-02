@@ -1,5 +1,185 @@
+
+<script>
+/**
+ * Topbar component
+ */
+import { getData, removeData } from "../components/controllers/savingData";
+import axios from "axios";
+export default {
+  data() {
+    return {
+      eventIsActive: false,
+      restaurationIsActive: false,
+      marketIsActive: false,
+      accountName: null,
+      accountLogo: null,
+      userName: null,
+      accountType: null,
+      languages: [
+        {
+          flag: require("~/assets/images/flags/us.jpg"),
+          language: "en",
+          title: "English",
+        },
+        {
+          flag: require("~/assets/images/flags/french.jpg"),
+          language: "fr",
+          title: "French",
+        },
+        {
+          flag: require("~/assets/images/flags/spain.jpg"),
+          language: "es",
+          title: "spanish",
+        },
+        {
+          flag: require("~/assets/images/flags/china.png"),
+          language: "zh",
+          title: "Chinese",
+        },
+        {
+          flag: require("~/assets/images/flags/arabic.png"),
+          language: "ar",
+          title: "Arabic",
+        },
+      ],
+      current_language: this.$i18n.locale,
+      text: null,
+      flag: null,
+      value: null,
+      userAccountModal: false,
+      userAccount: null,
+    };
+  },
+  async mounted() {
+    if (getData("event")) {
+      this.eventIsActive = true;
+    }
+    if (getData("restauration")) {
+      this.restaurationIsActive = true;
+    }
+    if (getData("market")) {
+      this.marketIsActive = true;
+    }
+    if (getData("account") == "event" || getData("account") == "supplier") {
+      this.accountName = getData("accountinfo").knowenName;
+      this.accountLogo = getData("accountinfo").logo;
+      this.userName = getData("accountinfo").userName;
+      if (getData("account") == "event") {
+        this.accountType = "event";
+      } else if (getData("account") == "supplier") {
+        this.accountType = "supplier";
+      }
+    }
+    let result = await axios.get(
+      process.env.baseUrl + "/users?username=" + this.userName
+    );
+    result = result.data[0];
+    this.userAccount = result;
+
+    this.value = this.languages.find((x) => x.language === this.$i18n.locale);
+    this.text = this.value.title;
+    this.flag = this.value.flag;
+    console.log("dddddddddddddddddddddddd");
+  },
+  methods: {
+    /**
+     * Toggle menu
+     */
+    toggleMenu() {
+      this.$parent.toggleMenu();
+    },
+    initFullScreen() {
+      document.body.classList.toggle("fullscreen-enable");
+      if (
+        !document.fullscreenElement &&
+        /* alternative standard method */
+        !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement
+      ) {
+        // current working methods
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+          document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen(
+            Element.ALLOW_KEYBOARD_INPUT
+          );
+        }
+      } else {
+        if (document.cancelFullScreen) {
+          document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        }
+      }
+    },
+    /**
+     * Toggle rightsidebar
+     */
+    toggleRightSidebar() {
+      this.$parent.toggleRightSidebar();
+    },
+    /**
+     * Set languages
+     */
+    setLanguage(locale, country, flag) {
+      this.$i18n.locale = locale;
+      this.current_language = locale;
+      this.text = country;
+      this.flag = flag;
+    },
+    logoutUser() {
+      if (getData("account") == "client") {
+        removeData("account");
+        removeData("clientinfo");
+      } else {
+        removeData("account");
+        removeData("accountinfo");
+      }
+      this.$router.push({
+        path: "/account/login",
+      });
+    },
+  },
+};
+</script>
+
 <template>
   <header id="page-topbar">
+    <b-modal v-model="userAccountModal" centered hide-footer v-if="userAccount">
+      <template #modal-title>Compte utilisateur </template>
+
+      <!-- <b-form-input v-model="userAccount" type="number"></b-form-input> -->
+
+      <label for="input-live" class="mt-1">Nom d'utilisateur </label>
+      <b-form-input
+        v-model="userAccount.username"
+        type="email"
+        disabled
+      ></b-form-input>
+      <label for="input-live" class="mt-4">E-mail utilisateur </label>
+      <b-form-input
+        v-model="userAccount.email"
+        type="email"
+        disabled
+      ></b-form-input>
+      <center>
+        <b-button class="mt-3 btn-sm" block variant="outline-secondary">
+          Modifier le mot de passe</b-button
+        >
+        <!-- <b-button
+          class="mt-3"
+          block
+          variant="primary"
+      
+        >
+          Soumettre</b-button
+        > -->
+      </center></b-modal
+    >
     <div class="navbar-header">
       <div class="d-flex">
         <!-- LOGO -->
@@ -231,7 +411,11 @@
           </template>
 
           <!-- item-->
-          <nuxt-link to="/supplierevent/profile" class="dropdown-item"  v-if="accountType == 'event'">
+          <nuxt-link
+            to="/supplierevent/profile"
+            class="dropdown-item"
+            v-if="accountType == 'event'"
+          >
             <i
               class="
                 uil uil-user-circle
@@ -242,9 +426,12 @@
               "
             ></i>
             <span class="align-middle">Profile</span>
-
           </nuxt-link>
-            <nuxt-link to="/supplier/profile" class="dropdown-item"  v-if="accountType == 'supplier'">
+          <nuxt-link
+            to="/supplier/profile"
+            class="dropdown-item"
+            v-if="accountType == 'supplier'"
+          >
             <i
               class="
                 uil uil-user-circle
@@ -255,9 +442,12 @@
               "
             ></i>
             <span class="align-middle">Profile</span>
-
           </nuxt-link>
-          <a class="dropdown-item" href="#">
+          <a
+            class="dropdown-item"
+            href="#"
+            @click="userAccountModal = !userAccountModal"
+          >
             <i
               class="
                 uil uil-users-alt
@@ -307,146 +497,6 @@
     </div>
   </header>
 </template>
-
-<script>
-/**
- * Topbar component
- */
-import { getData, removeData } from "../components/controllers/savingData";
-export default {
-  data() {
-    return {
-      eventIsActive: false,
-      restaurationIsActive: false,
-      marketIsActive: false,
-      accountName: null,
-      accountLogo: null,
-      userName: null,
-      accountType: null,
-      languages: [
-        {
-          flag: require("~/assets/images/flags/us.jpg"),
-          language: "en",
-          title: "English",
-        },
-        {
-          flag: require("~/assets/images/flags/french.jpg"),
-          language: "fr",
-          title: "French",
-        },
-        {
-          flag: require("~/assets/images/flags/spain.jpg"),
-          language: "es",
-          title: "spanish",
-        },
-        {
-          flag: require("~/assets/images/flags/china.png"),
-          language: "zh",
-          title: "Chinese",
-        },
-        {
-          flag: require("~/assets/images/flags/arabic.png"),
-          language: "ar",
-          title: "Arabic",
-        },
-      ],
-      current_language: this.$i18n.locale,
-      text: null,
-      flag: null,
-      value: null,
-    };
-  },
-  mounted() {
-    if (getData("event")) {
-      this.eventIsActive = true;
-    }
-    if (getData("restauration")) {
-      this.restaurationIsActive = true;
-    }
-    if (getData("market")) {
-      this.marketIsActive = true;
-    }
-    if (getData("account") == "event" || getData("account") == "supplier") {
-      this.accountName = getData("accountinfo").knowenName;
-      this.accountLogo = getData("accountinfo").logo;
-      this.userName = getData("accountinfo").userName;
-      if (getData("account") == "event") {
-        this.accountType = "event";
-      } else if (getData("account") == "supplier") {
-        this.accountType = "supplier";
-      }
-    }
-
-    this.value = this.languages.find((x) => x.language === this.$i18n.locale);
-    this.text = this.value.title;
-    this.flag = this.value.flag;
-    console.log("dddddddddddddddddddddddd");
-  },
-  methods: {
-    /**
-     * Toggle menu
-     */
-    toggleMenu() {
-      this.$parent.toggleMenu();
-    },
-    initFullScreen() {
-      document.body.classList.toggle("fullscreen-enable");
-      if (
-        !document.fullscreenElement &&
-        /* alternative standard method */
-        !document.mozFullScreenElement &&
-        !document.webkitFullscreenElement
-      ) {
-        // current working methods
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-          document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          document.documentElement.webkitRequestFullscreen(
-            Element.ALLOW_KEYBOARD_INPUT
-          );
-        }
-      } else {
-        if (document.cancelFullScreen) {
-          document.cancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        }
-      }
-    },
-    /**
-     * Toggle rightsidebar
-     */
-    toggleRightSidebar() {
-      this.$parent.toggleRightSidebar();
-    },
-    /**
-     * Set languages
-     */
-    setLanguage(locale, country, flag) {
-      this.$i18n.locale = locale;
-      this.current_language = locale;
-      this.text = country;
-      this.flag = flag;
-    },
-    logoutUser() {
-      if (getData("account") == "client") {
-        removeData("account");
-        removeData("clientinfo");
-      } else {
-        removeData("account");
-        removeData("accountinfo");
-      }
-      this.$router.push({
-        path: "/account/login",
-      });
-    },
-  },
-};
-</script>
 
 <style >
 </style>

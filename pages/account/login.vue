@@ -76,7 +76,7 @@ export default {
               knowenName: knowenName,
               userName: result.user.username,
             });
-            this.$router.push("/supplierevent");
+            this.$router.push("/supplierevent/dashboard");
           } else if (result.user.role.name == "supp") {
             persistData("account", "supplier");
             let result2 = await axios.get(
@@ -94,7 +94,7 @@ export default {
               knowenName: knowenName,
               userName: result.user.username,
             });
-            this.$router.push("/supplier");
+            this.$router.push("/supplier/dashboard");
           }
         } catch (error) {
           console.log(error);
