@@ -355,7 +355,7 @@ if (account == "event") {
   //   type:"event"
   // })
 }
-if (account == "client") {
+if (account=="client" ) {
   menuItems = menuItemsForClient
   // persistData("clientinfo", {
   //   id:"61d6ef9da87fba4628e55138",

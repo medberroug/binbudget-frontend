@@ -360,7 +360,7 @@ export default {
     <div class="row mt-4" v-if="myInvoice">
       <div class="col-lg-8">
         <div class="card shadow-none">
-          <div class="card-body p-6">
+          <div class="card-body p-8">
             <div class="invoice-title">
               <h4
                 class="float-end font-size-24"

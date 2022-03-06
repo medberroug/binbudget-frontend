@@ -143,7 +143,10 @@ export default {
           "/" +
           this.$route.params.order.split("++")[1]
       );
-
+      let result2 = await axios.get(
+        process.env.baseUrl + "/clients/" + result.data.byClient
+      );
+      this.client = result2.data;
       //  this.$route.params.order
       //   result.data.when=formatMyDate( result.data.when)
 
@@ -176,6 +179,7 @@ export default {
       cancelModalShow: false,
       quoteModalShow: false,
       items: [],
+      client: null,
     };
   },
   middleware: "authentication",
@@ -364,7 +368,7 @@ export default {
               <div class="p-4 border-top">
                 <form>
                   <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-7">
                       <div class="mb-3">
                         <label for="price">Nom de l'évènement</label>
                         <input
@@ -372,6 +376,19 @@ export default {
                           name="price"
                           type="text"
                           v-model="myOrder.name"
+                          disabled
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-lg-5">
+                      <div class="mb-3">
+                        <label for="price">Client</label>
+                        <input
+                          id="price"
+                          name="price"
+                          type="text"
+                          v-model="client.companyDetails.knowenName"
                           disabled
                           class="form-control"
                         />

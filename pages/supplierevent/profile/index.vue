@@ -494,9 +494,9 @@ export default {
                   <h5 class="font-size-16 mb-3 mt-5">Facturation et rentabilité</h5>
                   <div class="table-responsive mb-0">
                   <div class="">
-                    <p class="mb-1">Pourcentage de bénéfices :</p>
+                    <p class="mb-1">Pourcentage de bénéfices BinBudget:</p>
                     <h5 class="font-size-16">
-                      {{ 100 - supplierData.percentageTaking }}%
+                      {{ supplierData.percentageTaking }}%
                     </h5>
                   </div>
                   <div class="mt-4">
