@@ -38,12 +38,12 @@ export default {
       series: [
         {
           name: "Revenus prévisionnels",
-          type: "column",
+          type: "line",
           data: [],
         },
         {
           name: "À payer",
-          type: "area",
+          type: "column",
           data: [],
         },
       ],
@@ -55,7 +55,7 @@ export default {
           },
         },
         stroke: {
-          width: [0, 2, 4],
+          width: [4, 2, 4],
           curve: "smooth",
         },
         plotOptions: {
