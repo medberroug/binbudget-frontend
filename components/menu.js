@@ -155,12 +155,12 @@ var menuItemsForClient = [
       }
     ]
   },
-  {
-    id: 22,
-    label: "Settings",
-    icon: "uil-setting",
-    link: "/clients/settings"
-  }
+  // {
+  //   id: 22,
+  //   label: "Settings",
+  //   icon: "uil-setting",
+  //   link: "/clients/settings"
+  // }
 ];
 
 

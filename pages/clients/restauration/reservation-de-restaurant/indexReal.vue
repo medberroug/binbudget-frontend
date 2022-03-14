@@ -1,10 +1,146 @@
 <template>
   <div>
     <PageHeader :title="title" :details="details" />
-   <center>
-      <h3 class="m-5">En cours</h3>
-    <p class="m-5">  En cours de test.</p>
-    </center>
+    <div class="row mt-4">
+      <div class="col-xl-3 col-lg-4">
+        <div class="card">
+          <div class="card-header bg-transparent border-bottom">
+            <h5 class="mb-0">Filters</h5>
+          </div>
+          <!-- Page Categories -->
+          <div class="p-4">
+            <h5 class="font-size-14 mb-3">Categories</h5>
+            <div class="custom-accordion">
+              <!-- city filter -->
+              <a
+                class="text-body font-weight-semibold pb-2 d-block"
+                data-toggle="collapse"
+                href="javascript: void(0);"
+                role="button"
+                aria-expanded="false"
+                v-b-toggle.city-collapse
+              >
+                <i
+                  class="mdi mdi-chevron-up accor-down-icon text-primary mr-1"
+                ></i>
+                City
+              </a>
+              <b-collapse visible id="city-collapse">
+                <div class="card p-2 border shadow-none">
+                  <ul class="list-unstyled categories-list mb-0">
+                    <li
+                      v-on:click="cityFilterController('All cities')"
+                      :class="[
+                        {
+                          active: filterCityControllerValue == 'All cities',
+                        },
+                        '',
+                      ]"
+                    >
+                      <a href="#">
+                        <i class="mdi mdi-circle-medium mr-1"></i> All cities
+                      </a>
+                    </li>
+                    <li
+                      v-for="(city, myCityIndex) in cities"
+                      :key="myCityIndex"
+                      v-on:click="cityFilterController(city)"
+                      :class="[
+                        {
+                          active: city == filterCityControllerValue,
+                        },
+                        '',
+                      ]"
+                    >
+                      <a href="#">
+                        <i class="mdi mdi-circle-medium mr-1"></i> {{ city }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </b-collapse>
+              <!-- Speciality filter  -->
+              <a
+                class="text-body font-weight-semibold pb-2 d-block"
+                data-toggle="collapse"
+                href="javascript: void(0);"
+                role="button"
+                aria-expanded="false"
+                v-b-toggle.speciality-collapse
+              >
+                <i
+                  class="mdi mdi-chevron-up accor-down-icon text-primary mr-1"
+                ></i>
+                Speciality
+              </a>
+              <b-collapse visible id="speciality-collapse">
+                <div class="card p-2 border shadow-none">
+                  <ul class="list-unstyled categories-list mb-0">
+                    <li
+                      v-on:click="specialityFilterController('All restaurants')"
+                      :class="[
+                        {
+                          active:
+                            filterSpecialityControllerValue ==
+                            'All restaurants',
+                        },
+                        '',
+                      ]"
+                    >
+                      <a href="#">
+                        <i class="mdi mdi-circle-medium mr-1"></i> All
+                        restaurants
+                      </a>
+                    </li>
+                    <li
+                      v-for="(
+                        speciality, mySpecialityIndex
+                      ) in filterSpeciality"
+                      :key="mySpecialityIndex"
+                      v-on:click="specialityFilterController(speciality)"
+                      :class="[
+                        {
+                          active: speciality == filterSpecialityControllerValue,
+                        },
+                        '',
+                      ]"
+                    >
+                      <a href="#">
+                        <i class="mdi mdi-circle-medium mr-1"></i>
+                        {{ speciality }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </b-collapse>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-9 col-lg-8">
+        <div class="row">
+          <center v-if="filtredRestaurants.length == 0">
+            <p>Aucun fournisseur de services à montrer</p>
+          </center>
+          <item-card
+            class=""
+            v-for="(item, index) in filtredRestaurants"
+            :id="item._id"
+            :key="index"
+            :name="item.knownName"
+            :img="item.topImage"
+            :img_icon="item.logo"
+            :bg-color="colours[index].bg"
+            :text-color="colours[index].text"
+            :rating="item.rating"
+            :city="item.city"
+            :speciality="item.speciality"
+            :menu="item.menu"
+            :parentlink="'reservation-de-restaurant'"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -5,18 +5,18 @@
 export default {
   head() {
     return {
-      title: `Tableau de bord | BinBudget`
+      title: `Profile | BinBudget`
     };
   },
   data() {
     return {
-      title: "Tableau de bord",
+      title: "Profile",
       items: [
         {
           text: "Binbudget"
         },
         {
-          text: "Clients - Tableau de bord",
+          text: "Clients - Profile",
           active: true
         }
       ]

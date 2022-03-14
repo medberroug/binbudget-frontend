@@ -69,6 +69,11 @@ export default {
       } else if (getData("account") == "supplier") {
         this.accountType = "supplier";
       }
+    } else {
+      this.accountName = getData("clientinfo").knowenName;
+      this.accountLogo = getData("clientinfo").logo;
+      this.userName = getData("clientinfo").userName;
+      this.accountType = "client";
     }
     let result = await axios.get(
       process.env.baseUrl + "/users?username=" + this.userName
@@ -395,14 +400,22 @@ export default {
           right
           variant="white"
           menu-class="dropdown-menu-end"
-          v-if="accountType == 'event' || accountType == 'supplier'"
+          v-if="accountType == 'event' || accountType == 'supplier' || accountType == 'client'"
         >
           <template v-slot:button-content>
             <img
+            v-if="accountLogo"
               class="rounded-circle header-profile-user"
               :src="accountLogo"
               alt="Header Avatar"
             />
+            <img
+            v-else
+              class="rounded-circle header-profile-user"
+              src="../assets/images/noimageuser.png"
+              alt="Header Avatar"
+            />
+            <!-- ../../assets/images/noimageuser.png -->
             <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15"
               >{{ accountName }}
               <span class="text-muted">( {{ userName }} )</span>
@@ -427,6 +440,26 @@ export default {
             ></i>
             <span class="align-middle">Profile</span>
           </nuxt-link>
+
+
+ <nuxt-link
+            to="/clients/profile"
+            class="dropdown-item"
+            v-if="accountType == 'client'"
+          >
+            <i
+              class="
+                uil uil-user-circle
+                font-size-18
+                align-middle
+                text-muted
+                me-1
+              "
+            ></i>
+            <span class="align-middle">Profile</span>
+          </nuxt-link>
+
+
           <nuxt-link
             to="/supplier/profile"
             class="dropdown-item"

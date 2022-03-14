@@ -306,6 +306,8 @@ export default {
   async mounted() {
     // Set the initial number of items
     try {
+      console.log('I4M HERE ');
+      console.log(getData("clientinfo"));
       let result = await axios.get(
         process.env.baseUrl + "/invoices?client=" + getData("clientinfo").id
       );

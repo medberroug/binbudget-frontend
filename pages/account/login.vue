@@ -95,6 +95,28 @@ export default {
               userName: result.user.username,
             });
             this.$router.push("/supplier/dashboard");
+          } else if (result.user.role.name == "client") {
+            persistData("account", "client");
+            let result2 = await axios.get(
+              process.env.baseUrl + "/clients/" + result.user.userAccountId
+            );
+            let logo;
+            if (result2.data.logo) {
+              logo = process.env.baseUrl + result2.data.logo.url;
+            } else {
+              logo = null
+            }
+            let knowenName = result2.data.companyDetails.knowenName;
+            
+            persistData("clientinfo", {
+              id: result.user.userAccountId,
+              type: "client",
+              jwt: result.jwt,
+              logo: logo,
+              knowenName: knowenName,
+              userName: result.user.username,
+            });
+            this.$router.push("/clients");
           }
         } catch (error) {
           console.log(error);
