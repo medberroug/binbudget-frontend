@@ -26,6 +26,7 @@ export default {
       });
     },
     async handleFileUpload() {
+      this.uploadLoader=true
       let formData = new FormData();
       formData.append("files", this.$refs.file.files[0]);
       let myImage = await axios
@@ -40,7 +41,7 @@ export default {
         name: myImage.name,
         url: process.env.baseUrl + myImage.url,
       });
-      console.log(this.fields);
+      this.uploadLoader=false
     },
     deleteRow(index) {
       if (confirm("Êtes-vous sûr de vouloir supprimer cet élément ?"))
@@ -149,6 +150,7 @@ export default {
       categories: null,
       mySP: null,
       myShowIn: [],
+      uploadLoader:false,
       value1: null,
       file: "",
       fileMissing: false,
@@ -385,11 +387,22 @@ export default {
                     </div>
                   </form>
                   <b-button
+                      v-if="!uploadLoader"
                     variant="primary"
                     class="btn-lg mt-4"
                     @click="addProduct"
                   >
                     Modifier
+                    <i class="uil uil-upload ml-6"></i>
+                  </b-button>
+
+                    <b-button 
+                  v-if="uploadLoader"
+                    variant="warning"
+                    class="btn-lg mt-4"
+                   
+                  >
+                    En attente.. (téléchargement d'images)
                     <i class="uil uil-upload ml-6"></i>
                   </b-button>
                 </div>

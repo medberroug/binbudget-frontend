@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     readDate(date) {
-      return formatDistanceToNow(parseISO(date), { addSuffix: true ,locale: fr},{ locale: fr });
+      return formatDistanceToNow(parseISO(date), { addSuffix: true ,locale: fr});
     },
   },
 };

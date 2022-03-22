@@ -26,7 +26,7 @@ export default {
       let myAccount = getData("accountinfo");
       let myComment = "Aucun commentaire";
       if (value == "pendingValidation")
-        myComment = "Votre commande a été validée par le fournisseur";
+        myComment = "Votre commande a été validée par le client";
       try {
         if (value == "validate") {
           let result = await axios.put(
@@ -39,6 +39,7 @@ export default {
               eodId,
             {
               action: "validate",
+              who:"client"
             }
           );
           console.log(result.data);
@@ -521,6 +522,22 @@ export default {
                     Annulé</span
                   >
                 </span>
+                <button
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  @click="updateStatus('validate', sp.eventServiceProvider, myEvent.id, sp.id)"
+                  v-if="sp.status[sp.status.length - 1].name == 'quoteSent'"
+                >
+                  Accepter la proposition <i class="uil-check"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm mx-2"
+                  @click="updateStatus('cancel', sp.eventServiceProvider, myEvent.id, sp.id)"
+                  v-if="sp.status[sp.status.length - 1].name == 'quoteSent'"
+                >
+                  Annuler  <i class="uil-trash"></i>
+                </button>
               </h5>
               <div v-for="(article, index2) in sp.articles" :key="index2">
                 <div class="card border shadow-none">
@@ -681,6 +698,22 @@ export default {
                     Annulé</span
                   >
                 </span>
+                <button
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  @click="updateStatus('validate', sp.eventServiceProvider, myEvent.id, sp.id)"
+                  v-if="sp.status[sp.status.length - 1].name == 'quoteSent'"
+                >
+                  Accepter la proposition <i class="uil-check"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm mx-2"
+                  @click="updateStatus('cancel', sp.eventServiceProvider, myEvent.id, sp.id)"
+                  v-if="sp.status[sp.status.length - 1].name == 'quoteSent'"
+                >
+                  Annuler  <i class="uil-trash"></i>
+                </button>
               </h5>
               <div v-for="(article, index2) in sp.articles" :key="index2">
                 <div class="card border shadow-none">
@@ -841,6 +874,22 @@ export default {
                     Annulé</span
                   >
                 </span>
+                <button
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  @click="updateStatus('validate', sp.eventServiceProvider, myEvent.id, sp.id)"
+                  v-if="sp.status[sp.status.length - 1].name == 'quoteSent'"
+                >
+                  Accepter la proposition <i class="uil-check"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm mx-2"
+                  @click="updateStatus('cancel', sp.eventServiceProvider, myEvent.id, sp.id)"
+                  v-if="sp.status[sp.status.length - 1].name == 'quoteSent'"
+                >
+                  Annuler  <i class="uil-trash"></i>
+                </button>
               </h5>
               <div v-for="(article, index2) in sp.articles" :key="index2">
                 <div class="card border shadow-none">

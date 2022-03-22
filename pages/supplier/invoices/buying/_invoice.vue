@@ -4,6 +4,7 @@
  */
 import { format, parseISO } from "date-fns";
 import axios from "axios";
+var writtenNumber = require("number-in-letters");
 export default {
   head() {
     return {
@@ -69,6 +70,34 @@ export default {
     } catch (error) {}
   },
   methods: {
+      convertToWord(number) {
+      let afterComa = (number * 100) % 100;
+      let afterComaExist = false;
+      if (afterComa != 0) {
+        afterComaExist = true;
+        number = parseInt(number);
+        afterComa = writtenNumber(afterComa, { lang: "fr" });
+      }
+      let myWord = writtenNumber(number, { lang: "fr" });
+      let firstLetter = myWord[0].toUpperCase();
+      let restOfWord = myWord.substr(1, myWord.length - 1);
+      if (afterComaExist) {
+        return (
+          "Arrêtée la présente facture à la somme de " +
+          firstLetter +
+          restOfWord +
+          " dirhams et " +
+          afterComa +
+          " centimes. "
+        );
+      }
+      return (
+        "Arrêtée la présente facture à la somme de " +
+        firstLetter +
+        restOfWord +
+        " dirhams."
+      );
+    },
     async handleFileUpload() {
       let formData = new FormData();
       formData.append("files", this.$refs.file.files[0]);
@@ -516,6 +545,9 @@ export default {
                     </tr>
                     <tr>
                       <td colspan="3" rowspan="3">
+                        <div class="myClass">
+                         <span> <b>{{ convertToWord(myInvoice.total) }}</b></span>
+                        </div>
                         <p v-if="myInvoice.ref">
                           Référence: {{ myInvoice.ref }}
                         </p>
@@ -627,5 +659,13 @@ export default {
 }
 .mmm {
   margin-right: 10rem;
+}
+
+.myClass {
+  display: block;
+  width: 100%;
+  word-wrap: break-word;
+  
+   white-space: normal;
 }
 </style>

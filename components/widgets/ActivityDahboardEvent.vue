@@ -5,6 +5,7 @@
 import { format, parseISO } from "date-fns";
 import axios from "axios";
 import { getData } from "../controllers/savingData";
+import {  fr } from "date-fns/locale";
 export default {
   data() {
     return {
@@ -14,7 +15,7 @@ export default {
   methods: {
     formatMyDate(date) {
       // return date
-      return format(parseISO(date), "dd/MM/yyyy");
+      return format(parseISO(date), "dd/MM/yyyy", { addSuffix: true ,locale: fr},{ locale: fr });
     },
     formatMyHour(date) {
       // return date

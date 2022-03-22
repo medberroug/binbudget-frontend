@@ -8,6 +8,18 @@ import "vue2-datepicker/index.css";
 import Switches from "vue-switches";
 import { MoroccoCities } from "../../../../components/widgets/MaCities";
 import {
+  required,
+  email,
+  minLength,
+  sameAs,
+  maxLength,
+  minValue,
+  maxValue,
+  numeric,
+  url,
+  alphaNum,
+} from "vuelidate/lib/validators";
+import {
   persistData,
   getData,
 } from "../../../../components/controllers/savingData";
@@ -51,7 +63,7 @@ export default {
         this.$router.push({
           path: "/clients/events/planifier-un-evenement/service",
         });
-      }else if (getData("event").whereIamName == "terminer") {
+      } else if (getData("event").whereIamName == "terminer") {
         this.$router.push({
           path: "/clients/events/planifier-un-evenement/terminer",
         });
@@ -60,50 +72,62 @@ export default {
   },
   methods: {
     createEvent() {
-      this.eventDetails.placeCheck = this.placeCheck;
-      this.eventDetails.hostingCheck = this.hostingCheck;
-      this.eventDetails.restaurationCheck = this.restaurationCheck;
-      this.eventDetails.tmsCheck = this.tmsCheck;
-      this.eventDetails.whereIam = 2;
-      this.eventDetails.whereIamName = "service";
-
-      if (this.placeCheck) {
-        this.eventDetails.whereIamName = "place";
-      } else if (this.hostingCheck) {
-        this.eventDetails.whereIamName = "hosting";
-      } else if (this.restaurationCheck) {
-        this.eventDetails.whereIamName = "restauration";
-      } else if (this.tmsCheck) {
-        this.eventDetails.whereIamName = "tms";
-      }
-      persistData("event", this.eventDetails);
-      //       this.$router.push({
-      //     path: '/clients/restauration/livraison-de-repas'
-      // })
-     
-
-      if (this.placeCheck) {
-        this.$router.push({
-          path: "/clients/events/planifier-un-evenement/place",
-        });
-      } else if (this.hostingCheck) {
-        this.$router.push({
-          path: "/clients/events/planifier-un-evenement/hosting",
-        });
-      } else if (this.restaurationCheck) {
-        this.$router.push({
-          path: "/clients/events/planifier-un-evenement/restauration",
-        });
-      } else if (this.tmsCheck) {
-        this.$router.push({
-          path: "/clients/events/planifier-un-evenement/tms",
-        });
+      this.submitted = true;
+      if (
+        !this.eventDetails.name ||
+        !this.eventDetails.description ||
+        !this.eventDetails.city ||
+        !this.eventDetails.startDate ||
+        !this.eventDetails.endDate ||
+        !this.eventDetails.numberOfAttendees
+      ) {
+        this.somthingIsmissing = true;
       } else {
-        this.$router.push({
-          path: "/clients/events/planifier-un-evenement/service",
-        });
+         this.somthingIsmissing = false;
+        this.eventDetails.placeCheck = this.placeCheck;
+        this.eventDetails.hostingCheck = this.hostingCheck;
+        this.eventDetails.restaurationCheck = this.restaurationCheck;
+        this.eventDetails.tmsCheck = this.tmsCheck;
+        this.eventDetails.whereIam = 2;
+        this.eventDetails.whereIamName = "service";
+
+        if (this.placeCheck) {
+          this.eventDetails.whereIamName = "place";
+        } else if (this.hostingCheck) {
+          this.eventDetails.whereIamName = "hosting";
+        } else if (this.restaurationCheck) {
+          this.eventDetails.whereIamName = "restauration";
+        } else if (this.tmsCheck) {
+          this.eventDetails.whereIamName = "tms";
+        }
+        persistData("event", this.eventDetails);
+        //       this.$router.push({
+        //     path: '/clients/restauration/livraison-de-repas'
+        // })
+
+        if (this.placeCheck) {
+          this.$router.push({
+            path: "/clients/events/planifier-un-evenement/place",
+          });
+        } else if (this.hostingCheck) {
+          this.$router.push({
+            path: "/clients/events/planifier-un-evenement/hosting",
+          });
+        } else if (this.restaurationCheck) {
+          this.$router.push({
+            path: "/clients/events/planifier-un-evenement/restauration",
+          });
+        } else if (this.tmsCheck) {
+          this.$router.push({
+            path: "/clients/events/planifier-un-evenement/tms",
+          });
+        } else {
+          this.$router.push({
+            path: "/clients/events/planifier-un-evenement/service",
+          });
+        }
+        this.$router.go();
       }
-       this.$router.go();
     },
     stepperCalculate(checker) {
       console.log("Im clicked " + checker);
@@ -156,6 +180,8 @@ export default {
       numberOfSteppers: 2,
       actualStepper: 1,
       moroccoCities: MoroccoCities,
+      submitted: false,
+
       eventDetails: {
         name: null,
         description: null,
@@ -170,7 +196,7 @@ export default {
         whereIam: 1,
         whereIamName: null,
       },
-
+      somthingIsmissing: false,
       details: [
         {
           text: "Evenement",
@@ -207,6 +233,10 @@ export default {
     <PageHeader :title="title" :details="details" />
     <div class="row mt-3">
       <div class="col-lg-12">
+        <b-alert variant="danger" show v-if="somthingIsmissing"
+          >Vous avez des champs manquants, veuillez remplir tous les éléments
+          obligatoires.
+        </b-alert>
         <div id="addproduct-accordion" class="custom-accordion">
           <div class="card">
             <a
@@ -266,7 +296,17 @@ export default {
                           type="text"
                           v-model="eventDetails.name"
                           class="form-control"
+                          :class="{
+                            'is-invalid': submitted && !eventDetails.name,
+                          }"
+                          required
                         />
+                        <div
+                          v-if="submitted && !eventDetails.name"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -280,7 +320,16 @@ export default {
                           v-model="eventDetails.city"
                           :options="this.moroccoCities"
                           :multiple="false"
+                          :class="{
+                            'is-invalid': submitted && !eventDetails.city,
+                          }"
                         ></multiselect>
+                        <div
+                          v-if="submitted && !eventDetails.city"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-3">
@@ -291,7 +340,16 @@ export default {
                           v-model="eventDetails.startDate"
                           value=""
                           type="datetime-local"
+                          :class="{
+                            'is-invalid': submitted && !eventDetails.startDate,
+                          }"
                         ></b-form-input>
+                        <div
+                          v-if="submitted && !eventDetails.startDate"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-3">
@@ -301,7 +359,16 @@ export default {
                           id="date-time"
                           v-model="eventDetails.endDate"
                           type="datetime-local"
+                          :class="{
+                            'is-invalid': submitted && !eventDetails.endDate,
+                          }"
                         ></b-form-input>
+                        <div
+                          v-if="submitted && !eventDetails.endDate"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-3">
@@ -313,7 +380,17 @@ export default {
                           type="number"
                           v-model="eventDetails.numberOfAttendees"
                           class="form-control"
+                          :class="{
+                            'is-invalid':
+                              submitted && !eventDetails.numberOfAttendees,
+                          }"
                         />
+                        <div
+                          v-if="submitted && !eventDetails.numberOfAttendees"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -325,7 +402,16 @@ export default {
                       v-model="eventDetails.description"
                       id="productdesc"
                       rows="4"
+                      :class="{
+                        'is-invalid': submitted && !eventDetails.description,
+                      }"
                     ></textarea>
+                    <div
+                      v-if="submitted && !eventDetails.description"
+                      class="invalid-feedback"
+                    >
+                      <span>Cette valeur est obligatoire.</span>
+                    </div>
                   </div>
                 </form>
               </div>

@@ -4,6 +4,7 @@
  */
 
 import { formatDistanceToNow, parseISO } from "date-fns";
+import {  fr } from "date-fns/locale";
 export default {
   props: ["status"],
   mounted() {
@@ -11,7 +12,7 @@ export default {
   },
   methods: {
     readDate(date) {
-      return formatDistanceToNow(parseISO(date), { addSuffix: true });
+      return formatDistanceToNow(parseISO(date),  { addSuffix: true ,locale: fr});
     },
   },
 };
