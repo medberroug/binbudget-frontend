@@ -14,15 +14,19 @@ export default {
   },
   data() {
     return {
+      wrongCredetiels:false,
       baseUrl: null,
       email: "",
       password: "",
       submitted: false,
+      checkingData:false,
       authError: null,
       tryingToLogIn: false,
       isAuthError: false,
+   
     };
   },
+
   validations: {
     email: {
       required,
@@ -45,10 +49,12 @@ export default {
 
     async tryToLogIn() {
       this.submitted = true;
+      this.checkingData=true
       // stop here if form is invalid
       this.$v.$touch();
 
       if (this.$v.$invalid) {
+          this.checkingData = false;
         return;
       } else {
         try {
@@ -56,7 +62,8 @@ export default {
             identifier: this.email,
             password: this.password,
           });
-          console.log(result.data);
+          console.log(result);
+
           result = result.data;
           // console.log(result.data);
           if (result.user.role.name == "suppevent") {
@@ -118,9 +125,13 @@ export default {
             });
             this.$router.push("/clients");
           }
+          
         } catch (error) {
           console.log(error);
+       this.wrongCredetiels=true
+          console.log("GHALET");
         }
+         this.checkingData = false;
       }
     },
   },
@@ -159,6 +170,12 @@ export default {
                     Connectez-vous pour continuer à Binbudget.
                   </p>
                 </div>
+                <b-alert
+                    variant="danger"
+                    show
+                    v-if="wrongCredetiels"
+                    >L'identification ou le mot de passe sont incorrects, veuillez réessayer. 
+                  </b-alert>
                 <div class="p-2 mt-4">
                   <b-alert
                     v-model="isAuthError"
@@ -205,7 +222,7 @@ export default {
                     <b-form-group id="input-group-2" class="mb-3">
                       <div class="float-end">
                         <nuxt-link
-                          to="/account/forgot-password"
+                          to="/account/login"
                           class="text-muted"
                           >Mot de passe oublié ?</nuxt-link
                         >
@@ -227,7 +244,7 @@ export default {
                         Un mot de passe est requis.
                       </div>
                     </b-form-group>
-                    <div class="form-check">
+                    <!-- <div class="form-check">
                       <input
                         type="checkbox"
                         class="form-check-input"
@@ -236,14 +253,14 @@ export default {
                       <label class="form-check-label" for="auth-remember-check"
                         >Rappelez-vous de moi</label
                       >
-                    </div>
+                    </div> -->
                     <div class="mt-3 text-end">
                       <b-button
                         type="submit"
                         variant="primary"
                         class="w-sm"
                         @click="tryToLogIn()"
-                        >Se connecter</b-button
+                        >Se connecter  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="checkingData"></span></b-button
                       >
                     </div>
                     <!-- <div class="mt-4 text-center">
@@ -283,7 +300,7 @@ export default {
                       <p class="mb-0">
                         Vous n'avez pas de compte ?
                         <nuxt-link
-                          to="/account/register"
+                          to="/account/login"
                           class="fw-medium text-primary"
                           >S'inscrire maintenant</nuxt-link
                         >

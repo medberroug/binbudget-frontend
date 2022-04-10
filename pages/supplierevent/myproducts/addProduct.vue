@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     async handleFileUpload() {
-      this.uploadLoader=true
+      this.uploadLoader = true;
       let formData = new FormData();
       formData.append("files", this.$refs.file.files[0]);
       let myImage = await axios
@@ -33,53 +33,68 @@ export default {
         name: myImage.name,
         url: process.env.baseUrl + myImage.url,
       });
-      this.uploadLoader=false
+      this.uploadLoader = false;
     },
     deleteRow(index) {
       if (confirm("Êtes-vous sûr de vouloir supprimer cet élément ?"))
         this.fields.splice(index, 1);
     },
     async addProduct() {
-      let mySpecs = this.myProduct.specification.split(/\r?\n/);
-      this.myProduct.specification = [];
-      for (let i = 0; i < mySpecs.length; i++) {
-        this.myProduct.specification.push({
-          specText: mySpecs[i],
-        });
-      }
-      let shownIn = this.myProduct.shownIn;
-      this.myProduct.shownIn = [];
-      for (let i = 0; i < shownIn.length; i++) {
-        this.myProduct.shownIn.push({
-          serviceName: shownIn[i],
-        });
-      }
-      this.myProduct.status = true;
-      this.myProduct.categories = [{ name: this.myProduct.categories }];
-      console.log(this.myProduct);
-      console.log(this.myProduct);
-      let myImages = [];
-      for (let i = 0; i < this.fields.length; i++) {
-        myImages.push({
-          id: this.fields[i].id,
-        });
-      }
-      this.myProduct.images = myImages;
-      this.myProduct.firstImage = {
-        id: myImages[0].id,
-      };
-      this.mySP.items.push(this.myProduct);
-      let result = await axios.put(
-        process.env.baseUrl + "/eventserviceproviders/" + this.mySP.id,
-        {
-          items: this.mySP.items,
-        }
-      );
+      this.submitted = true;
 
-      this.$router.push(
-        "/supplierevent/myproducts/" +
-          result.data.items[result.data.items.length - 1].id
-      );
+      if (
+        !this.myProduct.unit ||
+        !this.myProduct.price ||
+        !this.myProduct.name ||
+        !this.myProduct.description ||
+        !this.myProduct.categories ||
+        !this.myProduct.specification ||
+        !this.myProduct.shownIn ||
+        this.fields.length == 0
+      ) {
+        this.somthingIsmissing = true;
+      } else {
+        let mySpecs = this.myProduct.specification.split(/\r?\n/);
+        this.myProduct.specification = [];
+        for (let i = 0; i < mySpecs.length; i++) {
+          this.myProduct.specification.push({
+            specText: mySpecs[i],
+          });
+        }
+        let shownIn = this.myProduct.shownIn;
+        this.myProduct.shownIn = [];
+        for (let i = 0; i < shownIn.length; i++) {
+          this.myProduct.shownIn.push({
+            serviceName: shownIn[i],
+          });
+        }
+        this.myProduct.status = true;
+        this.myProduct.categories = [{ name: this.myProduct.categories }];
+        console.log(this.myProduct);
+        console.log(this.myProduct);
+        let myImages = [];
+        for (let i = 0; i < this.fields.length; i++) {
+          myImages.push({
+            id: this.fields[i].id,
+          });
+        }
+        this.myProduct.images = myImages;
+        this.myProduct.firstImage = {
+          id: myImages[0].id,
+        };
+        this.mySP.items.push(this.myProduct);
+        let result = await axios.put(
+          process.env.baseUrl + "/eventserviceproviders/" + this.mySP.id,
+          {
+            items: this.mySP.items,
+          }
+        );
+
+        this.$router.push(
+          "/supplierevent/myproducts/" +
+            result.data.items[result.data.items.length - 1].id
+        );
+      }
     },
   },
   async mounted() {
@@ -114,10 +129,13 @@ export default {
       mySP: null,
       myShowIn: [],
       value1: null,
+
+      submitted: false,
       file: "",
-      uploadLoader:false,
+      uploadLoader: false,
       fileMissing: false,
       formData: new FormData(),
+      somthingIsmissing: false,
       myProduct: {
         status: null,
         unit: null,
@@ -146,6 +164,10 @@ export default {
     <PageHeader :title="title" :items="items" />
     <div class="row mt-3">
       <div class="col-lg-12">
+        <b-alert variant="danger" show v-if="somthingIsmissing"
+          >Vous avez des champs manquants, veuillez remplir tous les éléments
+          obligatoires.
+        </b-alert>
         <div id="addproduct-accordion" class="custom-accordion">
           <div class="card">
             <a
@@ -173,9 +195,11 @@ export default {
                     </div>
                   </div>
                   <div class="media-body overflow-hidden">
-                    <h5 class="font-size-16 mb-1">Billing Info</h5>
+                    <h5 class="font-size-16 mb-1">
+                      Informations sur le produit
+                    </h5>
                     <p class="text-muted text-truncate mb-0">
-                      Fill all information below
+                      Remplissez toutes les informations ci-dessous
                     </p>
                   </div>
                   <i
@@ -201,7 +225,16 @@ export default {
                       type="text"
                       class="form-control"
                       v-model="myProduct.name"
+                      :class="{
+                        'is-invalid': submitted && !myProduct.name,
+                      }"
                     />
+                    <div
+                      v-if="submitted && !myProduct.name"
+                      class="invalid-feedback"
+                    >
+                      <span>Cette valeur est obligatoire.</span>
+                    </div>
                   </div>
 
                   <div class="row">
@@ -214,7 +247,16 @@ export default {
                           type="text"
                           class="form-control"
                           v-model="myProduct.unit"
+                          :class="{
+                            'is-invalid': submitted && !myProduct.unit,
+                          }"
                         />
+                        <div
+                          v-if="submitted && !myProduct.unit"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -226,7 +268,16 @@ export default {
                           type="number"
                           class="form-control"
                           v-model="myProduct.price"
+                          :class="{
+                            'is-invalid': submitted && !myProduct.price,
+                          }"
                         />
+                        <div
+                          v-if="submitted && !myProduct.price"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -235,6 +286,9 @@ export default {
                         <select
                           class="form-control select2"
                           v-model="myProduct.categories"
+                          :class="{
+                            'is-invalid': submitted && !myProduct.categories,
+                          }"
                         >
                           <option
                             :value="category.name"
@@ -244,6 +298,12 @@ export default {
                             {{ category.name }}
                           </option>
                         </select>
+                        <div
+                          v-if="submitted && !myProduct.categories"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -255,7 +315,16 @@ export default {
                           v-model="myProduct.shownIn"
                           :options="myShowIn"
                           :multiple="true"
+                          :class="{
+                            'is-invalid': submitted && !myProduct.shownIn,
+                          }"
                         ></multiselect>
+                        <div
+                          v-if="submitted && !myProduct.shownIn"
+                          class="invalid-feedback"
+                        >
+                          <span>Cette valeur est obligatoire.</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -267,7 +336,16 @@ export default {
                         id="productdesc"
                         rows="4"
                         v-model="myProduct.description"
+                        :class="{
+                          'is-invalid': submitted && !myProduct.description,
+                        }"
                       ></textarea>
+                      <div
+                        v-if="submitted && !myProduct.description"
+                        class="invalid-feedback"
+                      >
+                        <span>Cette valeur est obligatoire.</span>
+                      </div>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="productdesc"
@@ -278,7 +356,16 @@ export default {
                         id="productdesc"
                         rows="4"
                         v-model="myProduct.specification"
+                        :class="{
+                          'is-invalid': submitted && !myProduct.specification,
+                        }"
                       ></textarea>
+                      <div
+                        v-if="submitted && !myProduct.specification"
+                        class="invalid-feedback"
+                      >
+                        <span>Cette valeur est obligatoire.</span>
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -312,9 +399,9 @@ export default {
                     </div>
                   </div>
                   <div class="media-body overflow-hidden">
-                    <h5 class="font-size-16 mb-1">Product Image</h5>
+                    <h5 class="font-size-16 mb-1">Photos du produit</h5>
                     <p class="text-muted text-truncate mb-0">
-                      Fill all information below
+                      Ajoutez au moins une image
                     </p>
                   </div>
                   <input
@@ -323,16 +410,25 @@ export default {
                     ref="file"
                     v-on:change="handleFileUpload()"
                   />
+
                   <i
                     class="mdi mdi-chevron-up accor-down-icon font-size-24"
                   ></i>
                 </div>
+
                 <div>
                   <div class="m-4 col-lg-10">
                     <center></center>
                   </div>
                 </div>
+
                 <div class="row d-flex justify-content-end p-2 pt-4">
+                  <b-alert
+                    variant="danger"
+                    show
+                    v-if="submitted && fields.length == 0"
+                    >Au moins une image doit être téléchargée.
+                  </b-alert>
                   <form class="repeater my-4">
                     <div>
                       <div class="row">
@@ -358,8 +454,8 @@ export default {
                       </div>
                     </div>
                   </form>
-                  <b-button 
-                  v-if="!uploadLoader"
+                  <b-button
+                    v-if="!uploadLoader"
                     variant="primary"
                     class="btn-lg mt-4"
                     @click="addProduct"
@@ -367,11 +463,10 @@ export default {
                     Soumettre
                     <i class="uil uil-upload ml-6"></i>
                   </b-button>
-                  <b-button 
-                  v-if="uploadLoader"
+                  <b-button
+                    v-if="uploadLoader"
                     variant="warning"
                     class="btn-lg mt-4"
-                   
                   >
                     En attente.. (téléchargement d'images)
                     <i class="uil uil-upload ml-6"></i>

@@ -17,8 +17,11 @@ export default {
   methods: {
     async updateStatus(value) {
       let myComment = "Aucun commentaire";
-      if (value == "pendingValidation")
+      if (value == "pendingValidation"){
         myComment = "Votre commande a été validée par le fournisseur";
+      }else  if (value == "closed"){
+        myComment = "la commande est terminée et archivée par le fournisseur.";
+      }
       try {
         let newStatus = {
           name: value,
@@ -227,6 +230,15 @@ export default {
             v-if="myOrder.status[0].name == 'pendingValidation'"
           >
             Valider <i class="mdi uil-check me-1"></i>
+          </button>
+
+          <button
+            @click="updateStatus('closed')"
+            type="button"
+            class="btn btn-success btn-sm mb-3 mx-3 float-end"
+            v-if="myOrder.status[0].name == 'pending'"
+          >
+            Terminer <i class="mdi uil-check me-1"></i>
           </button>
         </div>
       </div>

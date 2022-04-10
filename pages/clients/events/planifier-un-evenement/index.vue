@@ -316,6 +316,7 @@ export default {
                         <label for="manufacturername"
                           >Ville de l'événement</label
                         >
+                        
                         <multiselect
                           v-model="eventDetails.city"
                           :options="this.moroccoCities"

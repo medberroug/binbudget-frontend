@@ -132,7 +132,7 @@ export default {
           rouge</b-alert
         >
         <div class="custom-accordion">
-          <div class="card">
+          <div class="card" v-if="myOrder.withDelivery != null">
             <a
               href="javascript: void(0);"
               class="text-dark"

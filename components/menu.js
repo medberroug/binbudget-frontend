@@ -234,18 +234,18 @@ var menuItemsForSupplier = [
     icon: "uil-money-withdrawal",
     link: "/supplier/invoices/buying"
   },
-  {
-    id: 1001,
-    label: "Paramètres",
-    isTitle: true
-  },
+  // {
+  //   id: 1001,
+  //   label: "Paramètres",
+  //   isTitle: true
+  // },
 
-  {
-    id: 250,
-    label: "Settings",
-    icon: "uil-setting",
-    link: "/clients/settings"
-  }
+  // {
+  //   id: 250,
+  //   label: "Settings",
+  //   icon: "uil-setting",
+  //   link: "/clients/settings"
+  // }
 ];
 var menuItemsForEvent = [
   {

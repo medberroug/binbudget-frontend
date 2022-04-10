@@ -57,14 +57,16 @@
                 data.item.status[data.item.status.length - 1].name ===
                 'pseudoPaid',
               'bg-success':
-                data.item.status[data.item.status.length - 1].name === 'payed',
+                data.item.status[data.item.status.length - 1].name === 'paid',
               'bg-secondary':
                 data.item.status[data.item.status.length - 1].name ===
                   'cancelled' ||
                 data.item.status[data.item.status.length - 1].name === 'closed',
               'bg-danger':
                 data.item.status[data.item.status.length - 1].name ===
-                'overDueDate',
+                  'overDueDate' ||
+                data.item.status[data.item.status.length - 1].name ===
+                  'forcePaiment',
             }"
           >
             <span
@@ -86,10 +88,18 @@
             <span
               v-if="
                 data.item.status[data.item.status.length - 1].name ==
+                'forcePaiment'
+              "
+            >
+              À payer avant réception</span
+            >
+            <span
+              v-if="
+                data.item.status[data.item.status.length - 1].name ==
                 'pseudoPaid'
               "
             >
-              Partiellement payé (%{{getMyPaimentsPercentage(data.item)}})
+              Partiellement payé (%{{ getMyPaimentsPercentage(data.item) }})
             </span>
             <span
               v-if="
@@ -126,7 +136,7 @@
 
         <template v-slot:cell(invoiceNumber)="data">
           <div class="font-size-12">
-            <span 
+            <span
               v-if="
                 data.item.status[data.item.status.length - 1].name !=
                   'created' &&
@@ -138,7 +148,9 @@
             </span>
             <!-- <span v-else><p class="text-muted"> Pas encore renseigné </p></span> -->
 
-            <span v-else class="badge badge-pill font-size-10 bg-secondary"> Pas encore renseigné </span>
+            <span v-else class="badge badge-pill font-size-10 bg-secondary">
+              Pas encore renseigné
+            </span>
           </div>
         </template>
 
@@ -306,7 +318,7 @@ export default {
   async mounted() {
     // Set the initial number of items
     try {
-      console.log('I4M HERE ');
+      console.log("I4M HERE ");
       console.log(getData("clientinfo"));
       let result = await axios.get(
         process.env.baseUrl + "/invoices?client=" + getData("clientinfo").id
@@ -333,12 +345,12 @@ export default {
     /**
      * Search the table data with search input
      */
-    getMyPaimentsPercentage(invoice){
-      let totalPaid=0
-      for(let i=0; i<invoice.payments.length;i++){
-        totalPaid=totalPaid+invoice.payments[i].amount
+    getMyPaimentsPercentage(invoice) {
+      let totalPaid = 0;
+      for (let i = 0; i < invoice.payments.length; i++) {
+        totalPaid = totalPaid + invoice.payments[i].amount;
       }
-      return ((totalPaid/invoice.total)*100).toFixed(0)
+      return ((totalPaid / invoice.total) * 100).toFixed(0);
     },
     formatMyDate(date) {
       // return date

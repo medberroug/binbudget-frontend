@@ -94,41 +94,45 @@ export default {
 
       this.generalSettings = result.data;
     } catch (error) {}
-    console.log(this.myEvent);
-    for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
-      switch (this.myEvent.eventOrderDetails[i].type) {
-        case "place":
-          this.placeNoServiceController = false;
-          break;
-        case "hosting":
-          this.hostingNoServiceController = false;
-          break;
-        case "restauration":
-          this.restaurationNoServiceController = false;
-          break;
-        case "tms":
-          this.tmsNoServiceController = false;
-          break;
-        case "service":
-          this.serviceNoServiceController = false;
-          break;
-      }
-      for (
-        let j = 0;
-        j < this.myEvent.eventOrderDetails[i].articles.length;
-        j++
-      ) {
-        if (this.myEvent.eventOrderDetails[i].articles[j].price < 0) {
-          this.isEverythingPriced = false;
-          break;
+    if (this.myEvent.eventOrderDetails) {
+      for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
+        switch (this.myEvent.eventOrderDetails[i].type) {
+          case "place":
+            this.placeNoServiceController = false;
+            break;
+          case "hosting":
+            this.hostingNoServiceController = false;
+            break;
+          case "restauration":
+            this.restaurationNoServiceController = false;
+            break;
+          case "tms":
+            this.tmsNoServiceController = false;
+            break;
+          case "service":
+            this.serviceNoServiceController = false;
+            break;
         }
+        for (
+          let j = 0;
+          j < this.myEvent.eventOrderDetails[i].articles.length;
+          j++
+        ) {
+          if (this.myEvent.eventOrderDetails[i].articles[j].price < 0) {
+            this.isEverythingPriced = false;
+            break;
+          }
+        }
+        this.subTotal =
+          this.subTotal + this.myEvent.eventOrderDetails[i].subTotal;
       }
-      this.subTotal =
-        this.subTotal + this.myEvent.eventOrderDetails[i].subTotal;
-    }
 
-    this.tva = (this.subTotal * this.generalSettings.tva) / 100;
-    this.total = this.subTotal + this.tva;
+      this.tva = (this.subTotal * this.generalSettings.tva) / 100;
+      this.total = this.subTotal + this.tva;
+    } else {
+     removeData("event");
+      this.$router.push("/clients/events/mes-evenements");
+    }
   },
   data() {
     return {

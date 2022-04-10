@@ -57,7 +57,7 @@
                 data.item.status[data.item.status.length - 1].name ===
                 'pseudoPaid',
               'bg-success':
-                data.item.status[data.item.status.length - 1].name === 'payed',
+                data.item.status[data.item.status.length - 1].name === 'paid',
               'bg-secondary':
                 data.item.status[data.item.status.length - 1].name ===
                   'cancelled' ||
@@ -178,7 +178,7 @@
                 v-b-tooltip.hover
                 title="Consulter"
               >
-                <nuxt-link :to="'/supplierevent/invoices/selling/' + data.item.id">
+                <nuxt-link :to="'/supplier/invoices/selling/' + data.item.id">
                   <i class="uil uil-eye font-size-18"></i>
                 </nuxt-link>
               </a>
@@ -305,7 +305,7 @@ export default {
     try {
       let myAccount = getData("accountinfo");
       let result = await axios.get(
-        process.env.baseUrl + "/invoices?withTypeId=" + myAccount.id
+        process.env.baseUrl + "/invoices?type=Achat&withTypeId=" + myAccount.id
       );
       result = result.data;
       this.myInvoices = result;

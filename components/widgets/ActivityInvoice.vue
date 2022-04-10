@@ -41,12 +41,24 @@ export default {
                     'bg-info':
                       item.name === 'created' || item.name === 'validated',
                     'bg-warning': item.name === 'pseudoPaid',
-                    'bg-success': item.name === 'payed',
+                    'bg-success': item.name === 'paid',
                     'bg-secondary':
                       item.name === 'cancelled' || item.name === 'closed',
-                    'bg-danger': item.name === 'overDueDate',
+                     'bg-danger':
+                         item.name ===
+                          'overDueDate' ||
+                         item.name ===
+                          'forcePaiment',
                   }"
                 >
+                 <span
+                      v-if="
+                         item.name ==
+                        'forcePaiment'
+                      "
+                    >
+                      À payer avant réception</span
+                    >
                   <span v-if="item.name == 'created'"> Créé</span>
 
                   <span v-if="item.name == 'overDueDate'">

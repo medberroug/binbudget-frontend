@@ -26,7 +26,7 @@ export default {
       });
     },
     async handleFileUpload() {
-      this.uploadLoader=true
+      this.uploadLoader = true;
       let formData = new FormData();
       formData.append("files", this.$refs.file.files[0]);
       let myImage = await axios
@@ -41,58 +41,72 @@ export default {
         name: myImage.name,
         url: process.env.baseUrl + myImage.url,
       });
-      this.uploadLoader=false
+      this.uploadLoader = false;
     },
     deleteRow(index) {
       if (confirm("Êtes-vous sûr de vouloir supprimer cet élément ?"))
         this.fields.splice(index, 1);
     },
     async addProduct() {
-      let mySpecs = this.myProduct.specification.split(/\r?\n/);
-      this.myProduct.specification = [];
-      for (let i = 0; i < mySpecs.length; i++) {
-        if (mySpecs[i].length > 0) {
-          this.myProduct.specification.push({
-            specText: mySpecs[i],
+      this.submitted = true;
+      if (
+        !this.myProduct.unit ||
+        !this.myProduct.price ||
+        !this.myProduct.name ||
+        !this.myProduct.description ||
+        !this.myProduct.categories ||
+        !this.myProduct.specification ||
+        !this.myProduct.shownIn ||
+        this.fields.length == 0
+      ) {
+        this.somthingIsmissing = true;
+      } else {
+        let mySpecs = this.myProduct.specification.split(/\r?\n/);
+        this.myProduct.specification = [];
+        for (let i = 0; i < mySpecs.length; i++) {
+          if (mySpecs[i].length > 0) {
+            this.myProduct.specification.push({
+              specText: mySpecs[i],
+            });
+          }
+        }
+        let shownIn = this.myProduct.shownIn;
+        this.myProduct.shownIn = [];
+        for (let i = 0; i < shownIn.length; i++) {
+          this.myProduct.shownIn.push({
+            serviceName: shownIn[i],
           });
         }
-      }
-      let shownIn = this.myProduct.shownIn;
-      this.myProduct.shownIn = [];
-      for (let i = 0; i < shownIn.length; i++) {
-        this.myProduct.shownIn.push({
-          serviceName: shownIn[i],
-        });
-      }
-      this.myProduct.status = true;
-      // this.myProduct.categories = [{ name: this.myProduct.categories }];
+        this.myProduct.status = true;
+        // this.myProduct.categories = [{ name: this.myProduct.categories }];
 
-      let myImages = [];
-      for (let i = 0; i < this.fields.length; i++) {
-        myImages.push({
-          id: this.fields[i].id,
-        });
-      }
-      this.myProduct.images = myImages;
-      this.myProduct.firstImage = {
-        id: myImages[0].id,
-      };
-      for (let i = 0; i < this.mySP.items.length; i++) {
-        if (this.mySP.items[i].id == this.myProduct.id) {
-          console.log(this.mySP.items[i]);
-          console.log(this.myProduct);
-          this.mySP.items[i] = this.myProduct;
+        let myImages = [];
+        for (let i = 0; i < this.fields.length; i++) {
+          myImages.push({
+            id: this.fields[i].id,
+          });
         }
-      }
+        this.myProduct.images = myImages;
+        this.myProduct.firstImage = {
+          id: myImages[0].id,
+        };
+        for (let i = 0; i < this.mySP.items.length; i++) {
+          if (this.mySP.items[i].id == this.myProduct.id) {
+            console.log(this.mySP.items[i]);
+            console.log(this.myProduct);
+            this.mySP.items[i] = this.myProduct;
+          }
+        }
 
-      // this.mySP.items.push(this.myProduct);
-      let result = await axios.put(
-        process.env.baseUrl + "/eventserviceproviders/" + this.mySP.id,
-        {
-          items: this.mySP.items,
-        }
-      );
-      this.$router.push("/supplierevent/myproducts/" + this.myProduct.id);
+        // this.mySP.items.push(this.myProduct);
+        let result = await axios.put(
+          process.env.baseUrl + "/eventserviceproviders/" + this.mySP.id,
+          {
+            items: this.mySP.items,
+          }
+        );
+        this.$router.push("/supplierevent/myproducts/" + this.myProduct.id);
+      }
     },
   },
   async mounted() {
@@ -150,8 +164,10 @@ export default {
       categories: null,
       mySP: null,
       myShowIn: [],
-      uploadLoader:false,
+      uploadLoader: false,
       value1: null,
+      somthingIsmissing: false,
+      submitted: false,
       file: "",
       fileMissing: false,
       formData: new FormData(),
@@ -173,7 +189,16 @@ export default {
   <div>
     <PageHeader :title="title" :items="items" />
     <div class="row mt-3" v-if="myProduct">
+      <nuxt-link :to="'/supplierevent/myproducts'"
+        ><button type="button" class="btn btn-primary btn-sm mb-3">
+          <i class="mdi mdi-arrow-left me-1"></i>Mes articles
+        </button></nuxt-link
+      >
       <div class="col-lg-12">
+        <b-alert variant="danger" show v-if="somthingIsmissing"
+          >Vous avez des champs manquants, veuillez remplir tous les éléments
+          obligatoires.
+        </b-alert>
         <div id="addproduct-accordion" class="custom-accordion">
           <div class="card">
             <a
@@ -201,9 +226,11 @@ export default {
                     </div>
                   </div>
                   <div class="media-body overflow-hidden">
-                    <h5 class="font-size-16 mb-1">Billing Info</h5>
+                    <h5 class="font-size-16 mb-1">
+                      Informations sur le produit
+                    </h5>
                     <p class="text-muted text-truncate mb-0">
-                      Fill all information below
+                      Remplissez toutes les informations ci-dessous
                     </p>
                   </div>
                   <i
@@ -229,6 +256,9 @@ export default {
                       type="text"
                       class="form-control"
                       v-model="myProduct.name"
+                      :class="{
+                        'is-invalid': submitted && !myProduct.name,
+                      }"
                     />
                   </div>
 
@@ -242,6 +272,9 @@ export default {
                           type="text"
                           class="form-control"
                           v-model="myProduct.unit"
+                          :class="{
+                            'is-invalid': submitted && !myProduct.unit,
+                          }"
                         />
                       </div>
                     </div>
@@ -254,6 +287,9 @@ export default {
                           type="number"
                           class="form-control"
                           v-model="myProduct.price"
+                          :class="{
+                            'is-invalid': submitted && !myProduct.price,
+                          }"
                         />
                       </div>
                     </div>
@@ -263,6 +299,9 @@ export default {
                         <select
                           class="form-control select2"
                           v-model="myProduct.categories[0].name"
+                          :class="{
+                            'is-invalid': submitted && !myProduct.categories,
+                          }"
                         >
                           <option
                             :value="category.name"
@@ -283,6 +322,9 @@ export default {
                           v-model="myProduct.shownIn"
                           :options="myShowIn"
                           :multiple="true"
+                          :class="{
+                            'is-invalid': submitted && !myProduct.shownIn,
+                          }"
                         ></multiselect>
                       </div>
                     </div>
@@ -295,6 +337,9 @@ export default {
                         id="productdesc"
                         rows="4"
                         v-model="myProduct.description"
+                        :class="{
+                          'is-invalid': submitted && !myProduct.description,
+                        }"
                       ></textarea>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -306,6 +351,9 @@ export default {
                         id="productdesc"
                         rows="4"
                         v-model="myProduct.specification"
+                        :class="{
+                          'is-invalid': submitted && !myProduct.specification,
+                        }"
                       ></textarea>
                     </div>
                   </div>
@@ -340,9 +388,9 @@ export default {
                     </div>
                   </div>
                   <div class="media-body overflow-hidden">
-                    <h5 class="font-size-16 mb-1">Product Image</h5>
+                    <h5 class="font-size-16 mb-1">Photos du produit</h5>
                     <p class="text-muted text-truncate mb-0">
-                      Fill all information below
+                      Ajoutez au moins une image
                     </p>
                   </div>
                   <input
@@ -361,6 +409,7 @@ export default {
                   </div>
                 </div>
                 <div class="row d-flex justify-content-end p-2 pt-4">
+                  
                   <form class="repeater my-4">
                     <div>
                       <div class="row">
@@ -387,7 +436,7 @@ export default {
                     </div>
                   </form>
                   <b-button
-                      v-if="!uploadLoader"
+                    v-if="!uploadLoader"
                     variant="primary"
                     class="btn-lg mt-4"
                     @click="addProduct"
@@ -396,11 +445,10 @@ export default {
                     <i class="uil uil-upload ml-6"></i>
                   </b-button>
 
-                    <b-button 
-                  v-if="uploadLoader"
+                  <b-button
+                    v-if="uploadLoader"
                     variant="warning"
                     class="btn-lg mt-4"
-                   
                   >
                     En attente.. (téléchargement d'images)
                     <i class="uil uil-upload ml-6"></i>

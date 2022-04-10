@@ -150,6 +150,7 @@ export default {
             "/" +
             this.myInvoice.id
         );
+        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXX");
         console.log(result.data);
         if (!result.data[0]) {
           this.promoCodeIssue = result.data[1];
@@ -159,6 +160,15 @@ export default {
             process.env.baseUrl + "/invoices/" + this.myInvoice.id,
             result.data[1]
           );
+          if (result.data[2] != 0) {
+            console.log(result.data[2]);
+            let result3 = await axios.put(
+              process.env.baseUrl + "/orders/" + result.data[2].id,
+              result.data[2]
+            );
+            console.log("Result 3");
+            console.log(result3.data);
+          }
           console.log(result2.data);
           this.$router.go();
         }
@@ -376,7 +386,7 @@ export default {
           class="btn btn-success btn-sm float-end mx-1"
           v-if="
             myInvoice.status[0].name != 'closed' &&
-            myInvoice.status[0].name != 'payed' &&
+            myInvoice.status[0].name != 'paid' &&
             myInvoice.status[0].name != 'created' &&
             myInvoice.status[0].name != 'cancelled' &&
             paymentAmount < myInvoice.total
@@ -452,17 +462,21 @@ export default {
                         myInvoice.status[0].name === 'created' ||
                         myInvoice.status[0].name === 'validated',
                       'bg-warning': myInvoice.status[0].name === 'pseudoPaid',
-                      'bg-success': myInvoice.status[0].name === 'payed',
+                      'bg-success': myInvoice.status[0].name === 'paid',
                       'bg-secondary':
                         myInvoice.status[0].name === 'cancelled' ||
                         myInvoice.status[0].name === 'closed',
-                      'bg-danger': myInvoice.status[0].name === 'overDueDate',
+                      'bg-danger':
+                        myInvoice.status[0].name === 'overDueDate' ||
+                        myInvoice.status[0].name === 'forcePaiment',
                     }"
                   >
                     <span v-if="myInvoice.status[0].name == 'created'">
                       Créé</span
                     >
-
+                    <span v-if="myInvoice.status[0].name == 'forcePaiment'">
+                      À payer avant réception</span
+                    >
                     <span v-if="myInvoice.status[0].name == 'overDueDate'">
                       Expiration du délai</span
                     >
@@ -553,14 +567,15 @@ export default {
                     </tr>
                     <tr>
                       <td colspan="3" rowspan="3">
-                    <div class="myClass">
-                         <span> <b>{{ convertToWord(myInvoice.total) }}</b></span>
+                        <div class="myClass">
+                          <span>
+                            <b>{{ convertToWord(myInvoice.total) }}</b></span
+                          >
                         </div>
-                   
+
                         <p v-if="myInvoice.ref">
                           Référence: {{ myInvoice.ref }}
                         </p>
-                        
                       </td>
                       <td class="text-right font-size-16">Total HT</td>
                       <td>
@@ -675,7 +690,7 @@ export default {
   display: block;
   width: 100%;
   word-wrap: break-word;
-  
-   white-space: normal;
+
+  white-space: normal;
 }
 </style>

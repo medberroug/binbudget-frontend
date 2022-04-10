@@ -353,7 +353,7 @@ export default {
 
     <div class="col-sm-12 col-md-12 mt-4" v-if="myInvoice">
       <div class="classname">
-        <nuxt-link to="/supplierevent/invoices/selling"
+        <nuxt-link to="/supplier/invoices/selling"
           ><button type="button" class="btn btn-primary btn-sm">
             <i class="mdi mdi-arrow-left me-1"></i> liste des factures
           </button></nuxt-link
@@ -430,7 +430,7 @@ export default {
                         myInvoice.status[0].name === 'created' ||
                         myInvoice.status[0].name === 'validated',
                       'bg-warning': myInvoice.status[0].name === 'pseudoPaid',
-                      'bg-success': myInvoice.status[0].name === 'payed',
+                      'bg-success': myInvoice.status[0].name === 'paid',
                       'bg-secondary':
                         myInvoice.status[0].name === 'cancelled' ||
                         myInvoice.status[0].name === 'closed',
@@ -462,7 +462,7 @@ export default {
               </div>
               <div class="col-sm-6">
                 <div class="text-muted text-sm-right">
-                  <div
+                  <!-- <div
                     v-if="
                       myInvoice.status[0].name != 'created' &&
                       myInvoice.status[0].name != 'cancelled'
@@ -470,7 +470,7 @@ export default {
                   >
                     <h5 class="font-size-16 mb-1">N° de facture:</h5>
                     <p>{{ myInvoice.invoiceNumber }}</p>
-                  </div>
+                  </div> -->
                   <div class="mt-4">
                     <h5 class="font-size-16 mb-1">Date de la facture:</h5>
                     <p>{{ formatMyDate(myInvoice.createdAt) }}</p>
