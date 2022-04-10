@@ -4,6 +4,7 @@ export default {
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
    */
+  loading: false,
   ssr: false,
   /*
    ** Nuxt target
@@ -79,9 +80,9 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {
-    loaders:  {
+    loaders: {
       vue: {
-         prettify: false
+        prettify: false
       }
     }
   },
