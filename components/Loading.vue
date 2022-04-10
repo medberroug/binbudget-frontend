@@ -8,7 +8,7 @@ export default {
     }),
     methods: {
         start() {
-            this.loading = true;
+            this.loading = false;
         },
         finish() {
             this.loading = false;
