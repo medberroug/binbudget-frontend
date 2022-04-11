@@ -56,6 +56,10 @@ export default {
           });
         }
         try {
+          this.myOrder.linkedToSPItem = {
+            type: "market",
+            spID: "Binbudget",
+          };
           let result = await axios.post(
             process.env.baseUrl + "/orders",
             this.myOrder
@@ -260,7 +264,6 @@ export default {
                         <label class="card-radio-label">
                           <input
                             type="radio"
-                            
                             name="pay-method"
                             id="pay-methodoption1"
                             class="card-radio-input"
