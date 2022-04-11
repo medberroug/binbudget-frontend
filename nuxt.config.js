@@ -5,7 +5,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-mode
    */
   loading: false,
-  ssr: false,
+  ssr: true,
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
