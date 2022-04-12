@@ -260,13 +260,13 @@ export default {
   },
   data() {
     return {
-      title: "Commandes actives",
-      items: [
+      title: "Commandes archivées",
+      items: [ 
         {
           text: "Commandes",
         },
         {
-          text: "Commandes actives",
+          text: "Commandes archivées",
           active: true,
         },
       ],

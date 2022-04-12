@@ -54,7 +54,7 @@ export default {
 </script>
 
 <template>
-  <div class="col-xl-8">
+  <div class="col-xl-12">
     <div class="card">
       <div class="card-body">
         <div class="float-end">

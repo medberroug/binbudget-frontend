@@ -33,12 +33,17 @@ export default {
 
 <template>
   <div>
+    
     <PageHeader :title="title" :items="items" />
     <div class="mt-4"></div>
     <StatEvents />
-
+ 
     <div class="row">
-      <SalesAnalyticsEvents />
+      <div class="col-xl-8">
+<SalesAnalyticsEvents />
+     <ActivityDahboardEvent />
+      </div>
+      
       <div class="col-xl-4">
         <div class="card bg-primary">
           <div class="card-body">
@@ -75,7 +80,7 @@ export default {
         <SellingProductEvents />
         <TopClientsEvents :supplierID="mySupplierId" />
       </div>
-      <ActivityDahboardEvent />
+      
     </div>
 
     <div class="row"></div>

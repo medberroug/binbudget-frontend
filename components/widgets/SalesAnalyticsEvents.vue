@@ -110,7 +110,7 @@ export default {
 </script>
 
 <template>
-  <div class="col-xl-8" v-if="renderNow">
+  <div class="col-xl-12" v-if="renderNow">
     <div class="card">
       <div class="card-body">
         <div class="float-end">

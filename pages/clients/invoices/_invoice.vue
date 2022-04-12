@@ -463,6 +463,7 @@ export default {
                         myInvoice.status[0].name === 'validated',
                       'bg-warning': myInvoice.status[0].name === 'pseudoPaid',
                       'bg-success': myInvoice.status[0].name === 'paid',
+                      
                       'bg-secondary':
                         myInvoice.status[0].name === 'cancelled' ||
                         myInvoice.status[0].name === 'closed',

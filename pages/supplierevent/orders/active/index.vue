@@ -3,205 +3,225 @@
 <template>
   <div>
     <PageHeader :title="title" :details="items" />
-
-    <div class="row mt-3" v-if="myOrders.length > 0">
-      <div class="col-sm-12 col-md-2"></div>
-
-      <!-- Search -->
-      <div class="col-sm-12 col-md-10">
-        <div id="tickets-table_filter" class="dataTables_filter text-md-end">
-          <label class="d-inline-flex align-items-center">
-            Recherchez:
-            <b-form-input
-              v-model="filter"
-              type="search"
-              placeholder="Recherchez..."
-              class="form-control form-control-sm ms-2"
-            ></b-form-input>
-          </label>
+    <div v-if="loader">
+      <center>
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
         </div>
-      </div>
-      <!-- End search -->
+      </center>
     </div>
-    <!-- Table -->
-    <center v-if="myOrders.length == 0">
-      <h5 class="text-muted m-5">
-        Vous n'avez pas de commande active pour le moment
-      </h5>
-    </center>
-    <div class="table-responsive mb-0" v-if="myOrders.length > 0">
-      <b-table
-        table-class="table table-centered datatable table-card-list"
-        thead-tr-class="bg-transparent"
-        :items="myOrders"
-        :fields="fields"
-        responsive="sm"
-        :per-page="perPage"
-        :current-page="currentPage"
-        :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc"
-        :filter="filter"
-        :filter-included-fields="filterOn"
-        @filtered="onFiltered"
-      >
-        <template v-slot:cell(status)="data">
-          <div
-            class="badge badge-pill font-size-12"
-            :class="{
-              'bg-info':
-                data.item.status[data.item.status.length - 1].name ===
-                  'created' ||
-                data.item.status[data.item.status.length - 1].name ===
-                  'quoteSent',
-              'bg-warning':
-                data.item.status[data.item.status.length - 1].name ===
-                  'pendingQuote' ||
-                data.item.status[data.item.status.length - 1].name ===
-                  'pendingValidation',
-              'bg-success':
-                data.item.status[data.item.status.length - 1].name ===
-                  'validated' ||
-                data.item.status[data.item.status.length - 1].name ===
-                  'pending',
-              'bg-secondary':
-                data.item.status[data.item.status.length - 1].name === 'closed',
-              'bg-danger':
-                data.item.status[data.item.status.length - 1].name ===
-                'cancelled',
-            }"
-          >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name == 'created'
-              "
-            >
-              Créé</span
-            >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name ==
-                'pendingQuote'
-              "
-            >
-              En attente de devis</span
-            >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name ==
-                'pendingValidation'
-              "
-            >
-              En cours de validation</span
-            >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name ==
-                'quoteSent'
-              "
-            >
-              Devis envoyé</span
-            >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name ==
-                'validated'
-              "
-            >
-              Validé</span
-            >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name == 'pending'
-              "
-            >
-              En cours</span
-            >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name == 'closed'
-              "
-            >
-              Clôturé</span
-            >
-            <span
-              v-if="
-                data.item.status[data.item.status.length - 1].name ==
-                'cancelled'
-              "
-            >
-              Annulé</span
-            >
-          </div>
-        </template>
 
-        <template v-slot:cell(paimentMode)="data">
-          <div class="font-size-12">
-            <span v-if="data.item.paimentMode.type == 'invoice'">
-              <i class="uil uil-postcard d-block h6"> - Sur facture</i>
-            </span>
-            <span v-if="data.item.paimentMode.type == 'cod'">
-              <i class="uil uil-money-bill d-block h6">
-                - Paiement à la livraison</i
-              ></span
+    <div v-else>
+      
+
+      <div class="row mt-3" v-if="myOrders.length > 0">
+        <div class="col-sm-12 col-md-2"></div>
+
+        <!-- Search -->
+        <div class="col-sm-12 col-md-10">
+          <div id="tickets-table_filter" class="dataTables_filter text-md-end">
+            <label class="d-inline-flex align-items-center">
+              Recherchez:
+              <b-form-input
+                v-model="filter"
+                type="search"
+                placeholder="Recherchez..."
+                class="form-control form-control-sm ms-2"
+              ></b-form-input>
+            </label>
+          </div>
+        </div>
+        <!-- End search -->
+      </div>
+      <!-- Table -->
+      <center v-if="myOrders.length == 0">
+        <h5 class="text-muted m-5">
+          Vous n'avez pas de commande active pour le moment
+        </h5>
+      </center>
+      <div class="table-responsive mb-0" v-if="myOrders.length > 0">
+        <b-table
+          table-class="table table-centered datatable table-card-list"
+          thead-tr-class="bg-transparent"
+          :items="myOrders"
+          :fields="fields"
+          responsive="sm"
+          :per-page="perPage"
+          :current-page="currentPage"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          :filter="filter"
+          :filter-included-fields="filterOn"
+          @filtered="onFiltered"
+        >
+          <template v-slot:cell(status)="data">
+            <div
+              class="badge badge-pill font-size-12"
+              :class="{
+                'bg-info':
+                  data.item.status[data.item.status.length - 1].name ===
+                    'created' ||
+                  data.item.status[data.item.status.length - 1].name ===
+                    'quoteSent',
+                'bg-warning':
+                  data.item.status[data.item.status.length - 1].name ===
+                    'pendingQuote' ||
+                  data.item.status[data.item.status.length - 1].name ===
+                    'pendingValidation',
+                'bg-success':
+                  data.item.status[data.item.status.length - 1].name ===
+                    'validated' ||
+                  data.item.status[data.item.status.length - 1].name ===
+                    'pending',
+                'bg-secondary':
+                  data.item.status[data.item.status.length - 1].name ===
+                  'closed',
+                'bg-danger':
+                  data.item.status[data.item.status.length - 1].name ===
+                  'cancelled',
+              }"
             >
-          </div>
-        </template>
-
-        <template v-slot:cell(name)="data">
-          <div class="font-size-16">
-            {{ data.item.name }}
-          </div>
-        </template>
-
-        <template v-slot:cell(total)="data">
-          <div class="font-size-16">
-            {{
-              Intl.NumberFormat("ar-MA", {
-                style: "currency",
-                currency: "MAD",
-              }).format(data.item.total)
-            }}
-          </div>
-        </template>
-        <template v-slot:cell(type)="data">
-          <div class="font-size-16">
-            <h6 v-if="data.item.type == 'restauration'">Restauration</h6>
-            <h6 v-if="data.item.type == 'market'">Market</h6>
-            <h6 v-if="data.item.type == 'event'">Événement</h6>
-          </div>
-        </template>
-
-        <template v-slot:cell(when)="data">
-          <a href="#" class="text-body">{{
-            formatMyDate(data.item.createdAt)
-          }}</a>
-        </template>
-        <template v-slot:cell(startDate)="data">
-          <a href="#" class="text-body">{{
-            formatMyDate(data.item.startDate)
-          }}</a>
-        </template>
-        <template v-slot:cell(endDate)="data">
-          <a href="#" class="text-body">{{
-            formatMyDate(data.item.endDate)
-          }}</a>
-        </template>
-
-        <template v-slot:cell(id)="data">
-          <ul class="list-inline mb-0">
-            <li class="list-inline-item">
-              <a
-                href="javascript:void(0);"
-                class="px-2 text-primary"
-                v-b-tooltip.hover
-                title="Consulter"
+              <span
+                v-if="
+                  data.item.status[data.item.status.length - 1].name ==
+                  'created'
+                "
               >
-                <nuxt-link :to="'/supplierevent/orders/active/' + data.item.eventId+'++'+data.item.eventOrderDetailsId">
-                  <i class="uil uil-eye font-size-18"></i>
-                </nuxt-link>
-              </a>
-            </li>
-            <!-- <li class="list-inline-item">
+                Créé</span
+              >
+              <span
+                v-if="
+                  data.item.status[data.item.status.length - 1].name ==
+                  'pendingQuote'
+                "
+              >
+                En attente de devis</span
+              >
+              <span
+                v-if="
+                  data.item.status[data.item.status.length - 1].name ==
+                  'pendingValidation'
+                "
+              >
+                En cours de validation</span
+              >
+              <span
+                v-if="
+                  data.item.status[data.item.status.length - 1].name ==
+                  'quoteSent'
+                "
+              >
+                Devis envoyé</span
+              >
+              <span
+                v-if="
+                  data.item.status[data.item.status.length - 1].name ==
+                  'validated'
+                "
+              >
+                Validé</span
+              >
+              <span
+                v-if="
+                  data.item.status[data.item.status.length - 1].name ==
+                  'pending'
+                "
+              >
+                En cours</span
+              >
+              <span
+                v-if="
+                  data.item.status[data.item.status.length - 1].name == 'closed'
+                "
+              >
+                Clôturé</span
+              >
+              <span
+                v-if="
+                  data.item.status[data.item.status.length - 1].name ==
+                  'cancelled'
+                "
+              >
+                Annulé</span
+              >
+            </div>
+          </template>
+
+          <template v-slot:cell(paimentMode)="data">
+            <div class="font-size-12">
+              <span v-if="data.item.paimentMode.type == 'invoice'">
+                <i class="uil uil-postcard d-block h6"> - Sur facture</i>
+              </span>
+              <span v-if="data.item.paimentMode.type == 'cod'">
+                <i class="uil uil-money-bill d-block h6">
+                  - Paiement à la livraison</i
+                ></span
+              >
+            </div>
+          </template>
+
+          <template v-slot:cell(name)="data">
+            <div class="font-size-16">
+              {{ data.item.name }}
+            </div>
+          </template>
+
+          <template v-slot:cell(total)="data">
+            <div class="font-size-16">
+              {{
+                Intl.NumberFormat("ar-MA", {
+                  style: "currency",
+                  currency: "MAD",
+                }).format(data.item.total)
+              }}
+            </div>
+          </template>
+          <template v-slot:cell(type)="data">
+            <div class="font-size-16">
+              <h6 v-if="data.item.type == 'restauration'">Restauration</h6>
+              <h6 v-if="data.item.type == 'market'">Market</h6>
+              <h6 v-if="data.item.type == 'event'">Événement</h6>
+            </div>
+          </template>
+
+          <template v-slot:cell(when)="data">
+            <a href="#" class="text-body">{{
+              formatMyDate(data.item.createdAt)
+            }}</a>
+          </template>
+          <template v-slot:cell(startDate)="data">
+            <a href="#" class="text-body">{{
+              formatMyDate(data.item.startDate)
+            }}</a>
+          </template>
+          <template v-slot:cell(endDate)="data">
+            <a href="#" class="text-body">{{
+              formatMyDate(data.item.endDate)
+            }}</a>
+          </template>
+
+          <template v-slot:cell(id)="data">
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item">
+                <a
+                  href="javascript:void(0);"
+                  class="px-2 text-primary"
+                  v-b-tooltip.hover
+                  title="Consulter"
+                >
+                  <nuxt-link
+                    :to="
+                      '/supplierevent/orders/active/' +
+                      data.item.eventId +
+                      '++' +
+                      data.item.eventOrderDetailsId
+                    "
+                  >
+                    <i class="uil uil-eye font-size-18"></i>
+                  </nuxt-link>
+                </a>
+              </li>
+              <!-- <li class="list-inline-item">
               <a
                 href="javascript:void(0);"
                 class="px-2 text-danger"
@@ -211,34 +231,35 @@
                 <i class="uil uil-trash-alt font-size-18"></i>
               </a>
             </li> -->
-          </ul>
-        </template>
-      </b-table>
-    </div>
-    <div class="row" v-if="myOrders.length > 0">
-      <div class="col-sm-12 col-lg-4">
-        <div id="tickets-table_length" class="dataTables_length">
-          <label class="d-inline-flex align-items-center">
-            Afficher&nbsp;
-            <b-form-select
-              v-model="perPage"
-              size="sm"
-              :options="pageOptions"
-            ></b-form-select
-            >&nbsp;lignes
-          </label>
-        </div>
+            </ul>
+          </template>
+        </b-table>
       </div>
-      <div class="col-sm-12 col-lg-8">
-        <div class="dataTables_paginate paging_simple_numbers float-end">
-          <ul class="pagination pagination-rounded">
-            <!-- pagination -->
-            <b-pagination
-              v-model="currentPage"
-              :total-rows="rows"
-              :per-page="perPage"
-            ></b-pagination>
-          </ul>
+      <div class="row" v-if="myOrders.length > 0">
+        <div class="col-sm-12 col-lg-4">
+          <div id="tickets-table_length" class="dataTables_length">
+            <label class="d-inline-flex align-items-center">
+              Afficher&nbsp;
+              <b-form-select
+                v-model="perPage"
+                size="sm"
+                :options="pageOptions"
+              ></b-form-select
+              >&nbsp;lignes
+            </label>
+          </div>
+        </div>
+        <div class="col-sm-12 col-lg-8">
+          <div class="dataTables_paginate paging_simple_numbers float-end">
+            <ul class="pagination pagination-rounded">
+              <!-- pagination -->
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+              ></b-pagination>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -270,7 +291,7 @@ export default {
           active: true,
         },
       ],
-
+      loader: true,
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
@@ -353,6 +374,7 @@ export default {
       }
       console.log(this.myOrders);
       this.myOrders = this.myOrders.reverse();
+      this.loader = false;
     } catch (error) {
       console.log(error);
     }
