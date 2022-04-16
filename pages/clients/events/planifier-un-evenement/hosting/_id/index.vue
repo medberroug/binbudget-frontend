@@ -43,7 +43,7 @@ export default {
       this.restaurantDetails = result.data;
       this.restaurantItems;
       for (let i = 0; i < this.restaurantDetails.items.length; i++) {
-        let showInJudger = true;
+        let showInJudger = false;
         for (
           let j = 0;
           j < this.restaurantDetails.items[i].shownIn.length;
@@ -51,7 +51,7 @@ export default {
         ) {
           if (
             this.restaurantDetails.items[i].shownIn[j].serviceName ==
-            this.details[1].text
+            "event-hosting"
           ) {
             showInJudger = true;
             break;

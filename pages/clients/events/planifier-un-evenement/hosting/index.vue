@@ -85,7 +85,7 @@ export default {
       );
       result = result.data;
       this.myItems = result;
-      console.log("PLACES");
+      console.log("hosting");
       console.log(result);
       this.loader = true;
     } catch (error) {}
