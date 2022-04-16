@@ -604,7 +604,7 @@ export default {
                       <td>
                         <h5>
                           {{
-                            Intl.NumberFormat("ar-MA", {
+                            Intl.NumberFormat("fr-MA", {
                               style: "currency",
                               currency: "MAD",
                             }).format(myInvoice.total)

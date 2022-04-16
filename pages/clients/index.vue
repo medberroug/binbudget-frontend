@@ -5,33 +5,37 @@
 export default {
   head() {
     return {
-      title: `Tableau de bord | BinBudget`
+      title: `Tableau de bord | BinBudget`,
     };
+  },
+  methods: {
+   
   },
   data() {
     return {
       title: "Tableau de bord",
       items: [
         {
-          text: "Binbudget"
+          text: "Binbudget",
         },
         {
           text: "Clients - Tableau de bord",
-          active: true
-        }
-      ]
+          active: true,
+        },
+      ],
     };
   },
-  middleware: "authentication"
+  middleware: "authentication",
 };
 </script>
 
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-     <center>
+    <center>
+      
       <h3 class="m-5">En cours</h3>
-    <p class="m-5">  En cours de test.</p>
+      <p class="m-5">En cours de test.</p>
     </center>
   </div>
 </template>

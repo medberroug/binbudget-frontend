@@ -68,7 +68,8 @@ export default {
     // Doc: https://bootstrap-vue.js.org
     "bootstrap-vue/nuxt",
     // Doc: https://github.com/nuxt/content
-    "@nuxt/content"
+    "@nuxt/content",
+    ['cookie-universal-nuxt', { alias: 'cookiz' }],
   ],
   /*
    ** Content module configuration

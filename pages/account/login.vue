@@ -2,6 +2,7 @@
 import { required, email } from "vuelidate/lib/validators";
 import axios from "axios";
 import { getData, persistData } from "../../components/controllers/savingData";
+import {cookiz} from "cookie-universal-nuxt"
 /**
  * Login component
  */
@@ -14,16 +15,15 @@ export default {
   },
   data() {
     return {
-      wrongCredetiels:false,
+      wrongCredetiels: false,
       baseUrl: null,
       email: "",
       password: "",
       submitted: false,
-      checkingData:false,
+      checkingData: false,
       authError: null,
       tryingToLogIn: false,
       isAuthError: false,
-   
     };
   },
 
@@ -48,13 +48,16 @@ export default {
     // and password they provided.
 
     async tryToLogIn() {
+//        const counter = useCookie('counter')
+// counter.value = counter.value || Math.round(Math.random() * 1000)
+// console.log(counter);
       this.submitted = true;
-      this.checkingData=true
+      this.checkingData = true;
       // stop here if form is invalid
       this.$v.$touch();
 
       if (this.$v.$invalid) {
-          this.checkingData = false;
+        this.checkingData = false;
         return;
       } else {
         try {
@@ -68,6 +71,8 @@ export default {
           // console.log(result.data);
           if (result.user.role.name == "suppevent") {
             persistData("account", "event");
+           
+            
             let result2 = await axios.get(
               process.env.baseUrl +
                 "/eventserviceproviders/" +
@@ -83,7 +88,12 @@ export default {
               knowenName: knowenName,
               userName: result.user.username,
             });
+
+          
             this.$router.push("/supplierevent/dashboard");
+          
+            
+           
           } else if (result.user.role.name == "supp") {
             persistData("account", "supplier");
             let result2 = await axios.get(
@@ -111,10 +121,10 @@ export default {
             if (result2.data.logo) {
               logo = process.env.baseUrl + result2.data.logo.url;
             } else {
-              logo = null
+              logo = null;
             }
             let knowenName = result2.data.companyDetails.knowenName;
-            
+
             persistData("clientinfo", {
               id: result.user.userAccountId,
               type: "client",
@@ -125,13 +135,12 @@ export default {
             });
             this.$router.push("/clients");
           }
-          
         } catch (error) {
           console.log(error);
-       this.wrongCredetiels=true
+          this.wrongCredetiels = true;
           console.log("GHALET");
         }
-         this.checkingData = false;
+        this.checkingData = false;
       }
     },
   },
@@ -145,6 +154,7 @@ export default {
         <i class="mdi mdi-home-variant h2"></i>
       </nuxt-link>
     </div> -->
+    
     <div class="account-pages my-5 pt-sm-5">
       <div class="container">
         <div class="row">
@@ -170,12 +180,10 @@ export default {
                     Connectez-vous pour continuer à Binbudget.
                   </p>
                 </div>
-                <b-alert
-                    variant="danger"
-                    show
-                    v-if="wrongCredetiels"
-                    >L'identification ou le mot de passe sont incorrects, veuillez réessayer. 
-                  </b-alert>
+                <b-alert variant="danger" show v-if="wrongCredetiels"
+                  >L'identification ou le mot de passe sont incorrects, veuillez
+                  réessayer.
+                </b-alert>
                 <div class="p-2 mt-4">
                   <b-alert
                     v-model="isAuthError"
@@ -221,9 +229,7 @@ export default {
 
                     <b-form-group id="input-group-2" class="mb-3">
                       <div class="float-end">
-                        <nuxt-link
-                          to="/account/login"
-                          class="text-muted"
+                        <nuxt-link to="/account/login" class="text-muted"
                           >Mot de passe oublié ?</nuxt-link
                         >
                       </div>
@@ -260,8 +266,14 @@ export default {
                         variant="primary"
                         class="w-sm"
                         @click="tryToLogIn()"
-                        >Se connecter  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="checkingData"></span></b-button
-                      >
+                        >Se connecter
+                        <span
+                          class="spinner-border spinner-border-sm"
+                          role="status"
+                          aria-hidden="true"
+                          v-if="checkingData"
+                        ></span
+                      ></b-button>
                     </div>
                     <!-- <div class="mt-4 text-center">
                       <div class="signin-other-title">

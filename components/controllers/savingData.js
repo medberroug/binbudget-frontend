@@ -1,6 +1,8 @@
+
 module.exports = {
     persistData(key, value) {
         console.log("Persisting data");
+       
         try {
             if (JSON.parse(window.localStorage.getItem(key)) != null) {
                 window.localStorage.setItem(key, JSON.stringify(value));
@@ -152,3 +154,4 @@ module.exports = {
         return stepperTotal
     }
 }
+
