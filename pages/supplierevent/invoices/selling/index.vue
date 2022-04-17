@@ -57,7 +57,7 @@
                 data.item.status[data.item.status.length - 1].name ===
                 'pseudoPaid',
               'bg-success':
-                data.item.status[data.item.status.length - 1].name === 'payed',
+                data.item.status[data.item.status.length - 1].name === 'paid',
               'bg-secondary':
                 data.item.status[data.item.status.length - 1].name ===
                   'cancelled' ||

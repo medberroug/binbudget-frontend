@@ -367,7 +367,7 @@ export default {
           class="btn btn-success btn-sm float-end mx-1"
           v-if="
             myInvoice.status[0].name != 'closed' &&
-            myInvoice.status[0].name != 'payed' &&
+            myInvoice.status[0].name != 'paid' &&
             myInvoice.status[0].name != 'created' &&
             myInvoice.status[0].name != 'cancelled'
             && 
@@ -444,7 +444,7 @@ export default {
                         myInvoice.status[0].name === 'created' ||
                         myInvoice.status[0].name === 'validated',
                       'bg-warning': myInvoice.status[0].name === 'pseudoPaid',
-                      'bg-success': myInvoice.status[0].name === 'payed',
+                      'bg-success': myInvoice.status[0].name === 'paid',
                       'bg-secondary':
                         myInvoice.status[0].name === 'cancelled' ||
                         myInvoice.status[0].name === 'closed',

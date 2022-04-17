@@ -2,7 +2,7 @@
 import { required, email } from "vuelidate/lib/validators";
 import axios from "axios";
 import { getData, persistData } from "../../components/controllers/savingData";
-import {cookiz} from "cookie-universal-nuxt"
+
 /**
  * Login component
  */
@@ -132,7 +132,9 @@ export default {
               logo: logo,
               knowenName: knowenName,
               userName: result.user.username,
+              menu: result2.data.services
             });
+
             this.$router.push("/clients");
           }
         } catch (error) {

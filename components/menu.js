@@ -1,160 +1,14 @@
+
 var menuItemsForClient = [
-  {
-    id: 1,
-    label: "menu",
-    isTitle: true
-  },
-  {
-    id: 2,
-    label: "Tableau de bord",
-    icon: "uil-home-alt",
-    link: "/clients"
-  },
-  {
-    id: 3,
-    label: "services",
-    isTitle: true
-  },
-  {
-    id: 4,
-    label: "Restauration",
-    icon: "uil-restaurant",
-    subItems: [
-      {
-        id: 5,
-        label: "Livraison de repas",
-        link: "/clients/restauration/livraison-de-repas"
-      },
-      {
-        id: 6,
-        label: "Repas emporté",
-        link: "/clients/restauration/repas-emporte"
-      },
-      {
-        id: 7,
-        label: "Menu conventionné",
-        link: "/clients/restauration/menu-conventionne"
-      },
-
-      {
-        id: 9,
-        label: "Réservation de restaurant",
-        link: "/clients/restauration/reservation-de-restaurant"
-      }
-    ]
-  },
-  {
-    id: 10,
-    label: "Événements",
-    icon: "uil-schedule",
-    link: "/clients/events",
-    subItems: [
-      {
-        id: 24,
-        label: "Planifier un événement",
-        link: "/clients/events/planifier-un-evenement"
-      },
-      {
-        id: 25,
-        label: "Gérer les tickets",
-        link: "/clients/events/gerer-les-tickets",
-      },
-      {
-        id: 26,
-        label: "Mes événements",
-        link: "/clients/events/mes-evenements",
-      },
-      {
-        id: 27,
-        label: "Événements archivés",
-        link: "/clients/events/archive",
-      }
-    ]
-  },
-  {
-    id: 14,
-    label: "Note De Frais",
-    icon: "uil-moneybag",
-    
-
-    subItems: [
-      {
-        id: 15,
-        label: "Nouvelle déclaration",
-        link: "/clients/note-de-frais/declaration"
-      },
-      {
-        id: 16,
-        label: "Mes notes de frais",
-        link: "/clients/note-de-frais/mes-notes-de-frais",
-      }
-    ]
-  },
-  {
-    id: 17,
-    label: "Market",
-    icon: "uil-store",
-    link: "/clients/market"
-  },
-  {
-    id: 18,
-    label: "Commandes et factures",
-    isTitle: true
-  },
-  {
-    id: 19,
-    label: "Commandes",
-    icon: "uil-calender",
-    link: "/clients/orders",
-    subItems: [
-      {
-        id: 32,
-        label: "Commandes actives",
-        link: "/clients/orders/active"
-      },
-      {
-        id: 33,
-        label: "Commandes archivées",
-        link: "/clients/orders/archive"
-      },
-    ]
-  },
-  {
-    id: 21,
-    label: "Factures",
-    icon: "uil-invoice",
-    link: "/clients/invoices"
-  },
 
 
 
-  {
-    id: 180,
-    label: "Paramètres",
-    isTitle: true
-  },
-  {
-    id: 8,
-    label: "Restauration collectif",
-    icon: "uil-users-alt",
-    subItems: [
-      {
-        id: 28,
-        label: "Statistiques",
-        link: "/clients/restauration-collectif/statistiques"
-      },
-      {
-        id: 29,
-        label: "Mes employés",
-        link: "/clients/restauration-collectif/mes-employes"
-      },
-      {
-        id: 30,
-        label: "Paramètres",
-        link: "/clients/restauration-collectif/parametres"
-      }
-    ]
-  },
+
+
+
+
+
+
   // {
   //   id: 22,
   //   label: "Settings",
@@ -234,18 +88,18 @@ var menuItemsForSupplier = [
     icon: "uil-money-withdrawal",
     link: "/supplier/invoices/buying"
   },
-  // {
-  //   id: 1001,
-  //   label: "Paramètres",
-  //   isTitle: true
-  // },
+  {
+    id: 1001,
+    label: "Paramètres",
+    isTitle: true
+  },
 
-  // {
-  //   id: 250,
-  //   label: "Settings",
-  //   icon: "uil-setting",
-  //   link: "/clients/settings"
-  // }
+  {
+    id: 250,
+    label: "Settings",
+    icon: "uil-setting",
+    link: "/clients/settings"
+  }
 ];
 var menuItemsForEvent = [
   {
@@ -337,7 +191,7 @@ console.log("XXXXXXXXXXXXXXXXXXACCOUNTXXXXXXXXXXXXXXX");
 console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 // window.localStorage.setItem("'account'", "supplier")
 let menuItems = null
-let account = getData('account')  
+let account = getData('account')
 let myMenuType = null
 
 if (account == "supplier") {
@@ -346,7 +200,7 @@ if (account == "supplier") {
   //   id:"6165a1dedb4fc0357013de8f",
   //   type:"restaurations"
   // })
-  
+
 }
 if (account == "event") {
   menuItems = menuItemsForEvent
@@ -355,12 +209,254 @@ if (account == "event") {
   //   type:"event"
   // })
 }
-if (account=="client" ) {
+
+
+// CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+if (account == "client") {
+ 
+  let result = getData("clientinfo").menu
+  console.log(result);
   menuItems = menuItemsForClient
-  // persistData("clientinfo", {
-  //   id:"61d6ef9da87fba4628e55138",
-  
-  // })
+  let dynamicMenu = [{
+    id: 1,
+    label: "menu",
+    isTitle: true
+  },
+  {
+    id: 2,
+    label: "Tableau de bord",
+    icon: "uil-home-alt",
+    link: "/clients"
+  },
+  {
+    id: 3,
+    label: "services",
+    isTitle: true
+  },]
+
+  // RESTAURATION
+  let restaurationHeader = {
+    id: 4,
+    label: "Restauration",
+    icon: "uil-restaurant",
+    subItems: [
+    ]
+  }
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "livraison-de-repas") {
+
+      restaurationHeader.subItems.push({
+        id: 5,
+        label: "Livraison de repas",
+        link: "/clients/restauration/livraison-de-repas"
+      })
+
+    }
+  }
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "repas-emporte") {
+
+      restaurationHeader.subItems.push({
+        id: 6,
+        label: "Repas emporté",
+        link: "/clients/restauration/repas-emporte"
+      })
+
+    }
+  }
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "menu-conventionne") {
+
+      restaurationHeader.subItems.push({
+        id: 7,
+        label: "Menu conventionné",
+        link: "/clients/restauration/menu-conventionne"
+      })
+
+    }
+  }
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "reservation-de-restaurant") {
+
+      restaurationHeader.subItems.push({
+        id: 9,
+        label: "Réservation de restaurant",
+        link: "/clients/restauration/reservation-de-restaurant"
+      })
+
+    }
+  }
+  if (restaurationHeader.subItems.length > 0) {
+    dynamicMenu.push(restaurationHeader)
+  }
+  //Events
+  let eventsHeader = {
+    id: 10,
+    label: "Événements",
+    icon: "uil-schedule",
+    link: "/clients/events",
+    subItems: [
+
+    ]
+  }
+
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "event") {
+
+      eventsHeader.subItems.push({
+        id: 24,
+        label: "Planifier un événement",
+        link: "/clients/events/planifier-un-evenement"
+      },
+        
+        {
+          id: 26,
+          label: "Mes événements",
+          link: "/clients/events/mes-evenements",
+        },
+        {
+          id: 27,
+          label: "Événements archivés",
+          link: "/clients/events/archive",
+        })
+
+    }
+  }
+
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "tms") {
+
+      eventsHeader.subItems.push(
+        {
+          id: 25,
+          label: "Gérer les tickets",
+          link: "/clients/events/gerer-les-tickets",
+        }
+      )
+
+    }
+  }
+  if (eventsHeader.subItems.length > 0) {
+    dynamicMenu.push(eventsHeader)
+  }
+
+  // Ticket Management System
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "ndf") {
+
+      dynamicMenu.push(
+        {
+          id: 14,
+          label: "Note De Frais",
+          icon: "uil-moneybag",
+
+
+          subItems: [
+            {
+              id: 15,
+              label: "Nouvelle déclaration",
+              link: "/clients/note-de-frais/declaration"
+            },
+            {
+              id: 16,
+              label: "Mes notes de frais",
+              link: "/clients/note-de-frais/mes-notes-de-frais",
+            }
+          ]
+        }
+      )
+
+    }
+  }
+  // Market
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "market") {
+
+      dynamicMenu.push(
+        {
+          id: 17,
+          label: "Market",
+          icon: "uil-store",
+          link: "/clients/market"
+        }
+      )
+
+    }
+  }
+
+  //Push Factures
+
+  dynamicMenu.push({
+    id: 18,
+    label: "Commandes et factures",
+    isTitle: true
+  },
+    {
+      id: 19,
+      label: "Commandes",
+      icon: "uil-calender",
+      link: "/clients/orders",
+      subItems: [
+        {
+          id: 32,
+          label: "Commandes actives",
+          link: "/clients/orders/active"
+        },
+        {
+          id: 33,
+          label: "Commandes archivées",
+          link: "/clients/orders/archive"
+        },
+      ]
+    },
+    {
+      id: 21,
+      label: "Factures",
+      icon: "uil-invoice",
+      link: "/clients/invoices"
+    },
+  )
+  //Resto collectif
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].name == "restauration-collectif") {
+
+      dynamicMenu.push(
+        {
+          id: 180,
+          label: "Paramètres",
+          isTitle: true
+        },
+        {
+          id: 8,
+          label: "Restauration collectif",
+          icon: "uil-users-alt",
+          subItems: [
+            {
+              id: 28,
+              label: "Statistiques",
+              link: "/clients/restauration-collectif/statistiques"
+            },
+            {
+              id: 29,
+              label: "Mes employés",
+              link: "/clients/restauration-collectif/mes-employes"
+            },
+            {
+              id: 30,
+              label: "Paramètres",
+              link: "/clients/restauration-collectif/parametres"
+            }
+          ]
+        },
+      )
+
+    }
+  }
+
+  menuItems = dynamicMenu
+
+
 }
 
 
