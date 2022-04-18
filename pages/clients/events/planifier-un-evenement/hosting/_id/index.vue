@@ -92,7 +92,9 @@ export default {
             liked: false,
           };
 
-          this.restaurantItems.push(myNewItem);
+         if(this.restaurantDetails.items[i].status){
+            this.restaurantItems.push(myNewItem);
+         }
           console.log(this.restaurantItems);
         }
       }
