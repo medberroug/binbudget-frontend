@@ -124,7 +124,7 @@ export default {
               logo = null;
             }
             let knowenName = result2.data.companyDetails.knowenName;
-
+  
             persistData("clientinfo", {
               id: result.user.userAccountId,
               type: "client",
