@@ -560,9 +560,9 @@ export default {
                 this.itemForOrder.subTotal;
             } else {
               myEvent.eventOrderDetails[i].status.push({
-                name: "pendingValidation",
+                name: "pendingQuote",
                 comment:
-                  "En attendant la révision finale et la validation du fournisseur. ",
+                  "Article ajouté, en attente du devis du fournisseur",
                 date: new Date(),
               });
             }

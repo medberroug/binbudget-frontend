@@ -69,6 +69,12 @@ export default {
       let myAccount = getData("accountinfo");
 
       try {
+        for (let i = 0; i < this.myOrder.items.length; i++) {
+          if (this.myOrder.items[i].price < 0) {
+            this.showNegativeIssue = true;
+            return false;
+          }
+        }
         let result = await axios.put(
           process.env.baseUrl +
             "/updateEventOrderDetail/" +
@@ -157,6 +163,7 @@ export default {
       if (this.myOrder.items[i].price < 0) {
         this.isOrderSurDevis = true;
         this.isCODPossible = false;
+        this.ItemsQuote.push(this.myOrder.items[i]);
       }
     }
     if (this.myOrder.total >= 20000) {
@@ -175,10 +182,12 @@ export default {
       cancelOrderComment: null,
       paimentMode: "invoice",
       title: "Commander",
+      ItemsQuote: [],
       checkValues: false,
       cancelModalShow: false,
       quoteModalShow: false,
       items: [],
+      showNegativeIssue: false,
       client: null,
     };
   },
@@ -217,6 +226,10 @@ export default {
     <!-- PROPOSER UN DEVIS MODAL -->
     <b-modal v-model="quoteModalShow" centered hide-footer v-if="myOrder">
       <template #modal-title> Proposer un devis pour le client </template>
+      <b-alert variant="danger" show v-if="showNegativeIssue">
+        Avant d'envoyer le devis au client, veuillez vous assurer que tous les
+        articles ont un prix positif.
+      </b-alert>
       <p>
         Indiquez ci-dessous un devis précis, votre devis sera envoyé au client,
         si ce dernier valide le devis cela signifie que votre commande sera
@@ -224,15 +237,17 @@ export default {
       </p>
       <!-- myOrder.items -->
       <!-- <b-form-input v-model="discountVariable" type="number"></b-form-input> -->
-      <div class="row" v-for="(item, index) in myOrder.items" :key="index">
+      <div class="row" v-for="(item, index) in ItemsQuote" :key="index">
         <label for="productname"
-          >{{ myOrder.items[index].name }} (prix x quantité = sous total)</label
+          >{{ item.name }} (prix x quantité = sous total)</label
         >
         <div class="col-4">
           <b-form-input
-            v-model="myOrder.items[index].price"
+   
+            v-model="item.price"
             type="number"
           ></b-form-input>
+         
         </div>
 
         <div class="col-1 align-self-center">
@@ -241,7 +256,7 @@ export default {
         </div>
         <div class="col-3 align-self-center">
           <b>
-            <center>{{ myOrder.items[index].quantity }}</center></b
+            <center>{{ item.quantity }}</center></b
           >
         </div>
         <div class="col-1 align-self-center">
@@ -250,24 +265,24 @@ export default {
         </div>
         <div
           class="col-3 align-self-center"
-          v-if="myOrder.items[index].price > -1"
+          v-if="item.price > -1"
         >
           <label for="productname"></label>
           {{
-            Intl.NumberFormat("ar-MA", {
+            Intl.NumberFormat("fr-MA", {
               style: "currency",
               currency: "MAD",
             }).format(
-              myOrder.items[index].quantity * myOrder.items[index].price
+              item.quantity * item.price
             )
           }}
         </div>
         <div
           class="col-3 align-self-center"
-          v-if="myOrder.items[index].price <= -1"
+          v-if="item.price <= -1"
         >
-          <label for="productname"></label>
-          Prix négatif !
+          <label for="productname"> </label>
+          <span class="text-danger"><b>Prix négatif !</b></span>
         </div>
       </div>
 
@@ -687,34 +702,28 @@ export default {
                           >{{ item.name }}</nuxt-link
                         >
                       </h5>
-                      <p
-                        class="text-muted mb-0"
-                        v-if="myOrder.status[0].name != 'pendingQuote'"
-                      >
+                      <p class="text-muted mb-0" v-if="item.price >= 0">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(item.price)
                         }}
                         x {{ item.quantity }}
                       </p>
-                      <p
-                        class="text-muted mb-0"
-                        v-if="myOrder.status[0].name == 'pendingQuote'"
-                      >
+                      <p class="text-muted mb-0" v-if="item.price < 0">
                         ? x {{ item.quantity }}
                       </p>
                     </td>
-                    <td v-if="myOrder.status[0].name != 'pendingQuote'">
+                    <td v-if="item.price >= 0">
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(item.price * item.quantity)
                       }}
                     </td>
-                    <td v-if="myOrder.status[0].name == 'pendingQuote'">?</td>
+                    <td v-if="item.price < 0">?</td>
                   </tr>
 
                   <tr>
@@ -723,7 +732,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(myOrder.deliveryPrice)
@@ -736,7 +745,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(myOrder.subTotal)
@@ -749,7 +758,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(myOrder.tax)
@@ -763,7 +772,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(myOrder.total)

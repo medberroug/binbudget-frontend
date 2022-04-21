@@ -156,7 +156,7 @@ export default {
                       <p class="text-muted mb-2">Prix</p>
                       <h5 class="font-size-16" v-if="item.price > 0">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(item.price)
@@ -206,7 +206,7 @@ export default {
                       <p class="text-muted mb-2">Total</p>
                       <h5 class="font-size-16">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(item.price * item.quantity)
@@ -242,7 +242,7 @@ export default {
                       <td>Sub Total :</td>
                       <td class="text-right">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(myOrder.subTotal)
@@ -254,7 +254,7 @@ export default {
                       <td>Shipping Charge :</td>
                       <td class="text-right">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(myOrder.deliveryPrice)
@@ -265,7 +265,7 @@ export default {
                       <td>Estimated Tax :({{ tvaMarket }}%)</td>
                       <td class="text-right">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(myOrder.tax)
@@ -277,7 +277,7 @@ export default {
                       <td class="text-right">
                         <span class="font-weight-bold">
                           {{
-                            Intl.NumberFormat("ar-MA", {
+                            Intl.NumberFormat("fr-MA", {
                               style: "currency",
                               currency: "MAD",
                             }).format(myOrder.total)

@@ -559,11 +559,11 @@ console.log(this.$route.params.id);
                 this.itemForOrder.subTotal;
             } else {
               myEvent.eventOrderDetails[i].status.push({
-                name: "pendingValidation",
-                comment:
-                  "En attendant la révision finale et la validation du fournisseur. ",
-                date: new Date(),
-              });
+              name: "pendingQuote",
+              comment:
+                "En attendant la révision finale et la validation du fournisseur. ",
+              date: new Date(),
+            });
             }
           }
         }

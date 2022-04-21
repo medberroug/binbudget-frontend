@@ -167,7 +167,7 @@
         <template v-slot:cell(total)="data">
           <div class="font-size-16">
             {{
-              Intl.NumberFormat("ar-MA", {
+              Intl.NumberFormat("fr-MA", {
                 style: "currency",
                 currency: "MAD",
               }).format(data.item.total)

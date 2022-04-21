@@ -357,7 +357,7 @@ export default {
                       </h5>
                       <p class="text-muted mb-0">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(item.price)
@@ -367,7 +367,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(item.price * item.quantity)
@@ -381,7 +381,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(myOrder.deliveryPrice)
@@ -394,7 +394,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(myOrder.subTotal)
@@ -407,7 +407,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(myOrder.tax)
@@ -421,7 +421,7 @@ export default {
                     </td>
                     <td>
                       {{
-                        Intl.NumberFormat("ar-MA", {
+                        Intl.NumberFormat("fr-MA", {
                           style: "currency",
                           currency: "MAD",
                         }).format(myOrder.total)

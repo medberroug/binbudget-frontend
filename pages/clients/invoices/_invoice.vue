@@ -548,7 +548,7 @@ export default {
                       </td>
                       <td>
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(article.price)
@@ -559,7 +559,7 @@ export default {
                       </td>
                       <td class="text-right">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(article.total)
@@ -581,7 +581,7 @@ export default {
                       <td class="text-right font-size-16">Total HT</td>
                       <td>
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(myInvoice.subTotal)
@@ -592,7 +592,7 @@ export default {
                       <td class="text-right font-size-16">TVA</td>
                       <td>
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(myInvoice.tax)

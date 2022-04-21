@@ -430,7 +430,7 @@ export default {
                                 <p class="text-muted mb-2">Total</p>
                                 <h5 class="font-size-16">
                                   {{
-                                    Intl.NumberFormat("ar-MA", {
+                                    Intl.NumberFormat("fr-MA", {
                                       style: "currency",
                                       currency: "MAD",
                                     }).format(article.subTotal)
@@ -606,7 +606,7 @@ export default {
                                 <p class="text-muted mb-2">Total</p>
                                 <h5 class="font-size-16">
                                   {{
-                                    Intl.NumberFormat("ar-MA", {
+                                    Intl.NumberFormat("fr-MA", {
                                       style: "currency",
                                       currency: "MAD",
                                     }).format(article.subTotal)
@@ -782,7 +782,7 @@ export default {
                                 <p class="text-muted mb-2">Total</p>
                                 <h5 class="font-size-16">
                                   {{
-                                    Intl.NumberFormat("ar-MA", {
+                                    Intl.NumberFormat("fr-MA", {
                                       style: "currency",
                                       currency: "MAD",
                                     }).format(article.subTotal)
@@ -958,7 +958,7 @@ export default {
                                 <p class="text-muted mb-2">Total</p>
                                 <h5 class="font-size-16">
                                   {{
-                                    Intl.NumberFormat("ar-MA", {
+                                    Intl.NumberFormat("fr-MA", {
                                       style: "currency",
                                       currency: "MAD",
                                     }).format(article.subTotal)
@@ -1007,7 +1007,7 @@ export default {
                       <td>Sub Total :</td>
                       <td class="text-right">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(subTotal)
@@ -1026,7 +1026,7 @@ export default {
                       <td>TVA :</td>
                       <td class="text-right">
                         {{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(tva)
@@ -1038,7 +1038,7 @@ export default {
                       <th>Total :</th>
                       <td class="text-right">
                         <span class="font-weight-bold">{{
-                          Intl.NumberFormat("ar-MA", {
+                          Intl.NumberFormat("fr-MA", {
                             style: "currency",
                             currency: "MAD",
                           }).format(total)
