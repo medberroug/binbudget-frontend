@@ -69,11 +69,17 @@ export default {
       } else if (getData("account") == "supplier") {
         this.accountType = "supplier";
       }
-    } else {
+    } else if (getData("account") == "client") {
       this.accountName = getData("clientinfo").knowenName;
       this.accountLogo = getData("clientinfo").logo;
       this.userName = getData("clientinfo").userName;
       this.accountType = "client";
+    }
+    else if (getData("account") == "admin") {
+      this.accountName = getData("admininfo").knowenName;
+      // this.accountLogo = getData("admintinfo").logo;
+      this.userName = getData("admininfo").userName;
+      this.accountType = "admin";
     }
     let result = await axios.get(
       process.env.baseUrl + "/users?username=" + this.userName
@@ -400,7 +406,7 @@ export default {
           right
           variant="white"
           menu-class="dropdown-menu-end"
-          v-if="accountType == 'event' || accountType == 'supplier' || accountType == 'client'"
+          v-if="accountType == 'event' || accountType == 'supplier' || accountType == 'client' || accountType == 'admin'"
         >
           <template v-slot:button-content>
             <img

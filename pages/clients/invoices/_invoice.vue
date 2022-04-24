@@ -499,7 +499,7 @@ export default {
               </div>
               <div class="col-sm-6">
                 <div class="text-muted text-sm-right">
-                  <div
+                  <!-- <div
                     v-if="
                       myInvoice.status[0].name != 'created' &&
                       myInvoice.status[0].name != 'cancelled'
@@ -507,10 +507,16 @@ export default {
                   >
                     <h5 class="font-size-16 mb-1">N° de facture:</h5>
                     <p>{{ myInvoice.invoiceNumber }}</p>
+                  </div> -->
+                    <div
+                
+                  >
+                    <h5 class="font-size-16 mb-1">Créé le:</h5>
+                    <p>{{  formatMyDate(myInvoice.createdAt) }}</p>
                   </div>
                   <div class="mt-4">
-                    <h5 class="font-size-16 mb-1">Date de la facture:</h5>
-                    <p>{{ formatMyDate(myInvoice.createdAt) }}</p>
+                    <h5 class="font-size-16 mb-1">Date de paiment:</h5>
+                    <p >{{ formatMyDate(myInvoice.paimentDate) }}</p>
                   </div>
                   <div class="mt-4">
                     <h5 class="font-size-16 mb-1">Date d'échéance:</h5>

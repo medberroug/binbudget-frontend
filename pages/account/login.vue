@@ -136,6 +136,30 @@ export default {
             });
 
             this.$router.push("/clients");
+          }else if (result.user.role.name == "admin") {
+            persistData("account", "admin");
+            let result2 = await axios.get(
+              process.env.baseUrl + "/employees/" + result.user.userAccountId
+            );
+            let logo;
+            if (result2.data.logo) {
+              logo = process.env.baseUrl + result2.data.logo.url;
+            } else {
+              logo = null;
+            }
+            let knowenName = result2.data.firstName+ " "+result2.data.lastName;
+
+            persistData("admininfo", {
+              id: result.user.userAccountId,
+              type: "admin",
+              jwt: result.jwt,
+              logo: logo,
+              knowenName: knowenName,
+              userName: result.user.username,
+              menu: result2.data.permissions
+            });
+
+            this.$router.push("/admin");
           }
         } catch (error) {
           console.log(error);
