@@ -80,7 +80,7 @@ export default {
                 <template v-slot:button-content>
                   <i class="uil uil-ellipsis-v"></i>
                 </template>
-                <a class="dropdown-item text-primary" href="#">Modifier</a>
+                <a class="dropdown-item text-primary" href="#" >Modifier</a>
                 <a class="dropdown-item text-danger" href="#">Désactiver le profil </a>
                 
               </b-dropdown>

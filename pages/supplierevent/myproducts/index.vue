@@ -4,7 +4,7 @@
   <div>
     <PageHeader :title="title" :details="items" />
 
-    <div class="row mt-3 align-items-center" v-if="myItems.length > 0">
+    <div class="row mt-3 align-items-center" >
       <div class="col-sm-12 col-md-2">
         <nuxt-link :to="'/supplierevent/myproducts/addProduct'"
           ><button type="button" class="btn btn-primary btn-sm mt-3">
@@ -14,7 +14,7 @@
       </div>
 
       <!-- Search -->
-      <div class="col-sm-12 col-md-10">
+      <div class="col-sm-12 col-md-10 " v-if="myItems.length > 0">
         <div id="tickets-table_filter" class="dataTables_filter text-md-end">
           <label class="d-inline-flex align-items-center">
             Recherchez:
