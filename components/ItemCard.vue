@@ -40,7 +40,7 @@
             <nuxt-link
               :to="'/clients/restauration/'+parentlink+'/'+id"
               class="btn btn-primary my-2"
-              >Check Menu <i class="uil-arrow-right"></i
+              >Consulter le menu <i class="uil-arrow-right"></i
             ></nuxt-link>
           </div>
         </div>
@@ -48,7 +48,7 @@
           <div class="row">
             <div class="col-4 col-md-2">
               <div class="mt-3">
-                <p class="text-muted mb-2">Rating</p>
+                <p class="text-muted mb-2">Évaluation</p>
                 <span class="badge bg-success font-size-14 me-1"
                   ><i class="mdi mdi-star"></i> {{ rating }}</span
                 >
@@ -56,7 +56,7 @@
             </div>
             <div class="col-8 col-md-10">
               <div class="mt-3">
-                <p class="text-muted mb-2">Speciality</p>
+                <p class="text-muted mb-2">Spécialité</p>
                 <div class="font-size-12 me-1">
                   {{ speciality }}
                 </div>

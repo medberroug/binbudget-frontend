@@ -23,7 +23,7 @@
                 <i
                   class="mdi mdi-chevron-up accor-down-icon text-primary mr-1"
                 ></i>
-                City
+                Ville
               </a>
               <b-collapse visible id="city-collapse">
                 <div class="card p-2 border shadow-none">
@@ -38,7 +38,7 @@
                       ]"
                     >
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> All cities
+                        <i class="mdi mdi-circle-medium mr-1"></i> Toutes les villes
                       </a>
                     </li>
                     <li
@@ -71,7 +71,7 @@
                 <i
                   class="mdi mdi-chevron-up accor-down-icon text-primary mr-1"
                 ></i>
-                Speciality
+                Spécialité
               </a>
               <b-collapse visible id="speciality-collapse">
                 <div class="card p-2 border shadow-none">
@@ -88,8 +88,7 @@
                       ]"
                     >
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> All
-                        restaurants
+                        <i class="mdi mdi-circle-medium mr-1"></i>Tous les restaurants
                       </a>
                     </li>
                     <li

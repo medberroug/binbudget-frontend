@@ -115,7 +115,7 @@
                               me-2
                             "
                           ></i>
-                          Order option
+                          Quantité :
                         </h5>
                         <div class="mt-3" v-if="!anotherSupplier">
                           <div class="col" v-if="!itemAlreadyAdded">
@@ -130,7 +130,7 @@
                             >
                        
                               <div class="d-flex align-items-center">
-                                <b-button
+                                <!-- <b-button
                                   v-if="itemForOrder.quantity > myProduct.minQuantity"
                                   @click.prevent="calculateQuantity('sub')"
                                   variant="outline-primary"
@@ -159,7 +159,8 @@
                                   disabled
                                      v-else
                                   >+</b-button
-                                >
+                                > -->
+                                <NumberInputSpinner :min="myProduct.minQuantity" :max="myProduct.maxQuantity" :step="1" :integerOnly="true" v-model="itemForOrder.quantity" />
                               </div>
                             </div>
                             <div class="col-12 col-md-12">
@@ -172,7 +173,7 @@
                                     type="text"
                                     class="form-control"
                                     v-model="itemForOrder.comment"
-                                    placeholder="Enter the details for special order..."
+                                    placeholder="Saisissez les renseignements concernant une commande spéciale..."
                                   />
                                   <div class="input-group-append">
                                     <button
@@ -180,7 +181,7 @@
                                       class="btn btn-light mx-2"
                                       type="button"
                                     >
-                                      Add to cart
+                                      Ajouter au panier
                                     </button>
                                   </div>
                                 </div>
@@ -192,8 +193,7 @@
                            
                           <div v-else>
                             <h6 class="text-success" v-if="!anotherSupplier">
-                              <i class="fas fa-check mx-3"></i> Already added to
-                              cart
+                              <i class="fas fa-check mx-3"></i> Ajouté au panier
                             </h6>
                           </div>
                         </div>
@@ -402,6 +402,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import NumberInputSpinner from "vue-number-input-spinner";
 import axios from "axios";
 import {
   persistData,
@@ -455,6 +456,10 @@ export default {
       }
     } catch (error) {}
   },
+    components: {
+       
+        NumberInputSpinner,
+    },
   data() {
     return {
       order: {},

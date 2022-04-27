@@ -55,6 +55,7 @@
               <h6 class="mt-0 mb-1">
                 {{ item.name }}
               </h6>
+
               <div class="font-size-12 text-muted">
                 <p class="mb-1">Quantité: {{ item.quantity }}</p>
               </div>
@@ -63,7 +64,7 @@
         </nuxt-link>
       </template>
       <div class="media" v-if="myOrder.items.length == 0">
-        <div class="media-body text-center py-4">No Items in cart</div>
+        <div class="media-body text-center py-4">Aucun article dans le panier</div>
       </div>
     </simplebar>
     <div v-if="myOrder">
@@ -71,7 +72,7 @@
         <nuxt-link :to="'/clients/restauration/' + myOrder.subType + '/cart'">
           <center>
             <div class="btn btn-sm btn-link font-size-14 text-center">
-              <i class="uil-arrow-circle-right me-1"></i> View all items
+              <b>Commander <i class="uil-arrow-right me-1"></i></b>   
             </div>
           </center>
         </nuxt-link>

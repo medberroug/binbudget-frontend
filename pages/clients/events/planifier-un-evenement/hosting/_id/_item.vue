@@ -129,7 +129,7 @@
                               "
                             >
                               <div class="d-flex align-items-center">
-                                <b-button
+                                <!-- <b-button
                                   v-if="itemForOrder.quantity > 0"
                                   @click.prevent="calculateQuantity('sub')"
                                   variant="outline-primary"
@@ -149,7 +149,14 @@
                                   @click.prevent="calculateQuantity('add')"
                                   variant="outline-primary"
                                   >+</b-button
-                                >
+                                > -->
+                                <NumberInputSpinner
+                                  :min="0"
+                                  :max="1000"
+                                  :step="1"
+                                  :integerOnly="true"
+                                  v-model="itemForOrder.quantity"
+                                />
                               </div>
                             </div>
                             <div class="col-12 col-md-12">
@@ -162,7 +169,7 @@
                                     type="text"
                                     class="form-control"
                                     v-model="itemForOrder.comment"
-                                    placeholder="Enter the details for special order..."
+                                    placeholder="Saisissez les renseignements concernant une commande spéciale..."
                                   />
                                   <div class="input-group-append">
                                     <button
@@ -179,8 +186,7 @@
                           </div>
                           <div v-else>
                             <h6 class="text-success">
-                              <i class="fas fa-check mx-3"></i>Added to
-                              cart
+                              <i class="fas fa-check mx-3"></i>Added to cart
                             </h6>
                           </div>
                         </div>
@@ -391,6 +397,7 @@ import {
   eventNextStep,
   persistData,
 } from "../../../../../../components/controllers/savingData";
+import NumberInputSpinner from "vue-number-input-spinner";
 /**
  * Product-detail component
  */
@@ -400,11 +407,13 @@ export default {
       title: `${this.title} |  Admin Dashboard`,
     };
   },
-
+  components: {
+    NumberInputSpinner,
+  },
   async mounted() {
     try {
       this.myEvent = getData("event");
-console.log(this.$route.params.id);
+      console.log(this.$route.params.id);
       this.nextPage = eventNextStep(false);
       this.stepperTotal = eventStepperCalculator();
       this.stepperText =
@@ -419,26 +428,21 @@ console.log(this.$route.params.id);
       this.restaurant = result.data;
       let allItems = result.data.items;
       if (this.myEvent.eventOrderDetails) {
-     
         for (let i = 0; i < this.myEvent.eventOrderDetails.length; i++) {
-   
           if (
             this.myEvent.eventOrderDetails[i].eventServiceProvider ==
             this.$route.params.id
           ) {
-          
             console.log(this.myEvent.eventOrderDetails[i].articles.length);
             for (
               let j = 0;
               j < this.myEvent.eventOrderDetails[i].articles.length;
               j++
             ) {
-
               if (
                 this.myEvent.eventOrderDetails[i].articles[j].itemId ==
                 this.$route.params.item
               ) {
-               
                 this.itemAlreadyAdded = true;
                 break;
               }
@@ -451,7 +455,7 @@ console.log(this.$route.params.id);
           this.myItem = allItems[i];
         }
       }
-     
+
       let myItemPrice = null;
       let myItemDiscount = null;
       if (this.myItem.disocunt) {
@@ -464,7 +468,7 @@ console.log(this.$route.params.id);
         myItemDiscount = 0;
       }
       this.itemForOrder = {
-        firstImage: process.env.baseUrl+this.myItem.firstImage.url,
+        firstImage: process.env.baseUrl + this.myItem.firstImage.url,
         itemId: this.myItem.id,
         name: this.myItem.name,
         price: myItemPrice,
@@ -539,10 +543,18 @@ console.log(this.$route.params.id);
 
     //dddddddddddddddddddddddddddddddddddd Bellow are my own methods
 
-   addItemtoCart() {
+    addItemtoCart() {
       console.log(this.itemForOrder);
       let myEvent = getData("event");
       console.log(myEvent);
+       if (this.itemForOrder.price > 0) {
+          this.itemForOrder.subTotal =
+            this.itemForOrder.quantity * this.itemForOrder.price;
+        } else if (this.itemForOrder.pric < 0) {
+          this.itemForOrder.subTotal = -1;
+        } else {
+          this.itemForOrder.subTotal = 0;
+        }
       if (myEvent.eventOrderDetails) {
         let foundSP = false;
         for (let i = 0; i < myEvent.eventOrderDetails.length; i++) {
@@ -559,11 +571,11 @@ console.log(this.$route.params.id);
                 this.itemForOrder.subTotal;
             } else {
               myEvent.eventOrderDetails[i].status.push({
-              name: "pendingQuote",
-              comment:
-                "En attendant la révision finale et la validation du fournisseur. ",
-              date: new Date(),
-            });
+                name: "pendingQuote",
+                comment:
+                  "En attendant la révision finale et la validation du fournisseur. ",
+                date: new Date(),
+              });
             }
           }
         }
@@ -597,7 +609,7 @@ console.log(this.$route.params.id);
               },
             ];
           }
-           
+
           let newEventOrderDetails = {
             eventServiceProvider: this.$route.params.id,
             eventServiceProviderName: this.restaurant.knownName,

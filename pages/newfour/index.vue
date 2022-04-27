@@ -56,8 +56,10 @@ export default {
         !this.accountInfo.agreed ||
         !this.accountInfo.address.city ||
         !this.accountInfo.address.street
+
       ) {
         this.fileMissing = true;
+           this.uploadLoader = false;
       } else {
         if ((this.accountType == "events")) {
           let result = await axios.post(
@@ -134,6 +136,7 @@ export default {
           "/newFourCongrats" 
         );
         this.uploadLoader = false;
+        return false
       }
      
          

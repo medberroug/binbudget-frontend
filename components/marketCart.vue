@@ -54,15 +54,16 @@
         </nuxt-link>
       </template>
       <div class="media" v-if="myOrder.items.length == 0">
-        <div class="media-body text-center py-4">No Items in cart</div>
+        <div class="media-body text-center py-4">Aucun article dans le panier</div>
       </div>
     </simplebar>
     <div v-if="myOrder">
       <div class="p-2 border-top d-grid" v-if="myOrder.items.length > 0">
         <nuxt-link :to="'/clients/market/cart'">
           <center>
-            <div class="btn btn-sm btn-link font-size-14 text-center">
-              <i class="uil-arrow-circle-right me-1"></i> View all items
+            <div class="btn btn-sm btn-link font-size-15 text-center">
+              <b>Commander <i class="uil-arrow-right me-1"></i></b>   
+              
             </div>
           </center>
         </nuxt-link>

@@ -5,11 +5,11 @@
       <div class="col-xl-3 col-lg-4">
         <div class="card">
           <div class="card-header bg-transparent border-bottom">
-            <h5 class="mb-0">Filters</h5>
+            <h5 class="mb-0">Filtres</h5>
           </div>
           <!-- Page Categories -->
           <div class="p-4">
-            <h5 class="font-size-14 mb-3">Categories</h5>
+            <h5 class="font-size-14 mb-3">Catégories</h5>
             <div class="custom-accordion">
               <!-- city filter -->
               <a
@@ -23,7 +23,7 @@
                 <i
                   class="mdi mdi-chevron-up accor-down-icon text-primary mr-1"
                 ></i>
-                City
+                Ville
               </a>
               <b-collapse visible id="city-collapse">
                 <div class="card p-2 border shadow-none">
@@ -38,7 +38,7 @@
                       ]"
                     >
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> All cities
+                        <i class="mdi mdi-circle-medium mr-1"></i> Toutes les villes
                       </a>
                     </li>
                     <li
@@ -71,7 +71,7 @@
                 <i
                   class="mdi mdi-chevron-up accor-down-icon text-primary mr-1"
                 ></i>
-                Speciality
+                Spécialité
               </a>
               <b-collapse visible id="speciality-collapse">
                 <div class="card p-2 border shadow-none">
@@ -88,8 +88,7 @@
                       ]"
                     >
                       <a href="#">
-                        <i class="mdi mdi-circle-medium mr-1"></i> All
-                        restaurants
+                        <i class="mdi mdi-circle-medium mr-1"></i> Tous les restaurants
                       </a>
                     </li>
                     <li

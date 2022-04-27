@@ -173,8 +173,7 @@
         class="btn btn-sm btn-link font-size-14 text-center"
         href="javascript:void(0)"
       >
-        <i class="uil-arrow-circle-right me-1"></i>
-        {{ $t("navbar.dropdown.notification.button") }}
+          <b>Commander <i class="uil-arrow-right me-1"></i></b>   
       </a>
     </div>
   </b-dropdown>

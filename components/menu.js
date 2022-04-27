@@ -1,104 +1,104 @@
 
 var menuItemsForAdmin = [
-  // {
-  //   id: 2000,
-  //   label: "menu",
-  //   isTitle: true
-  // },
-  // {
-  //   id: 2001,
-  //   label: "Tableau de bord",
-  //   icon: "uil-home-alt",
-  //   link: "/admin"
-  // },
-  // {
-  //   id: 2002,
-  //   label: "Gestion des clients",
-  //   isTitle: true
-  // },
-  // {
-  //   id: 2003,
-  //   label: "T.B. Clients",
-  //   icon: "uil-chart-pie",
-  //   link: "/admin/clients/dashboard"
-  // },
-  // {
-  //   id: 2004,
-  //   label: "Clients",
-  //   icon: "uil-users-alt",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 2005,
-  //       label: "List des clients",
-  //       link: "/admin/clients/"
-  //     },
-  //     {
-  //       id: 2006,
-  //       label: "Comptes clients",
-  //       link: "/admin/clients/",
-  //     }
-  //   ]
-  // },
-  // {
-  //   id: 2002,
-  //   label: "Gestion des événements",
-  //   isTitle: true
-  // },
-  //  {
-  //   id: 2003,
-  //   label: "T.B. événements",
-  //   icon: "uil-chart-pie",
-  //   link: "/admin/clients/dashboard"
-  // },
-  // {
-  //   id: 2004,
-  //   label: "Four. événementiels",
-  //   icon: "uil-users-alt",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 2005,
-  //       label: "List des fournisseurs",
-  //       link: "/admin/clients/"
-  //     },
-  //     {
-  //       id: 2006,
-  //       label: "Comptes événementiels",
-  //       link: "/admin/clients/",
-  //     }
-  //   ]
-  // },{
-  //   id: 2004,
-  //   label: "Com. événementiels",
-  //   icon: "uil-shopping-cart-alt",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 93,
-  //       label: "Commandes en cours",
-  //       icon: "uil-shopping-basket",
-  //       link: "/supplier/orders/active"
-  //     },
-  //     {
-  //       id: 94,
-  //       label: "Commandes archivées",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },
-  //   ]
-  // },
+  {
+    id: 2000,
+    label: "menu",
+    isTitle: true
+  },
+  {
+    id: 2001,
+    label: "Tableau de bord",
+    icon: "uil-home-alt",
+    link: "/admin"
+  },
+  {
+    id: 2002,
+    label: "Gestion des clients",
+    isTitle: true
+  },
+  {
+    id: 2003,
+    label: "T.B. Clients",
+    icon: "uil-chart-pie",
+    link: "/admin/clients/dashboard"
+  },
+  {
+    id: 2004,
+    label: "Clients",
+    icon: "uil-users-alt",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 2005,
+        label: "List des clients",
+        link: "/admin/clients/"
+      },
+      {
+        id: 2006,
+        label: "Comptes clients",
+        link: "/admin/clients/",
+      }
+    ]
+  },
+  {
+    id: 2002,
+    label: "Gestion des événements",
+    isTitle: true
+  },
+   {
+    id: 2003,
+    label: "T.B. événements",
+    icon: "uil-chart-pie",
+    link: "/admin/clients/dashboard"
+  },
+  {
+    id: 2004,
+    label: "Four. événementiels",
+    icon: "uil-users-alt",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 2005,
+        label: "List des fournisseurs",
+        link: "/admin/clients/"
+      },
+      {
+        id: 2006,
+        label: "Comptes événementiels",
+        link: "/admin/clients/",
+      }
+    ]
+  },{
+    id: 2004,
+    label: "Com. événementiels",
+    icon: "uil-shopping-cart-alt",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 93,
+        label: "Commandes en cours",
+        icon: "uil-shopping-basket",
+        link: "/supplier/orders/active"
+      },
+      {
+        id: 94,
+        label: "Commandes archivées",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },
+    ]
+  },
   {
     id: 2002,
     label: "Gestion de la restauration",
     isTitle: true
   },
-  //  {
-  //   id: 2003,
-  //   label: "T.B. restauration",
-  //   icon: "uil-chart-pie",
-  //   link: "/admin/clients/dashboard"
-  // },
+   {
+    id: 2003,
+    label: "T.B. restauration",
+    icon: "uil-chart-pie",
+    link: "/admin/clients/dashboard"
+  },
   {
     id: 2004,
     label: "Four. restauration",
@@ -136,204 +136,204 @@ var menuItemsForAdmin = [
       },
     ]
   }
-  //,{
-  //   id: 2002,
-  //   label: "Gestion de la livraison",
-  //   isTitle: true
-  // },
-  // {
-  //   id: 2003,
-  //   label: "T.B. livraison",
-  //   icon: "uil-chart-pie",
-  //   link: "/admin/clients/dashboard"
-  // },{
-  //   id: 2004,
-  //   label: "Livreurs",
-  //   icon: "uil-users-alt",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 2005,
-  //       label: "List des livreurs",
-  //       link: "/admin/clients/"
-  //     },
-  //     {
-  //       id: 2006,
-  //       label: "Comptes livreurs",
-  //       link: "/admin/clients/",
-  //     }
-  //   ]
-  // },{
-  //   id: 2004,
-  //   label: "Com. Livraisons",
-  //   icon: "uil-shopping-cart-alt",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 93,
-  //       label: "Livraisons en cours",
-  //       icon: "uil-shopping-basket",
-  //       link: "/supplier/orders/active"
-  //     },
-  //     {
-  //       id: 94,
-  //       label: "Livraisons archivées",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },
-  //   ]
-  // },
-  // {
-  //   id: 2002,
-  //   label: "Market",
-  //   isTitle: true
-  // },
-  // {
-  //   id: 2003,
-  //   label: "T.B. Market",
-  //   icon: "uil-chart-pie",
-  //   link: "/admin/clients/dashboard"
-  // },
-  // {
-  //   id: 2004,
-  //   label: "Commandes Market",
-  //   icon: "uil-shopping-cart-alt",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 93,
-  //       label: "Commandes en cours",
-  //       icon: "uil-shopping-basket",
-  //       link: "/supplier/orders/active"
-  //     },
-  //     {
-  //       id: 94,
-  //       label: "Commandes archivées",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },
-  //   ]
-  // },
-  // {
-  //   id: 2004,
-  //   label: "Produits et stocks",
-  //   icon: "uil-archive",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 93,
-  //       label: "Produits",
-  //       icon: "uil-shopping-basket",
-  //       link: "/supplier/orders/active"
-  //     },
-  //     {
-  //       id: 94,
-  //       label: "Inventaire des produits",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },
-  //   ]
-  // },
-  // {
-  //   id: 2004,
-  //   label: "Paramètres Market",
-  //   icon: "uil-shop",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 93,
-  //       label: "Catégories",
-  //       icon: "uil-shopping-basket",
-  //       link: "/supplier/orders/active"
-  //     },
-  //     {
-  //       id: 94,
-  //       label: "Entrepôts",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },
-  //   ]
-  // },{
-  //   id: 2002,
-  //   label: "Devis et factures",
-  //   isTitle: true
-  // },{
-  //   id: 2003,
-  //   label: "T.B. Comptable",
-  //   icon: "uil-chart-pie",
-  //   link: "/admin/clients/dashboard"
-  // }, {
-  //   id: 2004,
-  //   label: "Factures",
-  //   icon: "uil-money-insert",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 93,
-  //       label: "Factures en cours",
-  //       icon: "uil-shopping-basket",
-  //       link: "/supplier/orders/active"
-  //     },
-  //     {
-  //       id: 94,
-  //       label: "Factures archivées",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },
-  //   ]
-  // },{
-  //   id: 2004,
-  //   label: "Devis",
-  //   icon: "uil-receipt",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 93,
-  //       label: "Devis en cours",
-  //       icon: "uil-shopping-basket",
-  //       link: "/supplier/orders/active"
-  //     },
-  //     {
-  //       id: 94,
-  //       label: "Devis archivées",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },
-  //   ]
-  // },{
-  //   id: 2004,
-  //   label: "Paiments",
-  //   icon: "uil-money-withdraw",
-  //   link: "/admin/clients/",
-  //   subItems: [
-  //     {
-  //       id: 93,
-  //       label: "Saisir un paiment",
-  //       icon: "uil-shopping-basket",
-  //       link: "/supplier/orders/active"
-  //     },
-  //     {
-  //       id: 94,
-  //       label: "Paiments en attente",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },{
-  //       id: 94,
-  //       label: "liste des paiments",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },{
-  //       id: 94,
-  //       label: "Modalités des paiments",
-  //       icon: "uil-archive",
-  //       link: "/supplier/orders/archive"
-  //     },
-  //   ]
-  // },{
-  //   id: 2002,
-  //   label: "Paramètres système",
-  //   isTitle: true
-  // }
+  ,{
+    id: 2002,
+    label: "Gestion de la livraison",
+    isTitle: true
+  },
+  {
+    id: 2003,
+    label: "T.B. livraison",
+    icon: "uil-chart-pie",
+    link: "/admin/clients/dashboard"
+  },{
+    id: 2004,
+    label: "Livreurs",
+    icon: "uil-users-alt",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 2005,
+        label: "List des livreurs",
+        link: "/admin/clients/"
+      },
+      {
+        id: 2006,
+        label: "Comptes livreurs",
+        link: "/admin/clients/",
+      }
+    ]
+  },{
+    id: 2004,
+    label: "Com. Livraisons",
+    icon: "uil-shopping-cart-alt",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 93,
+        label: "Livraisons en cours",
+        icon: "uil-shopping-basket",
+        link: "/supplier/orders/active"
+      },
+      {
+        id: 94,
+        label: "Livraisons archivées",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },
+    ]
+  },
+  {
+    id: 2002,
+    label: "Market",
+    isTitle: true
+  },
+  {
+    id: 2003,
+    label: "T.B. Market",
+    icon: "uil-chart-pie",
+    link: "/admin/clients/dashboard"
+  },
+  {
+    id: 2004,
+    label: "Commandes Market",
+    icon: "uil-shopping-cart-alt",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 93,
+        label: "Commandes en cours",
+        icon: "uil-shopping-basket",
+        link: "/supplier/orders/active"
+      },
+      {
+        id: 94,
+        label: "Commandes archivées",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },
+    ]
+  },
+  {
+    id: 2004,
+    label: "Produits et stocks",
+    icon: "uil-archive",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 93,
+        label: "Produits",
+        icon: "uil-shopping-basket",
+        link: "/supplier/orders/active"
+      },
+      {
+        id: 94,
+        label: "Inventaire des produits",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },
+    ]
+  },
+  {
+    id: 2004,
+    label: "Paramètres Market",
+    icon: "uil-shop",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 93,
+        label: "Catégories",
+        icon: "uil-shopping-basket",
+        link: "/supplier/orders/active"
+      },
+      {
+        id: 94,
+        label: "Entrepôts",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },
+    ]
+  },{
+    id: 2002,
+    label: "Devis et factures",
+    isTitle: true
+  },{
+    id: 2003,
+    label: "T.B. Comptable",
+    icon: "uil-chart-pie",
+    link: "/admin/clients/dashboard"
+  }, {
+    id: 2004,
+    label: "Factures",
+    icon: "uil-money-insert",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 93,
+        label: "Factures en cours",
+        icon: "uil-shopping-basket",
+        link: "/supplier/orders/active"
+      },
+      {
+        id: 94,
+        label: "Factures archivées",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },
+    ]
+  },{
+    id: 2004,
+    label: "Devis",
+    icon: "uil-receipt",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 93,
+        label: "Devis en cours",
+        icon: "uil-shopping-basket",
+        link: "/supplier/orders/active"
+      },
+      {
+        id: 94,
+        label: "Devis archivées",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },
+    ]
+  },{
+    id: 2004,
+    label: "Paiments",
+    icon: "uil-money-withdraw",
+    link: "/admin/clients/",
+    subItems: [
+      {
+        id: 93,
+        label: "Saisir un paiment",
+        icon: "uil-shopping-basket",
+        link: "/supplier/orders/active"
+      },
+      {
+        id: 94,
+        label: "Paiments en attente",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },{
+        id: 94,
+        label: "liste des paiments",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },{
+        id: 94,
+        label: "Modalités des paiments",
+        icon: "uil-archive",
+        link: "/supplier/orders/archive"
+      },
+    ]
+  },{
+    id: 2002,
+    label: "Paramètres système",
+    isTitle: true
+  }
 ];
 
 
