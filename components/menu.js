@@ -45,7 +45,7 @@ var menuItemsForAdmin = [
     label: "Gestion des événements",
     isTitle: true
   },
-   {
+  {
     id: 2003,
     label: "T.B. événements",
     icon: "uil-chart-pie",
@@ -68,7 +68,7 @@ var menuItemsForAdmin = [
         link: "/admin/clients/",
       }
     ]
-  },{
+  }, {
     id: 2004,
     label: "Com. événementiels",
     icon: "uil-shopping-cart-alt",
@@ -93,7 +93,7 @@ var menuItemsForAdmin = [
     label: "Gestion de la restauration",
     isTitle: true
   },
-   {
+  {
     id: 2003,
     label: "T.B. restauration",
     icon: "uil-chart-pie",
@@ -116,7 +116,7 @@ var menuItemsForAdmin = [
         link: "/admin/clients/",
       }
     ]
-  },{
+  }, {
     id: 2004,
     label: "Com. Restauration",
     icon: "uil-shopping-cart-alt",
@@ -136,7 +136,7 @@ var menuItemsForAdmin = [
       },
     ]
   }
-  ,{
+  , {
     id: 2002,
     label: "Gestion de la livraison",
     isTitle: true
@@ -146,7 +146,7 @@ var menuItemsForAdmin = [
     label: "T.B. livraison",
     icon: "uil-chart-pie",
     link: "/admin/clients/dashboard"
-  },{
+  }, {
     id: 2004,
     label: "Livreurs",
     icon: "uil-users-alt",
@@ -163,7 +163,7 @@ var menuItemsForAdmin = [
         link: "/admin/clients/",
       }
     ]
-  },{
+  }, {
     id: 2004,
     label: "Com. Livraisons",
     icon: "uil-shopping-cart-alt",
@@ -253,11 +253,11 @@ var menuItemsForAdmin = [
         link: "/supplier/orders/archive"
       },
     ]
-  },{
+  }, {
     id: 2002,
     label: "Devis et factures",
     isTitle: true
-  },{
+  }, {
     id: 2003,
     label: "T.B. Comptable",
     icon: "uil-chart-pie",
@@ -281,7 +281,7 @@ var menuItemsForAdmin = [
         link: "/supplier/orders/archive"
       },
     ]
-  },{
+  }, {
     id: 2004,
     label: "Devis",
     icon: "uil-receipt",
@@ -300,7 +300,7 @@ var menuItemsForAdmin = [
         link: "/supplier/orders/archive"
       },
     ]
-  },{
+  }, {
     id: 2004,
     label: "Paiments",
     icon: "uil-money-withdraw",
@@ -317,19 +317,19 @@ var menuItemsForAdmin = [
         label: "Paiments en attente",
         icon: "uil-archive",
         link: "/supplier/orders/archive"
-      },{
+      }, {
         id: 94,
         label: "liste des paiments",
         icon: "uil-archive",
         link: "/supplier/orders/archive"
-      },{
+      }, {
         id: 94,
         label: "Modalités des paiments",
         icon: "uil-archive",
         link: "/supplier/orders/archive"
       },
     ]
-  },{
+  }, {
     id: 2002,
     label: "Paramètres système",
     isTitle: true
@@ -503,7 +503,7 @@ var menuItemsForEvent = [
   //   link: "/clients/settings"
   // }
 ];
-import { getData, persistData , removeData } from "../components/controllers/savingData"
+import { getData, persistData, removeData } from "../components/controllers/savingData"
 
 console.log("XXXXXXXXXXXXXXXXXXACCOUNTXXXXXXXXXXXXXXX");
 // persistData("account", "supplier")
@@ -541,10 +541,10 @@ if (account == "admin") {
 // CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 if (account == "client") {
-  if(getData("clientinfo").menu){
+  if (getData("clientinfo").menu) {
     let result = getData("clientinfo").menu
-    
-    
+
+
     let dynamicMenu = [{
       id: 1,
       label: "menu",
@@ -561,7 +561,7 @@ if (account == "client") {
       label: "services",
       isTitle: true
     },]
-  
+
     // RESTAURATION
     let restaurationHeader = {
       id: 4,
@@ -572,46 +572,46 @@ if (account == "client") {
     }
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "livraison-de-repas") {
-  
+
         restaurationHeader.subItems.push({
           id: 5,
           label: "Livraison de repas",
           link: "/clients/restauration/livraison-de-repas"
         })
-  
+
       }
     }
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "repas-emporte") {
-  
+
         restaurationHeader.subItems.push({
           id: 6,
           label: "Repas emporté",
           link: "/clients/restauration/repas-emporte"
         })
-  
+
       }
     }
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "menu-conventionne") {
-  
+
         restaurationHeader.subItems.push({
           id: 7,
           label: "Menu conventionné",
           link: "/clients/restauration/menu-conventionne"
         })
-  
+
       }
     }
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "reservation-de-restaurant") {
-  
+
         restaurationHeader.subItems.push({
           id: 9,
           label: "Réservation de restaurant",
           link: "/clients/restauration/reservation-de-restaurant"
         })
-  
+
       }
     }
     if (restaurationHeader.subItems.length > 0) {
@@ -624,19 +624,47 @@ if (account == "client") {
       icon: "uil-schedule",
       link: "/clients/events",
       subItems: [
-  
+
       ]
     }
-  
+    let onlineConferanceHeader = {
+      id: 10,
+      label: "Conférence en ligne",
+      icon: "uil-rss-interface",
+      link: "/clients/onlineConferance",
+      subItems: [
+
+      ]
+    }
+    let courtierProHeader = {
+      id: 10,
+      label: "Courtier Pro.",
+      icon: "uil-truck",
+      link: "/clients/courtierPro",
+      subItems: [
+
+      ]
+    }
+    let summerHotelsHeader = {
+      id: 10,
+      label: "Réservation vacances",
+      icon: "uil-mountains-sun",
+      link: "/clients/courtierPro",
+      subItems: [
+
+      ]
+    }
+
+
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "event") {
-  
+
         eventsHeader.subItems.push({
           id: 24,
           label: "Planifier un événement",
           link: "/clients/events/planifier-un-evenement"
         },
-          
+
           {
             id: 26,
             label: "Mes événements",
@@ -647,13 +675,13 @@ if (account == "client") {
             label: "Événements archivés",
             link: "/clients/events/archive",
           })
-  
+
       }
     }
-  
+
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "tms") {
-  
+
         eventsHeader.subItems.push(
           {
             id: 25,
@@ -661,24 +689,117 @@ if (account == "client") {
             link: "/clients/events/gerer-les-tickets",
           }
         )
-  
+
       }
     }
     if (eventsHeader.subItems.length > 0) {
       dynamicMenu.push(eventsHeader)
     }
-  
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].name == "conférence-en-ligne") {
+
+        onlineConferanceHeader.subItems.push({
+          id: 24,
+          label: "Créer conf. en ligne",
+          link: "/clients/events/planifier-un-evenement"
+        },
+
+          {
+            id: 26,
+            label: "Mes conf. en ligne",
+            link: "/clients/events/mes-evenements",
+          },
+          {
+            id: 27,
+            label: "Gérer les participants",
+            link: "/clients/events/archive",
+          },
+          {
+            id: 27,
+            label: "Paramètres",
+            link: "/clients/events/archive",
+          })
+
+      }
+    }
+
+    if (onlineConferanceHeader.subItems.length > 0) {
+      dynamicMenu.push(onlineConferanceHeader)
+    }
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].name == "courtier-professionnel") {
+
+        courtierProHeader.subItems.push({
+          id: 24,
+          label: "Planifier une mission",
+          link: "/clients/events/planifier-un-evenement"
+        },
+
+          {
+            id: 26,
+            label: "Mes missions active",
+            link: "/clients/events/mes-evenements",
+          },
+          {
+            id: 27,
+            label: "Mes missions archivées",
+            link: "/clients/events/archive",
+          },
+          {
+            id: 27,
+            label: "Paramètres",
+            link: "/clients/events/archive",
+          })
+
+      }
+    }
+
+    if (courtierProHeader.subItems.length > 0) {
+      dynamicMenu.push(courtierProHeader)
+    }
+    // Réservation vacances summerHotelsHeader
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].name == "reservation-vacances") {
+
+        summerHotelsHeader.subItems.push({
+          id: 27,
+          label: "statistiques ",
+          link: "/clients/events/archive",
+        }, {
+          id: 24,
+          label: "Lancer une opération",
+          link: "/clients/events/planifier-un-evenement"
+        },
+
+          {
+            id: 26,
+            label: "Op.de rés. actives ",
+            link: "/clients/events/mes-evenements",
+          },
+          {
+            id: 27,
+            label: "Op.de rés. archivées",
+            link: "/clients/events/archive",
+          },
+        )
+
+      }
+    }
+
+    if (summerHotelsHeader.subItems.length > 0) {
+      dynamicMenu.push(summerHotelsHeader)
+    }
     // Ticket Management System
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "ndf") {
-  
+
         dynamicMenu.push(
           {
             id: 14,
             label: "Note De Frais",
             icon: "uil-moneybag",
-  
-  
+
+
             subItems: [
               {
                 id: 15,
@@ -693,13 +814,13 @@ if (account == "client") {
             ]
           }
         )
-  
+
       }
     }
     // Market
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "market") {
-  
+
         dynamicMenu.push(
           {
             id: 17,
@@ -708,12 +829,12 @@ if (account == "client") {
             link: "/clients/market"
           }
         )
-  
+
       }
     }
-  
+
     //Push Factures
-  
+
     dynamicMenu.push({
       id: 18,
       label: "Commandes et factures",
@@ -747,7 +868,7 @@ if (account == "client") {
     //Resto collectif
     for (let i = 0; i < result.length; i++) {
       if (result[i].name == "restauration-collectif") {
-  
+
         dynamicMenu.push(
           {
             id: 180,
@@ -777,17 +898,17 @@ if (account == "client") {
             ]
           },
         )
-  
+
       }
     }
-  
+
     menuItems = dynamicMenu
-  
-  } else{
+
+  } else {
     removeData("clientinfo")
     removeData("account")
   }
-  
+
 
 }
 
