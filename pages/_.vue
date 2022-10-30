@@ -45,7 +45,7 @@ export default {
   layout: "auth",
   head() {
     return {
-      title: `${this.title} | BinBudget, Business on budget`,
+      title: `${this.title} | Proof, A community for a healthy family`,
     };
   },
   data() {

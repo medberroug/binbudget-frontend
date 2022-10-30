@@ -41,8 +41,6 @@ export default {
     <center>
       
       <h3 class="m-5">En cours</h3>
-      
-
     </center>
   </div>
 </template>

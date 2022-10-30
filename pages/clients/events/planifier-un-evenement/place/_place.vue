@@ -158,6 +158,7 @@
                                 > -->
                                 <NumberInputSpinner :min="0" :max="1000" :step="1" :integerOnly="true" v-model="itemForOrder.quantity" />
                               </div>
+                              
                             </div>
 
                             <div class="col-12 col-md-12">
