@@ -97,6 +97,7 @@ export default {
     message: process.env.VUE_APP_MESSAGINGSENDERID,
     appid: process.env.VUE_APP_APPId,
     measurement: process.env.VUE_APP_MEASUREMENTID,
-    baseUrl: process.env.VUE_APP_BASE_URL || 'https://api.binbudget.com/'
+    // baseUrl: process.env.VUE_APP_BASE_URL || 'https://localhost:1337',
+    baseUrl: process.env.VUE_APP_BASE_URL || 'https://api.binbudget.com'
   }
 };
