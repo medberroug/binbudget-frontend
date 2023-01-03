@@ -638,12 +638,12 @@ if (account == "client") {
     }
     let courtierProHeader = {
       id: 10,
-      label: "Courtier Pro.",
+      label: "Coursier Pro.",
       icon: "uil-truck",
       link: "/clients/courtierPro",
       subItems: [
 
-      ]
+      ] 
     }
     let summerHotelsHeader = {
       id: 10,

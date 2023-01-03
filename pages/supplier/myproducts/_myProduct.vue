@@ -219,6 +219,13 @@
                           >
                             Réservation de restaurant</span
                           >
+                          <span
+                            v-if="
+                              where.serviceName == 'restauration-collectif'
+                            "
+                          >
+                          Restauration Collectif</span
+                          >
                         </div>
                       </div>
                     </div>
