@@ -128,6 +128,9 @@
             <span v-if="where.serviceName == 'reservation-de-restaurant'">
               Réservation de restaurant</span
             >
+            <span v-if="where.serviceName == 'reservation-collectif'">
+              Réservation de restaurant</span
+            >
           </div>
         </template>
         <template v-slot:cell(name)="data">
