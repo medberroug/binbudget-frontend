@@ -128,7 +128,7 @@
             <span v-if="where.serviceName == 'reservation-de-restaurant'">
               Réservation de restaurant</span
             >
-            <span v-if="where.serviceName == 'reservation-collectif'">
+            <span v-if="where.serviceName == 'restauration-collectif'">
               Réservation de restaurant</span
             >
           </div>
